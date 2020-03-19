@@ -2,11 +2,12 @@ import React, { useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { CssBaseline } from "@material-ui/core";
 import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
-import { InitialState, StoreProvider } from "./store/Store";
-
 import "typeface-roboto";
+
+import { InitialState, StoreProvider } from "./store/Store";
 import Theme from "./styles/Theme";
 import { Reducer } from "./store/Reducers";
+import ContentRouter from "./ContentRouter";
 
 const useStyles = makeStyles({
   root: {}
@@ -26,7 +27,9 @@ function App() {
       <CssBaseline />
       <StoreProvider initialState={InitialState} reducer={Reducer}>
         <Router>
-          <div className={classes.root}>Storypointers</div>
+          <div className={classes.root}>
+            <ContentRouter />
+          </div>
         </Router>
       </StoreProvider>
     </ThemeProvider>

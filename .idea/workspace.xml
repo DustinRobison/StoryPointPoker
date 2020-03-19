@@ -2,15 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a17e160a-c286-4fbe-bf88-4a931ad878da" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/store/Reducers.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/store/Store.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/store/reducers/UserReducer.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/styles/Colors.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/styles/Theme.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ContentRouter.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/home/Home.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +57,7 @@
       <option name="presentableId" value="Default" />
       <updated>1584652339237</updated>
       <workItem from="1584652343685" duration="435000" />
-      <workItem from="1584652782215" duration="2101000" />
+      <workItem from="1584652782215" duration="2975000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <created>1584652843904</created>
@@ -78,7 +73,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584654415099</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="CRA Template ready">
+      <created>1584654902208</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1584654902208</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -87,13 +89,14 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="First commit" />
     <MESSAGE value="Hooked up firebase" />
-    <option name="LAST_COMMIT_MESSAGE" value="Hooked up firebase" />
+    <MESSAGE value="CRA Template ready" />
+    <option name="LAST_COMMIT_MESSAGE" value="CRA Template ready" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="1065" y="-1170" key="CommitChangelistDialog2" timestamp="1584654414671">
+    <state x="1065" y="-1170" key="CommitChangelistDialog2" timestamp="1584654901820">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="1065" y="-1170" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584654414671" />
+    <state x="1065" y="-1170" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584654901820" />
     <state x="1063" y="-975" key="EditFileWatcherDialog" timestamp="1584654749180">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
@@ -102,9 +105,9 @@
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
     <state x="906" y="-1121" key="SettingsEditor/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584654750220" />
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1584654416572">
+    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1584654903648">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584654416572" />
+    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584654903648" />
   </component>
 </project>
