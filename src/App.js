@@ -8,12 +8,25 @@ import { InitialState, StoreProvider } from "./store/Store";
 import Theme from "./styles/Theme";
 import { Reducer } from "./store/Reducers";
 import ContentRouter from "./ContentRouter";
+import SpAppBar from "./components/appBar/SpAppBar";
+import ScrollToTop from "./components/scroll/SpScrollToTop";
+import SpFooter from "./components/footer/SpFooter";
+
+const APP_BAR_HEIGHT = 80;
 
 const useStyles = makeStyles({
-  root: {}
+  contentContainer: {
+    flex: "1 0 auto"
+  },
+  appBarSpacer: {
+    height: APP_BAR_HEIGHT
+  },
+  appFooter: {
+    flexShrink: 0
+  }
 });
 
-function App() {
+const App = () => {
   const classes = useStyles();
 
   useEffect(() => {
@@ -27,13 +40,20 @@ function App() {
       <CssBaseline />
       <StoreProvider initialState={InitialState} reducer={Reducer}>
         <Router>
-          <div className={classes.root}>
+          <ScrollToTop />
+          <div className={classes.contentContainer}>
+            <nav className={classes.appBarSpacer}>
+              <SpAppBar height={APP_BAR_HEIGHT} />
+            </nav>
             <ContentRouter />
           </div>
+          <footer className={classes.appFooter}>
+            <SpFooter />
+          </footer>
         </Router>
       </StoreProvider>
     </ThemeProvider>
   );
-}
+};
 
 export default App;

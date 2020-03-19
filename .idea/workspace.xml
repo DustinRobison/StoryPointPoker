@@ -2,10 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a17e160a-c286-4fbe-bf88-4a931ad878da" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/ContentRouter.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/home/Home.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/appBar/SpAppBar.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/footer/SpFooter.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/links/SpLink.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/scroll/SpScrollToTop.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/home/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/home/Home.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +62,7 @@
       <option name="presentableId" value="Default" />
       <updated>1584652339237</updated>
       <workItem from="1584652343685" duration="435000" />
-      <workItem from="1584652782215" duration="2975000" />
+      <workItem from="1584652782215" duration="4832000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <created>1584652843904</created>
@@ -80,7 +85,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584654902208</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="CRA Template ready">
+      <created>1584656065727</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1584656065727</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -93,10 +105,10 @@
     <option name="LAST_COMMIT_MESSAGE" value="CRA Template ready" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="1065" y="-1170" key="CommitChangelistDialog2" timestamp="1584654901820">
+    <state x="1065" y="-1170" key="CommitChangelistDialog2" timestamp="1584656065363">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="1065" y="-1170" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584654901820" />
+    <state x="1065" y="-1170" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584656065363" />
     <state x="1063" y="-975" key="EditFileWatcherDialog" timestamp="1584654749180">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
@@ -105,9 +117,9 @@
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
     <state x="906" y="-1121" key="SettingsEditor/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584654750220" />
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1584654903648">
+    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1584656067438">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584654903648" />
+    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584656067438" />
   </component>
 </project>
