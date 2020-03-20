@@ -50,6 +50,10 @@ const Room = () => {
   } = roomData;
 
   useEffect(() => {
+    document.title = `SPP: ${id}`;
+  }, [id]);
+
+  useEffect(() => {
     if (currentUser && currentUser.displayName) {
       addUser();
     }
@@ -107,7 +111,12 @@ const Room = () => {
               isOwner={ownerId === currentUser.uid}
               showVotes={showVotes}
               users={
-                isObject(users) ? Object.keys(users).map(key => users[key]) : []
+                isObject(users)
+                  ? Object.keys(users).map(key => ({
+                      ...users[key],
+                      isCurrentUser: key === currentUser.uid
+                    }))
+                  : []
               }
             />
           </Grid>

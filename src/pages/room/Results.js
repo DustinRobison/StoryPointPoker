@@ -26,15 +26,20 @@ const Results = ({ showVotes, users }) => {
       <Typography variant={"h6"}>Results</Typography>
       <List>
         {Array.isArray(users)
-          ? users.map(({ name, vote, active, uid }, idx) => (
+          ? users.map(({ name, vote, active, uid, isCurrentUser }, idx) => (
               <ListItem
                 key={`${idx}-user`}
                 className={classes.listItem}
                 disabled={!active}
               >
                 <ListItemIcon>
-                  {showVotes ? (
-                    <Typography>{vote}</Typography>
+                  {isCurrentUser || showVotes ? (
+                    <Typography
+                      variant={showVotes ? "h5" : "subtitle1"}
+                      color={showVotes ? "textPrimary" : "inherit"}
+                    >
+                      {vote}
+                    </Typography>
                   ) : vote === "" || vote === "-" ? (
                     <Timer />
                   ) : (
@@ -57,7 +62,8 @@ Results.propTypes = {
     PropTypes.shape({
       name: PropTypes.string,
       active: PropTypes.bool.isRequired,
-      vote: PropTypes.string
+      vote: PropTypes.string,
+      isCurrentUser: PropTypes.bool
     })
   )
 };

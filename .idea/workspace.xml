@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a17e160a-c286-4fbe-bf88-4a931ad878da" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/helpers/StringHelpers.js" afterDir="false" />
+    <list default="true" id="a17e160a-c286-4fbe-bf88-4a931ad878da" name="Default Changelist" comment="Added some basic functionality and icons title">
+      <change afterPath="$PROJECT_DIR$/public/1024.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/128.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/256.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/32.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/512.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/64.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/Accuracy.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/helpers/DbRoom.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/helpers/DbRoom.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/home/JoinRoom.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/home/JoinRoom.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/room/ButtonGrid.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/ButtonGrid.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/room/NameForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/NameForm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/favicon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/public/favicon.ico" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/logo192.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/logo512.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/appBar/SpAppBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/appBar/SpAppBar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/home/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/home/Home.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/room/Results.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/Results.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/room/Room.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/Room.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/room/RoomHeader.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/RoomHeader.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,11 +70,13 @@
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public" />
+      <recent name="$PROJECT_DIR$/src/assets" />
+      <recent name="$PROJECT_DIR$/functions/prodTest" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/components/auth" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/functions/prodTest" />
     </key>
   </component>
   <component name="RestClientSettings">
@@ -117,7 +129,7 @@
       <workItem from="1584652782215" duration="10974000" />
       <workItem from="1584672554923" duration="11235000" />
       <workItem from="1584719274708" duration="8975000" />
-      <workItem from="1584734052787" duration="3644000" />
+      <workItem from="1584734052787" duration="6611000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <created>1584652843904</created>
@@ -210,7 +222,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584731900392</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Basic Working functionality woo woo">
+      <created>1584737737703</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1584737737703</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -229,13 +248,14 @@
     <MESSAGE value="Refactored to call it room" />
     <MESSAGE value="Created firebase realtime connection hook" />
     <MESSAGE value="Working Shared open text!" />
-    <option name="LAST_COMMIT_MESSAGE" value="Working Shared open text!" />
+    <MESSAGE value="Basic Working functionality woo woo" />
+    <option name="LAST_COMMIT_MESSAGE" value="Basic Working functionality woo woo" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2" timestamp="1584731900056">
+    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2" timestamp="1584741369536">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584731900056" />
+    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584741369536" />
     <state x="1063" y="-975" key="EditFileWatcherDialog" timestamp="1584654749180">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
@@ -260,14 +280,14 @@
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
     <state x="906" y="-1121" key="SettingsEditor/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584654750220" />
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1584731901437">
+    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1584737739074">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584731901437" />
-    <state x="586" y="-1029" width="782" height="550" key="find.popup" timestamp="1584737689211">
+    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584737739074" />
+    <state x="586" y="-1029" width="782" height="550" key="find.popup" timestamp="1584739377333">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="586" y="-1029" width="782" height="550" key="find.popup/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584737689211" />
+    <state x="586" y="-1029" width="782" height="550" key="find.popup/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584739377333" />
     <state x="1119" y="-1017" width="670" height="676" key="search.everywhere.popup" timestamp="1584674585447">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
