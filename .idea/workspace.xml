@@ -2,14 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a17e160a-c286-4fbe-bf88-4a931ad878da" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/functions/prodTest/createRoom.http" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/helpers/Debounce.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/firebase.json" beforeDir="false" afterPath="$PROJECT_DIR$/firebase.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/home/CreateRoom.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/home/CreateRoom.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/appBar/SpAppBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/appBar/SpAppBar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/home/CreateRoom.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/home/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/home/Home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/home/JoinRoom.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/home/JoinRoom.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +113,8 @@
       <updated>1584652339237</updated>
       <workItem from="1584652343685" duration="435000" />
       <workItem from="1584652782215" duration="10974000" />
-      <workItem from="1584672554923" duration="11108000" />
+      <workItem from="1584672554923" duration="11235000" />
+      <workItem from="1584719274708" duration="3828000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <created>1584652843904</created>
@@ -172,7 +172,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584677244429</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Created API backend with firebase functions">
+      <created>1584683839528</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1584683839528</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -186,45 +193,46 @@
     <MESSAGE value="Create session management" />
     <MESSAGE value="UI for session complete" />
     <MESSAGE value="changed to firestore" />
-    <option name="LAST_COMMIT_MESSAGE" value="changed to firestore" />
+    <MESSAGE value="Created API backend with firebase functions" />
+    <option name="LAST_COMMIT_MESSAGE" value="Created API backend with firebase functions" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2" timestamp="1584683775324">
+    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2" timestamp="1584683838985">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584683775324" />
+    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584683838985" />
     <state x="1063" y="-975" key="EditFileWatcherDialog" timestamp="1584654749180">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
     <state x="1063" y="-975" key="EditFileWatcherDialog/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584654749180" />
-    <state width="1440" height="324" key="GridCell.Tab.0.bottom" timestamp="1584683358307">
+    <state width="1440" height="324" key="GridCell.Tab.0.bottom" timestamp="1584683893317">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state width="1440" height="324" key="GridCell.Tab.0.bottom/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584683358307" />
-    <state width="1440" height="324" key="GridCell.Tab.0.center" timestamp="1584683358306">
+    <state width="1440" height="324" key="GridCell.Tab.0.bottom/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584683893317" />
+    <state width="1440" height="324" key="GridCell.Tab.0.center" timestamp="1584683893316">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state width="1440" height="324" key="GridCell.Tab.0.center/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584683358306" />
-    <state width="1440" height="324" key="GridCell.Tab.0.left" timestamp="1584683358305">
+    <state width="1440" height="324" key="GridCell.Tab.0.center/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584683893316" />
+    <state width="1440" height="324" key="GridCell.Tab.0.left" timestamp="1584683893316">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state width="1440" height="324" key="GridCell.Tab.0.left/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584683358305" />
-    <state width="1440" height="324" key="GridCell.Tab.0.right" timestamp="1584683358307">
+    <state width="1440" height="324" key="GridCell.Tab.0.left/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584683893316" />
+    <state width="1440" height="324" key="GridCell.Tab.0.right" timestamp="1584683893317">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state width="1440" height="324" key="GridCell.Tab.0.right/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584683358307" />
+    <state width="1440" height="324" key="GridCell.Tab.0.right/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584683893317" />
     <state x="906" y="-1121" key="SettingsEditor" timestamp="1584654750220">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
     <state x="906" y="-1121" key="SettingsEditor/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584654750220" />
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1584677245713">
+    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1584683840889">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584677245713" />
-    <state x="586" y="-1029" width="782" height="550" key="find.popup" timestamp="1584680404190">
+    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584683840889" />
+    <state x="586" y="-1029" width="782" height="550" key="find.popup" timestamp="1584726372660">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="586" y="-1029" width="782" height="550" key="find.popup/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584680404190" />
+    <state x="586" y="-1029" width="782" height="550" key="find.popup/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584726372660" />
     <state x="1119" y="-1017" width="670" height="676" key="search.everywhere.popup" timestamp="1584674585447">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>

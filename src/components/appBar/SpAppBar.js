@@ -11,10 +11,10 @@ const useStyles = makeStyles(({ spacing }) => ({
 const SpAppBar = ({ height }) => {
   const classes = useStyles();
   return (
-    <AppBar className={classes.root}>
+    <AppBar className={classes.root} style={{ height }}>
       <Toolbar>
         <Link component={HomeLink} color={"inherit"} underline={"none"}>
-          <Typography variant={"h3"}>StoryPointers</Typography>
+          <Typography variant={"h3"}>Story Point Poker</Typography>
         </Link>
       </Toolbar>
     </AppBar>
