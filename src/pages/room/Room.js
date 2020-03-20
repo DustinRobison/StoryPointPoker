@@ -9,6 +9,7 @@ import LoadingPage from "../../components/loading/LoadingPage";
 import ButtonGrid from "./ButtonGrid";
 import RoomHeader from "./RoomHeader";
 import Results from "./Results";
+import { checkIfRoomExists, useRoom } from "../../helpers/DbRoom";
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -31,16 +32,15 @@ const Room = () => {
   const { id } = useParams();
   const { pathname } = useLocation();
   const { currentUser } = useContext(AuthContext);
-  const [state, setState] = useState({
-    loading: false,
-    error: "",
-    exists: true
-  });
-  const { loading, error, exists } = state;
+  const roomData = useRoom(id);
+  console.log(roomData);
 
   useEffect(() => {
     // On Mount validate if doc exists, if not redirect to home
-  }, []);
+    if (currentUser && currentUser.displayName) {
+      console.log(`set user`);
+    }
+  }, [currentUser]);
 
   const clearVotes = () => {};
 
@@ -54,9 +54,9 @@ const Room = () => {
   }
 
   // Redirect home if room doesnt exists
-  if (!exists) {
-    return <Redirect to={"/"} />;
-  }
+  // if (!exists) {
+  //   return <Redirect to={"/"} />;
+  // }
 
   if (currentUser && !currentUser.displayName) {
     return <NameForm />;

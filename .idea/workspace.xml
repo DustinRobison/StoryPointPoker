@@ -2,15 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a17e160a-c286-4fbe-bf88-4a931ad878da" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/helpers/DbDocument.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ContentRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ContentRouter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/helpers/DbDocument.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/helpers/DbRoom.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/home/JoinRoom.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/home/JoinRoom.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/session/ButtonGrid.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/ButtonGrid.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/session/NameForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/NameForm.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/session/Results.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/Results.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/session/Session.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/Room.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/session/SessionHeader.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/RoomHeader.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/room/Room.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/Room.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,7 +111,7 @@
       <workItem from="1584652343685" duration="435000" />
       <workItem from="1584652782215" duration="10974000" />
       <workItem from="1584672554923" duration="11235000" />
-      <workItem from="1584719274708" duration="4735000" />
+      <workItem from="1584719274708" duration="6921000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <created>1584652843904</created>
@@ -188,7 +183,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584726705128</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Refactored to call it room">
+      <created>1584727662169</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1584727662169</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -204,13 +206,14 @@
     <MESSAGE value="changed to firestore" />
     <MESSAGE value="Created API backend with firebase functions" />
     <MESSAGE value="Can now create or join rooms successfully" />
-    <option name="LAST_COMMIT_MESSAGE" value="Can now create or join rooms successfully" />
+    <MESSAGE value="Refactored to call it room" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactored to call it room" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2" timestamp="1584726704675">
+    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2" timestamp="1584727661860">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584726704675" />
+    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584727661860" />
     <state x="1063" y="-975" key="EditFileWatcherDialog" timestamp="1584654749180">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
@@ -235,10 +238,10 @@
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
     <state x="906" y="-1121" key="SettingsEditor/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584654750220" />
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1584726707748">
+    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1584727664124">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584726707748" />
+    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584727664124" />
     <state x="586" y="-1029" width="782" height="550" key="find.popup" timestamp="1584726372660">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>

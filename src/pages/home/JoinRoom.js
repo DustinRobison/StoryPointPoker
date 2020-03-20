@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import { useDebounce } from "../../helpers/Debounce";
 import FirebaseApp from "../../Firebase";
 import { AuthContext } from "../../components/auth/Auth";
-import { checkIfRoomExists } from "../../helpers/DbDocument";
+import { checkIfRoomExists } from "../../helpers/DbRoom";
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
