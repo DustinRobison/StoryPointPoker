@@ -11,6 +11,8 @@ import ContentRouter from "./ContentRouter";
 import SpAppBar from "./components/appBar/SpAppBar";
 import ScrollToTop from "./components/scroll/SpScrollToTop";
 import SpFooter from "./components/footer/SpFooter";
+import { AuthProvider } from "./components/auth/Auth";
+import FirebaseApp from "./Firebase";
 
 const APP_BAR_HEIGHT = 80;
 
@@ -33,26 +35,29 @@ const App = () => {
     console.log(
       `${process.env.REACT_APP_DOMAIN} version: '${process.env.REACT_APP_VERSION}'`
     );
+    FirebaseApp.auth().signInAnonymously();
   }, []);
 
   return (
-    <ThemeProvider theme={Theme}>
-      <CssBaseline />
-      <StoreProvider initialState={InitialState} reducer={Reducer}>
-        <Router>
-          <ScrollToTop />
-          <div className={classes.contentContainer}>
-            <nav className={classes.appBarSpacer}>
-              <SpAppBar height={APP_BAR_HEIGHT} />
-            </nav>
-            <ContentRouter />
-          </div>
-          <footer className={classes.appFooter}>
-            <SpFooter />
-          </footer>
-        </Router>
-      </StoreProvider>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider theme={Theme}>
+        <CssBaseline />
+        <StoreProvider initialState={InitialState} reducer={Reducer}>
+          <Router>
+            <ScrollToTop />
+            <div className={classes.contentContainer}>
+              <nav className={classes.appBarSpacer}>
+                <SpAppBar height={APP_BAR_HEIGHT} />
+              </nav>
+              <ContentRouter />
+            </div>
+            <footer className={classes.appFooter}>
+              <SpFooter />
+            </footer>
+          </Router>
+        </StoreProvider>
+      </ThemeProvider>
+    </AuthProvider>
   );
 };
 

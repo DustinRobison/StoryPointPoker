@@ -2,15 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a17e160a-c286-4fbe-bf88-4a931ad878da" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/components/appBar/SpAppBar.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/footer/SpFooter.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/links/SpLink.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/scroll/SpScrollToTop.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Firebase.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/auth/Auth.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/auth/PrivateRoute.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/loading/LoadingPage.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/home/CreateRoom.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/home/JoinRoom.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/session/NameForm.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/session/Session.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ContentRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ContentRouter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/footer/SpFooter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/footer/SpFooter.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/home/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/home/Home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/Reducers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/Reducers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/reducers/UserReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/reducers/UserReducer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,11 +51,17 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/components/auth" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="prettierjs.PrettierConfiguration.Package" value="$PROJECT_DIR$/node_modules/prettier" />
     <property name="settings.editor.selected.configurable" value="watcher.settings" />
     <property name="show.migrate.to.gradle.popup" value="false" />
+    <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/components/auth" />
+    </key>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -62,7 +74,7 @@
       <option name="presentableId" value="Default" />
       <updated>1584652339237</updated>
       <workItem from="1584652343685" duration="435000" />
-      <workItem from="1584652782215" duration="4832000" />
+      <workItem from="1584652782215" duration="10652000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <created>1584652843904</created>
@@ -92,7 +104,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584656065727</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Fixed fullwidth layout with footer">
+      <created>1584657930069</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1584657930069</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -102,13 +121,14 @@
     <MESSAGE value="First commit" />
     <MESSAGE value="Hooked up firebase" />
     <MESSAGE value="CRA Template ready" />
-    <option name="LAST_COMMIT_MESSAGE" value="CRA Template ready" />
+    <MESSAGE value="Fixed fullwidth layout with footer" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed fullwidth layout with footer" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="1065" y="-1170" key="CommitChangelistDialog2" timestamp="1584656065363">
+    <state x="1065" y="-1170" key="CommitChangelistDialog2" timestamp="1584657929624">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="1065" y="-1170" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584656065363" />
+    <state x="1065" y="-1170" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584657929624" />
     <state x="1063" y="-975" key="EditFileWatcherDialog" timestamp="1584654749180">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
@@ -117,9 +137,13 @@
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
     <state x="906" y="-1121" key="SettingsEditor/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584654750220" />
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1584656067438">
+    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1584657931613">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584656067438" />
+    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584657931613" />
+    <state x="586" y="-1029" width="782" height="550" key="find.popup" timestamp="1584659072997">
+      <screen x="-346" y="-1417" width="2560" height="1417" />
+    </state>
+    <state x="586" y="-1029" width="782" height="550" key="find.popup/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584659072997" />
   </component>
 </project>
