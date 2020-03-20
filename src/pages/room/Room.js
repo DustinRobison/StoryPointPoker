@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { Redirect, useParams, useLocation } from "react-router-dom";
 import { Paper, Typography, Link, Divider, Grid } from "@material-ui/core";
@@ -7,7 +7,7 @@ import { AuthContext } from "../../components/auth/Auth";
 import NameForm from "./NameForm";
 import LoadingPage from "../../components/loading/LoadingPage";
 import ButtonGrid from "./ButtonGrid";
-import SessionHeader from "./SessionHeader";
+import RoomHeader from "./RoomHeader";
 import Results from "./Results";
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
@@ -26,11 +26,21 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 
 const SHOW_VOTES = false;
 
-const Session = () => {
+const Room = () => {
   const classes = useStyles();
   const { id } = useParams();
   const { pathname } = useLocation();
   const { currentUser } = useContext(AuthContext);
+  const [state, setState] = useState({
+    loading: false,
+    error: "",
+    exists: true
+  });
+  const { loading, error, exists } = state;
+
+  useEffect(() => {
+    // On Mount validate if doc exists, if not redirect to home
+  }, []);
 
   const clearVotes = () => {};
 
@@ -38,11 +48,13 @@ const Session = () => {
 
   const handleVote = () => {};
 
+  // Loading while waiting for user
   if (!currentUser) {
     return <LoadingPage />;
   }
 
-  if (!id) {
+  // Redirect home if room doesnt exists
+  if (!exists) {
     return <Redirect to={"/"} />;
   }
 
@@ -66,7 +78,7 @@ const Session = () => {
         <Divider />
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <SessionHeader clearVotes={clearVotes} showVotes={showVotes} />
+            <RoomHeader clearVotes={clearVotes} showVotes={showVotes} />
           </Grid>
           <Grid item sm={6} xs={12}>
             <ButtonGrid handleVote={handleVote} />
@@ -80,4 +92,4 @@ const Session = () => {
   );
 };
 
-export default Session;
+export default Room;

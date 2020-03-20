@@ -5,6 +5,7 @@ import { useHistory } from "react-router-dom";
 import { useDebounce } from "../../helpers/Debounce";
 import FirebaseApp from "../../Firebase";
 import { AuthContext } from "../../components/auth/Auth";
+import { checkIfRoomExists } from "../../helpers/DbDocument";
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
@@ -33,33 +34,28 @@ const JoinRoom = () => {
         loading: true,
         error: ""
       });
-      async function checkIfRoomExists() {
-        try {
-          const fbDoc = await FirebaseApp.firestore()
-            .collection("/rooms")
-            .doc(debouncedRoomName)
-            .get();
+      checkIfRoomExists(debouncedRoomName)
+        .then(roomExists =>
           setState({
             ...state,
-            exists: fbDoc.exists,
+            exists: roomExists,
             loading: false,
             error: ""
-          });
-        } catch (error) {
+          })
+        )
+        .catch(error =>
           setState({
             ...state,
             loading: false,
             error: error.message
-          });
-        }
-      }
-      checkIfRoomExists();
+          })
+        );
     }
     // eslint-disable-next-line
   }, [debouncedRoomName]);
 
   const joinRoom = async () => {
-    history.push(`/session/${roomName}`);
+    history.push(`/room/${roomName}`);
   };
 
   const createRoom = async () => {
@@ -78,7 +74,7 @@ const JoinRoom = () => {
           sharedText: "",
           showVotes: false
         });
-      history.push(`/session/${roomName}`);
+      history.push(`/room/${roomName}`);
     } catch (error) {
       console.log(error);
       setState({

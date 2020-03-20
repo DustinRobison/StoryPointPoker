@@ -16,7 +16,7 @@ const useStyles = makeStyles(({ spacing }) => ({
   }
 }));
 
-const SessionHeader = ({ clearVotes, showVotes }) => {
+const RoomHeader = ({ clearVotes, showVotes }) => {
   const classes = useStyles();
 
   return (
@@ -66,9 +66,9 @@ const SessionHeader = ({ clearVotes, showVotes }) => {
   );
 };
 
-SessionHeader.propTypes = {
+RoomHeader.propTypes = {
   clearVotes: PropTypes.func,
   showVotes: PropTypes.func
 };
 
-export default SessionHeader;
+export default RoomHeader;
