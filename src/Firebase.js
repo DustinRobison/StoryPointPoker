@@ -1,7 +1,7 @@
 // initialize firebase (https://firebase.google.com/docs/web/setup?authuser=0#config-object)
 import * as firebase from "firebase/app";
 import "firebase/auth";
-import "firebase/firebase";
+import "firebase/firestore";
 
 const FirebaseApp = firebase.initializeApp({
   apiKey: "AIzaSyB_CSQJO3D0EEuw_tocXqUWtw251AGdRQU",
