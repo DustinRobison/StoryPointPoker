@@ -6,6 +6,7 @@ import { useDebounce } from "../../helpers/Debounce";
 import FirebaseApp from "../../Firebase";
 import { AuthContext } from "../../components/auth/Auth";
 import { checkIfRoomExists } from "../../helpers/DbRoom";
+import { lettersAndNumbersOnly } from "../../helpers/StringHelpers";
 // import firebase from "firebase/firestore";
 
 const useStyles = makeStyles(({ spacing }) => ({
@@ -97,14 +98,14 @@ const JoinRoom = () => {
         <Grid item xs={12}>
           <TextField
             label={"Room Name"}
-            helperText={"Numbers and letters only"}
+            helperText={"Numbers and letters only with at least 4 characters"}
             fullWidth
             inputProps={{ style: { textAlign: "center" } }}
             value={roomName}
             onChange={e =>
               setState({
                 ...state,
-                roomName: e.target.value
+                roomName: lettersAndNumbersOnly(e.target.value)
               })
             }
           />

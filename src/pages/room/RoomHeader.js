@@ -16,7 +16,13 @@ const useStyles = makeStyles(({ spacing }) => ({
   }
 }));
 
-const RoomHeader = ({ sharedText, setSharedText, clearVotes, showVotes }) => {
+const RoomHeader = ({
+  sharedText,
+  setSharedText,
+  clearVotes,
+  showVotes,
+  setShowVotes
+}) => {
   const classes = useStyles();
 
   return (
@@ -48,9 +54,9 @@ const RoomHeader = ({ sharedText, setSharedText, clearVotes, showVotes }) => {
                 <Button
                   variant={"contained"}
                   color={"primary"}
-                  onClick={() => showVotes()}
+                  onClick={() => setShowVotes(!showVotes)}
                 >
-                  Show Votes
+                  {showVotes ? "Hide Votes" : "Show Votes"}
                 </Button>
               </div>
             </Grid>
@@ -69,10 +75,11 @@ const RoomHeader = ({ sharedText, setSharedText, clearVotes, showVotes }) => {
 };
 
 RoomHeader.propTypes = {
+  showVotes: PropTypes.bool,
   sharedText: PropTypes.string,
   setSharedText: PropTypes.func,
   clearVotes: PropTypes.func,
-  showVotes: PropTypes.func
+  setShowVotes: PropTypes.func
 };
 
 export default RoomHeader;

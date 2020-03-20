@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import PropTypes from "prop-types";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { Paper, Grid, Typography, TextField, Button } from "@material-ui/core";
 import { useHistory, useLocation } from "react-router-dom";
@@ -19,7 +20,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   }
 }));
 
-const NameForm = () => {
+const NameForm = ({ addUser }) => {
   const classes = useStyles();
   const { currentUser } = useContext(AuthContext);
   const [name, setName] = useState("");
@@ -35,6 +36,7 @@ const NameForm = () => {
     await currentUser.updateProfile({
       displayName: name
     });
+    addUser();
 
     // little hack to force a refresh
     history.push(location.pathname);
@@ -69,6 +71,10 @@ const NameForm = () => {
       </Paper>
     </div>
   );
+};
+
+NameForm.propTypes = {
+  addUser: PropTypes.func
 };
 
 export default NameForm;

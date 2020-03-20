@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { Redirect, useParams, useLocation } from "react-router-dom";
 import { Paper, Typography, Link, Divider, Grid } from "@material-ui/core";
+import { isObject } from "lodash";
 
 import { AuthContext } from "../../components/auth/Auth";
 import NameForm from "./NameForm";
@@ -9,7 +10,7 @@ import LoadingPage from "../../components/loading/LoadingPage";
 import ButtonGrid from "./ButtonGrid";
 import RoomHeader from "./RoomHeader";
 import Results from "./Results";
-import { checkIfRoomExists, useRoom } from "../../helpers/DbRoom";
+import { useRoom } from "../../helpers/DbRoom";
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -25,8 +26,6 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   }
 }));
 
-const SHOW_VOTES = false;
-
 const Room = () => {
   const classes = useStyles();
   const { id } = useParams();
@@ -38,13 +37,15 @@ const Room = () => {
     error,
     exists,
     ownerId,
-    messages,
+    users,
+    // messages,
     sharedText,
+    showVotes,
     addUser,
     removeUser,
     setSharedText,
     handleVote,
-    showVotes,
+    setShowVotes,
     clearVotes
   } = roomData;
 
@@ -53,6 +54,7 @@ const Room = () => {
       addUser();
     }
     return () => removeUser();
+    // eslint-disable-next-line
   }, [currentUser]);
 
   // Loading while waiting for user
@@ -66,8 +68,12 @@ const Room = () => {
   }
 
   if (currentUser && !currentUser.displayName) {
-    return <NameForm />;
+    return <NameForm addUser={addUser} />;
   }
+
+  const clearAllUserVotes = () => {
+    clearVotes(Object.keys(users));
+  };
 
   return (
     <div className={classes.root}>
@@ -88,15 +94,27 @@ const Room = () => {
             <RoomHeader
               sharedText={sharedText}
               setSharedText={setSharedText}
-              clearVotes={clearVotes}
+              clearVotes={clearAllUserVotes}
               showVotes={showVotes}
+              setShowVotes={setShowVotes}
             />
           </Grid>
           <Grid item sm={6} xs={12}>
             <ButtonGrid handleVote={handleVote} />
           </Grid>
           <Grid item sm={6} xs={12}>
-            <Results showVotes={SHOW_VOTES} />
+            <Results
+              isOwner={ownerId === currentUser.uid}
+              showVotes={showVotes}
+              users={
+                isObject(users) ? Object.keys(users).map(key => users[key]) : []
+              }
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant={"h5"} color={"error"} align={"center"}>
+              {error}
+            </Typography>
           </Grid>
         </Grid>
       </Paper>

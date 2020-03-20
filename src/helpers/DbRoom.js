@@ -1,5 +1,7 @@
 import FirebaseApp from "../Firebase";
 import { useContext, useEffect, useState } from "react";
+import { reduce } from "lodash";
+
 import { AuthContext } from "../components/auth/Auth";
 
 export const checkIfRoomExists = async roomName => {
@@ -61,14 +63,21 @@ export const useRoom = roomName => {
         unsubscribe();
       }
     };
+    // eslint-disable-next-line
   }, [roomName, currentUser]);
 
   const addUser = () => {
-    if (state.docRef && currentUser && currentUser.uid) {
+    if (
+      state.docRef &&
+      currentUser &&
+      currentUser.uid &&
+      currentUser.displayName
+    ) {
       state.docRef.update({
         [`users.${currentUser.uid}`]: {
           name: currentUser.displayName,
-          active: true
+          active: true,
+          vote: "-"
         }
       });
     }
@@ -82,13 +91,34 @@ export const useRoom = roomName => {
     }
   };
 
-  const clearVotes = () => {
-    console.log("clear votes");
+  const clearVotes = userUids => {
+    if (state.docRef && Array.isArray(userUids)) {
+      const updateObject = reduce(
+        userUids,
+        (acc, uid) => {
+          return { ...acc, [`users.${uid}.vote`]: "-" };
+        },
+        {}
+      );
+      state.docRef.update({ ...updateObject, showVotes: false });
+    }
   };
 
-  const showVotes = () => {};
+  const setShowVotes = showVotes => {
+    if (state.docRef) {
+      state.docRef.update({
+        showVotes
+      });
+    }
+  };
 
-  const handleVote = vote => {};
+  const handleVote = vote => {
+    if (state.docRef) {
+      state.docRef.update({
+        [`users.${currentUser.uid}.vote`]: vote
+      });
+    }
+  };
 
   const setSharedText = sharedText => {
     if (state.docRef) {
@@ -103,7 +133,7 @@ export const useRoom = roomName => {
     addUser,
     removeUser,
     clearVotes,
-    showVotes,
+    setShowVotes,
     handleVote,
     setSharedText
   };

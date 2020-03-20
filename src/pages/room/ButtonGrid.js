@@ -20,7 +20,7 @@ const ButtonGrid = ({ handleVote }) => {
           <Grid item md={3} sm={4} xs={6} key={`${idx}-vote-button`}>
             <Button
               variant={"contained"}
-              onClick={() => handleVote(value)}
+              onClick={() => handleVote(value.toString())}
               fullWidth
             >
               {value}

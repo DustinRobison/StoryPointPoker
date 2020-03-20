@@ -6,8 +6,7 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemIcon,
-  ListItemSecondaryAction
+  ListItemIcon
 } from "@material-ui/core";
 import { Timer, CheckCircle } from "@material-ui/icons";
 
@@ -20,36 +19,47 @@ const useStyles = makeStyles(({ spacing }) => ({
   }
 }));
 
-const Results = ({ showVotes }) => {
+const Results = ({ showVotes, users }) => {
   const classes = useStyles();
-  const users = [
-    { name: "Dustin", vote: 3 },
-    { name: "greg", vote: null }
-  ];
   return (
     <div className={classes.root}>
       <Typography variant={"h6"}>Results</Typography>
       <List>
-        {users.map(({ name, vote }, idx) => (
-          <ListItem key={`${idx}-user`} className={classes.listItem}>
-            <ListItemIcon>
-              {vote === null ? <Timer /> : <CheckCircle color={"action"} />}
-            </ListItemIcon>
-            <ListItemText primary={name} />
-            <ListItemSecondaryAction>
-              {showVotes ? (
-                <Typography variant={"h6"}>{vote}</Typography>
-              ) : null}
-            </ListItemSecondaryAction>
-          </ListItem>
-        ))}
+        {Array.isArray(users)
+          ? users.map(({ name, vote, active, uid }, idx) => (
+              <ListItem
+                key={`${idx}-user`}
+                className={classes.listItem}
+                disabled={!active}
+              >
+                <ListItemIcon>
+                  {showVotes ? (
+                    <Typography>{vote}</Typography>
+                  ) : vote === "" || vote === "-" ? (
+                    <Timer />
+                  ) : (
+                    <CheckCircle color={"action"} />
+                  )}
+                </ListItemIcon>
+                <ListItemText primary={name ? name : ""} />
+              </ListItem>
+            ))
+          : null}
       </List>
     </div>
   );
 };
 
 Results.propTypes = {
-  showVotes: PropTypes.bool.isRequired
+  isOwner: PropTypes.bool,
+  showVotes: PropTypes.bool.isRequired,
+  users: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+      active: PropTypes.bool.isRequired,
+      vote: PropTypes.string
+    })
+  )
 };
 
 export default Results;
