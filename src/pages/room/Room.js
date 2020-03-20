@@ -33,30 +33,37 @@ const Room = () => {
   const { pathname } = useLocation();
   const { currentUser } = useContext(AuthContext);
   const roomData = useRoom(id);
-  console.log(roomData);
+  const {
+    loading,
+    error,
+    exists,
+    ownerId,
+    messages,
+    sharedText,
+    addUser,
+    removeUser,
+    setSharedText,
+    handleVote,
+    showVotes,
+    clearVotes
+  } = roomData;
 
   useEffect(() => {
-    // On Mount validate if doc exists, if not redirect to home
     if (currentUser && currentUser.displayName) {
-      console.log(`set user`);
+      addUser();
     }
+    return () => removeUser();
   }, [currentUser]);
 
-  const clearVotes = () => {};
-
-  const showVotes = () => {};
-
-  const handleVote = () => {};
-
   // Loading while waiting for user
-  if (!currentUser) {
+  if (loading || !currentUser) {
     return <LoadingPage />;
   }
 
   // Redirect home if room doesnt exists
-  // if (!exists) {
-  //   return <Redirect to={"/"} />;
-  // }
+  if (!exists) {
+    return <Redirect to={"/"} />;
+  }
 
   if (currentUser && !currentUser.displayName) {
     return <NameForm />;
@@ -78,7 +85,12 @@ const Room = () => {
         <Divider />
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <RoomHeader clearVotes={clearVotes} showVotes={showVotes} />
+            <RoomHeader
+              sharedText={sharedText}
+              setSharedText={setSharedText}
+              clearVotes={clearVotes}
+              showVotes={showVotes}
+            />
           </Grid>
           <Grid item sm={6} xs={12}>
             <ButtonGrid handleVote={handleVote} />

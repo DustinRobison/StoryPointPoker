@@ -16,7 +16,7 @@ const useStyles = makeStyles(({ spacing }) => ({
   }
 }));
 
-const RoomHeader = ({ clearVotes, showVotes }) => {
+const RoomHeader = ({ sharedText, setSharedText, clearVotes, showVotes }) => {
   const classes = useStyles();
 
   return (
@@ -31,6 +31,8 @@ const RoomHeader = ({ clearVotes, showVotes }) => {
                 multiline
                 rows={3}
                 fullWidth
+                value={sharedText}
+                onChange={e => setSharedText(e.target.value)}
               />
               <div className={classes.buttonContainer}>
                 <Button
@@ -67,6 +69,8 @@ const RoomHeader = ({ clearVotes, showVotes }) => {
 };
 
 RoomHeader.propTypes = {
+  sharedText: PropTypes.string,
+  setSharedText: PropTypes.func,
   clearVotes: PropTypes.func,
   showVotes: PropTypes.func
 };

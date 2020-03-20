@@ -13,6 +13,9 @@ export const checkIfRoomExists = async roomName => {
 export const useRoom = roomName => {
   const { currentUser } = useContext(AuthContext);
   const [state, setState] = useState({
+    docRef: FirebaseApp.firestore()
+      .collection("/rooms")
+      .doc(roomName),
     loading: false,
     error: "",
     exists: true,
@@ -60,6 +63,25 @@ export const useRoom = roomName => {
     };
   }, [roomName, currentUser]);
 
+  const addUser = () => {
+    if (state.docRef && currentUser && currentUser.uid) {
+      state.docRef.update({
+        [`users.${currentUser.uid}`]: {
+          name: currentUser.displayName,
+          active: true
+        }
+      });
+    }
+  };
+
+  const removeUser = () => {
+    if (state.docRef && currentUser && currentUser.uid) {
+      state.docRef.update({
+        [`users.${currentUser.uid}.active`]: false
+      });
+    }
+  };
+
   const clearVotes = () => {
     console.log("clear votes");
   };
@@ -68,7 +90,21 @@ export const useRoom = roomName => {
 
   const handleVote = vote => {};
 
-  const setOpenText = text => {};
+  const setSharedText = sharedText => {
+    if (state.docRef) {
+      state.docRef.update({
+        sharedText
+      });
+    }
+  };
 
-  return { ...state, clearVotes, showVotes, handleVote, setOpenText };
+  return {
+    ...state,
+    addUser,
+    removeUser,
+    clearVotes,
+    showVotes,
+    handleVote,
+    setSharedText
+  };
 };

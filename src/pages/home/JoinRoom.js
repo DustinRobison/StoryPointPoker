@@ -6,6 +6,7 @@ import { useDebounce } from "../../helpers/Debounce";
 import FirebaseApp from "../../Firebase";
 import { AuthContext } from "../../components/auth/Auth";
 import { checkIfRoomExists } from "../../helpers/DbRoom";
+// import firebase from "firebase/firestore";
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
@@ -73,6 +74,7 @@ const JoinRoom = () => {
           users: {},
           sharedText: "",
           showVotes: false
+          // createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
       history.push(`/room/${roomName}`);
     } catch (error) {
