@@ -2,21 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a17e160a-c286-4fbe-bf88-4a931ad878da" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Firebase.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/auth/Auth.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/auth/PrivateRoute.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/loading/LoadingPage.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/home/CreateRoom.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/home/JoinRoom.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/session/NameForm.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/session/Session.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/session/ButtonGrid.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/session/Results.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/session/SessionHeader.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ContentRouter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ContentRouter.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/footer/SpFooter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/footer/SpFooter.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/home/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/home/Home.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/Reducers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/Reducers.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/reducers/UserReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/reducers/UserReducer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/session/Session.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/session/Session.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +66,8 @@
       <option name="presentableId" value="Default" />
       <updated>1584652339237</updated>
       <workItem from="1584652343685" duration="435000" />
-      <workItem from="1584652782215" duration="10652000" />
+      <workItem from="1584652782215" duration="10974000" />
+      <workItem from="1584672554923" duration="4120000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <created>1584652843904</created>
@@ -111,7 +104,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584657930069</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Create session management">
+      <created>1584663939335</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1584663939335</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -122,13 +122,14 @@
     <MESSAGE value="Hooked up firebase" />
     <MESSAGE value="CRA Template ready" />
     <MESSAGE value="Fixed fullwidth layout with footer" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed fullwidth layout with footer" />
+    <MESSAGE value="Create session management" />
+    <option name="LAST_COMMIT_MESSAGE" value="Create session management" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="1065" y="-1170" key="CommitChangelistDialog2" timestamp="1584657929624">
+    <state x="1065" y="-1170" key="CommitChangelistDialog2" timestamp="1584663938874">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="1065" y="-1170" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584657929624" />
+    <state x="1065" y="-1170" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584663938874" />
     <state x="1063" y="-975" key="EditFileWatcherDialog" timestamp="1584654749180">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
@@ -137,13 +138,17 @@
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
     <state x="906" y="-1121" key="SettingsEditor/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584654750220" />
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1584657931613">
+    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1584663941188">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584657931613" />
+    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584663941188" />
     <state x="586" y="-1029" width="782" height="550" key="find.popup" timestamp="1584659072997">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
     <state x="586" y="-1029" width="782" height="550" key="find.popup/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584659072997" />
+    <state x="1119" y="-1017" width="670" height="676" key="search.everywhere.popup" timestamp="1584674585447">
+      <screen x="-346" y="-1417" width="2560" height="1417" />
+    </state>
+    <state x="1119" y="-1017" width="670" height="676" key="search.everywhere.popup/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584674585447" />
   </component>
 </project>
