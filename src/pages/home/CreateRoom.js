@@ -16,20 +16,46 @@ const CreateRoom = () => {
   const classes = useStyles();
   const { currentUser } = useContext(AuthContext);
   const history = useHistory();
-  const [error, setError] = useState();
+  const [state, setState] = useState({
+    error: "",
+    isLoading: false
+  });
+  const { error, isLoading } = state;
 
-  const createRoom = () => {
-    initializeRoom()
-      .then(res => history.push(`/session/${res}`))
-      .catch(error => setError(error));
-  };
-
-  const initializeRoom = () => {
-    if (!currentUser) {
-      return Promise.reject("Cannot create room for null user!");
+  const createRoom = async () => {
+    try {
+      const request = await fetch(
+        `https://us-central1-storypointers.cloudfunctions.net/createRoom`,
+        {
+          method: "POST",
+          mode: "no-cors",
+          header: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST"
+          },
+          body: JSON.stringify({ userId: currentUser.uid })
+        }
+      );
+      console.log(request);
+      const res = await request.json();
+      console.log(res);
+      history.push(`/session/${res.room}`);
+    } catch (error) {
+      console.log(`error: ${error}`);
+      setState({
+        error: error.message,
+        isLoading: false
+      });
     }
-    return Promise.resolve("1");
   };
+
+  // initializeRoom()
+  //   .then(res => history.push(`/session/${res}`))
+  //   .catch(error => {
+  //     console.log(error);
+  //     setError(error.message);
+  //   });
 
   return (
     <Paper className={classes.root}>
@@ -46,6 +72,7 @@ const CreateRoom = () => {
             variant={"contained"}
             fullWidth
             onClick={createRoom}
+            disabled={isLoading}
           >
             Create A Room
           </Button>
