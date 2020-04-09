@@ -49,7 +49,11 @@ const MessageInput = ({ label, readOnly, parentMessage, submitMessage }) => {
           }}
           value={message}
           onChange={e => setMessage(e.target.value)}
-          helperText={message !== parentMessage ? "Not Sent Yet" : ""}
+          helperText={
+            message.length > 0 && message !== parentMessage
+              ? "Not Sent Yet"
+              : ""
+          }
         />
       </form>
     </div>
