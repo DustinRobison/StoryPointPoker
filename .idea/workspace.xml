@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a17e160a-c286-4fbe-bf88-4a931ad878da" name="Default Changelist" comment="Added some basic functionality and icons title">
-      <change afterPath="$PROJECT_DIR$/functions/functions/.eslintrc.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/functions/functions/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/functions/functions/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/functions/functions/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/functions/functions/package.json" afterDir="false" />
+    <list default="true" id="a17e160a-c286-4fbe-bf88-4a931ad878da" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/functions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/functions/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/helpers/DbRoom.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/DbRoom.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/helpers/StringHelpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/helpers/StringHelpers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/home/JoinRoom.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/home/JoinRoom.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/room/Results.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/Results.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/room/Room.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/Room.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/room/RoomHeader.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/RoomHeader.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,17 +43,21 @@
     <option name="version" value="1" />
   </component>
   <component name="ProjectId" id="1ZMcKXDMG1iwJALxdNQLDkHdGiZ" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/functions" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="prettierjs.PrettierConfiguration.Package" value="$PROJECT_DIR$/node_modules/prettier" />
     <property name="settings.editor.selected.configurable" value="watcher.settings" />
@@ -57,14 +65,15 @@
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/functions" />
-      <recent name="$PROJECT_DIR$/src/components/auth" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/pages/room" />
       <recent name="$PROJECT_DIR$/public" />
       <recent name="$PROJECT_DIR$/src/assets" />
       <recent name="$PROJECT_DIR$/functions/prodTest" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/functions" />
+      <recent name="$PROJECT_DIR$/src/components/auth" />
     </key>
   </component>
   <component name="RestClientSettings">
@@ -118,7 +127,13 @@
       <workItem from="1584672554923" duration="11235000" />
       <workItem from="1584719274708" duration="8975000" />
       <workItem from="1584734052787" duration="6611000" />
-      <workItem from="1584744412429" duration="1009000" />
+      <workItem from="1584744412429" duration="1733000" />
+      <workItem from="1584981912747" duration="1325000" />
+      <workItem from="1585153896513" duration="3910000" />
+      <workItem from="1585605070897" duration="2330000" />
+      <workItem from="1586205457558" duration="1024000" />
+      <workItem from="1586364825211" duration="7428000" />
+      <workItem from="1586377553228" duration="13119000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <created>1584652843904</created>
@@ -218,13 +233,21 @@
       <option name="project" value="LOCAL" />
       <updated>1584737737703</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Added not working functions to git repo">
+      <created>1584745459905</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1584745459905</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="First commit" />
     <MESSAGE value="Hooked up firebase" />
     <MESSAGE value="CRA Template ready" />
@@ -238,13 +261,14 @@
     <MESSAGE value="Created firebase realtime connection hook" />
     <MESSAGE value="Working Shared open text!" />
     <MESSAGE value="Basic Working functionality woo woo" />
-    <option name="LAST_COMMIT_MESSAGE" value="Basic Working functionality woo woo" />
+    <MESSAGE value="Added not working functions to git repo" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added not working functions to git repo" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2" timestamp="1584745395343">
+    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2" timestamp="1584745459174">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584745395343" />
+    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584745459174" />
     <state x="1063" y="-975" key="EditFileWatcherDialog" timestamp="1584654749180">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
@@ -269,14 +293,14 @@
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
     <state x="906" y="-1121" key="SettingsEditor/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584745417193" />
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1584737739074">
+    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1584745461609">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584737739074" />
-    <state x="586" y="-1029" width="782" height="550" key="find.popup" timestamp="1584739377333">
+    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584745461609" />
+    <state x="586" y="-1029" width="782" height="550" key="find.popup" timestamp="1586390163525">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="586" y="-1029" width="782" height="550" key="find.popup/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584739377333" />
+    <state x="586" y="-1029" width="782" height="550" key="find.popup/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1586390163525" />
     <state x="1119" y="-1017" width="670" height="676" key="search.everywhere.popup" timestamp="1584674585447">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>

@@ -1,13 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { Paper, Button, Grid, TextField, Typography } from "@material-ui/core";
+import firebase from "firebase/app";
+import "@firebase/firestore";
 import { useHistory } from "react-router-dom";
-import { useDebounce } from "../../helpers/Debounce";
+
 import FirebaseApp from "../../Firebase";
+import { useDebounce } from "../../helpers/Debounce";
 import { AuthContext } from "../../components/auth/Auth";
-import { checkIfRoomExists } from "../../helpers/DbRoom";
-import { lettersAndNumbersOnly } from "../../helpers/StringHelpers";
-// import firebase from "firebase/firestore";
+import { checkIfRoomExists } from "../room/DbRoom";
+import { simpleStringOnly } from "../../helpers/StringHelpers";
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
@@ -73,9 +75,15 @@ const JoinRoom = () => {
           ownerId: currentUser.uid,
           messages: [],
           users: {},
-          sharedText: "",
-          showVotes: false
-          // createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          showVotes: false,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          lastVoteTimestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          history: [
+            {
+              action: `${currentUser.displayName} has created room ${debouncedRoomName}`,
+              timestamp: new Date().toISOString()
+            }
+          ]
         });
       history.push(`/room/${roomName}`);
     } catch (error) {
@@ -98,14 +106,14 @@ const JoinRoom = () => {
         <Grid item xs={12}>
           <TextField
             label={"Room Name"}
-            helperText={"Numbers and letters only with at least 4 characters"}
+            helperText={"Some character restrictions apply"}
             fullWidth
             inputProps={{ style: { textAlign: "center" } }}
             value={roomName}
             onChange={e =>
               setState({
                 ...state,
-                roomName: lettersAndNumbersOnly(e.target.value)
+                roomName: simpleStringOnly(e.target.value)
               })
             }
           />

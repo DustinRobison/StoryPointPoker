@@ -1,37 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {
   Typography,
   List,
   ListItem,
-  ListItemText,
-  ListItemIcon
+  ListItemIcon,
+  ListItemSecondaryAction,
+  IconButton,
+  TextField
 } from "@material-ui/core";
-import { Timer, CheckCircle } from "@material-ui/icons";
+import {
+  Timer,
+  CheckCircle,
+  Delete as DeleteIcon,
+  Edit as EditIcon,
+  Save as SaveIcon
+} from "@material-ui/icons";
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
     padding: spacing(3)
-  },
-  listItem: {
-    borderBottom: "1px solid black"
   }
 }));
 
-const Results = ({ showVotes, users }) => {
+const Results = ({ showVotes, users, removeUser, isOwner, updateUserName }) => {
   const classes = useStyles();
+  const [state, setState] = useState({
+    isEditingName: false,
+    name: ""
+  });
+  const { isEditingName } = state;
   return (
     <div className={classes.root}>
       <Typography variant={"h6"}>Results</Typography>
       <List>
         {Array.isArray(users)
           ? users.map(({ name, vote, active, uid, isCurrentUser }, idx) => (
-              <ListItem
-                key={`${idx}-user`}
-                className={classes.listItem}
-                disabled={!active}
-              >
+              <ListItem key={`${idx}-user`} className={classes.listItem}>
                 <ListItemIcon>
                   {isCurrentUser || showVotes ? (
                     <Typography
@@ -46,7 +52,57 @@ const Results = ({ showVotes, users }) => {
                     <CheckCircle color={"action"} />
                   )}
                 </ListItemIcon>
-                <ListItemText primary={name ? name : ""} />
+                <TextField
+                  InputProps={{
+                    readOnly: !isCurrentUser && !isEditingName
+                  }}
+                  value={isCurrentUser && isEditingName ? state.name : name}
+                  onChange={e => setState({ ...state, name: e.target.value })}
+                />
+                <ListItemSecondaryAction>
+                  {isCurrentUser ? (
+                    isEditingName ? (
+                      <IconButton
+                        edge={"end"}
+                        aria-label={"Save"}
+                        onClick={() =>
+                          updateUserName(state.name)
+                            .then(res =>
+                              setState({
+                                ...state,
+                                isEditingName: false
+                              })
+                            )
+                            .catch(err => {})
+                        }
+                      >
+                        <SaveIcon />
+                      </IconButton>
+                    ) : (
+                      <IconButton
+                        edge={"end"}
+                        aria-label={"Edit Name"}
+                        onClick={() =>
+                          setState({
+                            ...state,
+                            name,
+                            isEditingName: true
+                          })
+                        }
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    )
+                  ) : isOwner ? (
+                    <IconButton
+                      edge={"end"}
+                      aria-label={"Remove User"}
+                      onClick={() => removeUser(uid)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  ) : null}
+                </ListItemSecondaryAction>
               </ListItem>
             ))
           : null}
@@ -61,11 +117,12 @@ Results.propTypes = {
   users: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
-      active: PropTypes.bool.isRequired,
       vote: PropTypes.string,
       isCurrentUser: PropTypes.bool
     })
-  )
+  ),
+  removeUser: PropTypes.func.isRequired,
+  updateUserName: PropTypes.func.isRequired
 };
 
 export default Results;

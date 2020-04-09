@@ -1,8 +1,10 @@
-import FirebaseApp from "../Firebase";
 import { useContext, useEffect, useState } from "react";
 import { reduce } from "lodash";
+import firebase from "firebase/app";
+import "@firebase/firestore";
 
-import { AuthContext } from "../components/auth/Auth";
+import FirebaseApp from "../../Firebase";
+import { AuthContext } from "../../components/auth/Auth";
 
 export const checkIfRoomExists = async roomName => {
   const fbDoc = await FirebaseApp.firestore()
@@ -24,7 +26,10 @@ export const useRoom = roomName => {
     ownerId: "",
     sharedText: "",
     showVotes: false,
-    messages: []
+    messages: [],
+    users: [],
+    history: [],
+    lastVoteTimestamp: 0
   });
 
   useEffect(() => {
@@ -43,7 +48,9 @@ export const useRoom = roomName => {
             sharedText,
             showVotes,
             users,
-            messages
+            messages,
+            history,
+            lastVoteTimestamp
           } = doc.data();
           setState({
             ...state,
@@ -53,7 +60,10 @@ export const useRoom = roomName => {
             sharedText,
             showVotes,
             users,
-            messages
+            messages,
+            history,
+            lastVoteTimestamp:
+              (lastVoteTimestamp && lastVoteTimestamp.seconds) || 0
           });
         });
     }
@@ -67,6 +77,7 @@ export const useRoom = roomName => {
   }, [roomName, currentUser]);
 
   const addUser = () => {
+    // Check for required data
     if (
       state.docRef &&
       currentUser &&
@@ -78,15 +89,19 @@ export const useRoom = roomName => {
           name: currentUser.displayName,
           active: true,
           vote: "-"
-        }
+        },
+        history: firebase.firestore.FieldValue.arrayUnion({
+          action: `User ${currentUser.displayName} has joined the room.`,
+          timestamp: new Date().toISOString()
+        })
       });
     }
   };
 
-  const removeUser = () => {
-    if (state.docRef && currentUser && currentUser.uid) {
+  const removeUser = uid => {
+    if (state.docRef) {
       state.docRef.update({
-        [`users.${currentUser.uid}.active`]: false
+        [`users.${uid}.active`]: false
       });
     }
   };
@@ -100,14 +115,44 @@ export const useRoom = roomName => {
         },
         {}
       );
-      state.docRef.update({ ...updateObject, showVotes: false });
+      state.docRef.update({
+        ...updateObject,
+        showVotes: false,
+        lastVoteTimestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        history: firebase.firestore.FieldValue.arrayUnion({
+          action: `${currentUser.displayName} has cleared the votes.`,
+          timestamp: new Date().toISOString()
+        })
+      });
+    }
+  };
+
+  const updateUserName = async name => {
+    if (state.docRef) {
+      const oldName = currentUser.displayName;
+      await currentUser.updateProfile({
+        displayName: name
+      });
+      await state.docRef.update({
+        [`users.${currentUser.uid}.name`]: name,
+        history: firebase.firestore.FieldValue.arrayUnion({
+          action: `User ${oldName} has changed names to ${name}.`,
+          timestamp: new Date().toISOString()
+        })
+      });
+      return;
     }
   };
 
   const setShowVotes = showVotes => {
     if (state.docRef) {
       state.docRef.update({
-        showVotes
+        showVotes,
+        lastVoteTimestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        history: firebase.firestore.FieldValue.arrayUnion({
+          action: `${currentUser.displayName} has shown the votes.`,
+          timestamp: new Date().toISOString()
+        })
       });
     }
   };
@@ -115,7 +160,11 @@ export const useRoom = roomName => {
   const handleVote = vote => {
     if (state.docRef) {
       state.docRef.update({
-        [`users.${currentUser.uid}.vote`]: vote
+        [`users.${currentUser.uid}.vote`]: vote,
+        history: firebase.firestore.FieldValue.arrayUnion({
+          action: `${currentUser.displayName} has voted.`,
+          timestamp: new Date().toISOString()
+        })
       });
     }
   };
@@ -135,6 +184,7 @@ export const useRoom = roomName => {
     clearVotes,
     setShowVotes,
     handleVote,
-    setSharedText
+    setSharedText,
+    updateUserName
   };
 };

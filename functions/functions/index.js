@@ -1,8 +1,21 @@
+// The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
 const functions = require("firebase-functions");
+const express = require("express");
+const cors = require("cors");
+const validator = require("validator");
+
+const { sendWelcomeEmail } = require("./actions/Email");
+
+// Initialize Express
+const app = express();
+// Automatically allow cross-origin requests
+app.use(cors({ origin: true }));
 
 // The Firebase Admin SDK to access the Firebase Realtime Database.
 const admin = require("firebase-admin");
 admin.initializeApp();
+
+exports.api = functions.https.onRequest(app);
 
 // exports.deleteOldItems = functions.database.ref('/rooms/{roomName}')
 //     .onWrite((change, context) => {

@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
-import { TextField, Button, Grid, Typography } from "@material-ui/core";
+import { Button, Grid, Typography } from "@material-ui/core";
+import { Skeleton } from "@material-ui/lab";
 import Timer from "react-compound-timer";
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles(({ spacing, palette }) => ({
   root: {
     paddingTop: spacing(3)
   },
@@ -13,10 +14,24 @@ const useStyles = makeStyles(({ spacing }) => ({
     paddingBottom: spacing(1),
     display: "flex",
     justifyContent: "space-around"
+  },
+  messageContainer: {
+    height: "10rem",
+    border: `1px solid ${palette.primary.light}`,
+    paddingBottom: spacing(1)
+  },
+  center: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
+    width: "100%"
   }
 }));
 
 const RoomHeader = ({
+  lastVoteTimestamp,
+  messages,
   sharedText,
   setSharedText,
   clearVotes,
@@ -24,57 +39,73 @@ const RoomHeader = ({
   setShowVotes
 }) => {
   const classes = useStyles();
+  const [state, setState] = useState({
+    loading: false,
+    message: ""
+  });
+  const initialTime =
+    lastVoteTimestamp === 0
+      ? 0
+      : Math.floor(Date.now() / 1000) - lastVoteTimestamp;
+
+  const handleMessageSubmit = e => {
+    e.preventDefault();
+    if (state.message) {
+      console.log("submit");
+      setState({
+        ...state,
+        loading: true
+      });
+    }
+  };
 
   return (
     <div className={classes.root}>
-      <Timer formatValue={value => `${value < 10 ? `0${value}` : value}`}>
-        {({ reset }) => (
-          <Grid container spacing={3}>
-            <Grid item sm={9} xs={12}>
-              <TextField
-                label={"Shared Open Text"}
-                variant={"outlined"}
-                multiline
-                rows={3}
-                fullWidth
-                value={sharedText}
-                onChange={e => setSharedText(e.target.value)}
-              />
-              <div className={classes.buttonContainer}>
-                <Button
-                  variant={"contained"}
-                  color={"primary"}
-                  onClick={() => {
-                    reset();
-                    clearVotes();
-                  }}
-                >
-                  Clear Votes
-                </Button>
-                <Button
-                  variant={"contained"}
-                  color={"primary"}
-                  onClick={() => setShowVotes(!showVotes)}
-                >
-                  {showVotes ? "Hide Votes" : "Show Votes"}
-                </Button>
-              </div>
-            </Grid>
-            <Grid item sm={3} xs={12}>
+      <Grid container spacing={3}>
+        <Grid item sm={9} xs={12}>
+          <div className={classes.buttonContainer}>
+            <Button
+              variant={"contained"}
+              color={"primary"}
+              onClick={() => {
+                clearVotes();
+              }}
+            >
+              Clear Votes
+            </Button>
+            <Button
+              variant={"contained"}
+              color={"primary"}
+              onClick={() => setShowVotes(!showVotes)}
+            >
+              {showVotes ? "Hide Votes" : "Show Votes"}
+            </Button>
+          </div>
+        </Grid>
+        <Grid item sm={3} xs={12}>
+          {lastVoteTimestamp === 0 ? (
+            <Skeleton variant={"text"} width={200} height={40} />
+          ) : (
+            <Timer
+              initialTime={initialTime}
+              formatValue={value => `${value < 10 ? `0${value}` : value}`}
+            >
               <Typography variant={"h5"} align={"center"}>
                 <Timer.Hours />:
                 <Timer.Minutes />:
                 <Timer.Seconds />
               </Typography>
-            </Grid>
-          </Grid>
-        )}
-      </Timer>
+            </Timer>
+          )}
+        </Grid>
+      </Grid>
     </div>
   );
 };
 
 RoomHeader.propTypes = {
+  messages: PropTypes.arrayOf(PropTypes.object),
+  lastVoteTimestamp: PropTypes.number.isRequired,
   showVotes: PropTypes.bool,
   sharedText: PropTypes.string,
   setSharedText: PropTypes.func,

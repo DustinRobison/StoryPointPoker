@@ -10,7 +10,7 @@ import LoadingPage from "../../components/loading/LoadingPage";
 import ButtonGrid from "./ButtonGrid";
 import RoomHeader from "./RoomHeader";
 import Results from "./Results";
-import { useRoom } from "../../helpers/DbRoom";
+import { useRoom } from "./DbRoom";
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -38,15 +38,17 @@ const Room = () => {
     exists,
     ownerId,
     users,
-    // messages,
+    messages,
     sharedText,
     showVotes,
+    lastVoteTimestamp,
     addUser,
     removeUser,
     setSharedText,
     handleVote,
     setShowVotes,
-    clearVotes
+    clearVotes,
+    updateUserName
   } = roomData;
 
   useEffect(() => {
@@ -54,10 +56,14 @@ const Room = () => {
   }, [id]);
 
   useEffect(() => {
-    if (currentUser && currentUser.displayName) {
-      addUser();
+    let uid;
+    if (currentUser && currentUser.uid && currentUser.displayName) {
+      uid = currentUser.uid;
+      if (currentUser && currentUser.displayName) {
+        addUser();
+      }
     }
-    return () => removeUser();
+    return () => (uid ? removeUser(uid) : {});
     // eslint-disable-next-line
   }, [currentUser]);
 
@@ -96,6 +102,8 @@ const Room = () => {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <RoomHeader
+              messages={messages}
+              lastVoteTimestamp={lastVoteTimestamp}
               sharedText={sharedText}
               setSharedText={setSharedText}
               clearVotes={clearAllUserVotes}
@@ -112,12 +120,17 @@ const Room = () => {
               showVotes={showVotes}
               users={
                 isObject(users)
-                  ? Object.keys(users).map(key => ({
-                      ...users[key],
-                      isCurrentUser: key === currentUser.uid
-                    }))
+                  ? Object.keys(users)
+                      .filter(key => users[key].active)
+                      .map(key => ({
+                        ...users[key],
+                        isCurrentUser: key === currentUser.uid,
+                        uid: key
+                      }))
                   : []
               }
+              removeUser={removeUser}
+              updateUserName={updateUserName}
             />
           </Grid>
           <Grid item xs={12}>
