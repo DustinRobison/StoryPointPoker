@@ -7,12 +7,12 @@ import { AuthContext } from "../../components/auth/Auth";
 import NameForm from "./NameForm";
 import LoadingPage from "../../components/loading/LoadingPage";
 import ButtonGrid from "./ButtonGrid";
-import Results from "./Results";
 import { useRoom } from "./DbRoom";
 import RoomVotesManager from "./RoomVotesManager";
 import RoomResults from "./RoomResults";
 import RoomTimer from "./RoomTimer";
 import MessageInput from "../../components/message/MessageInput";
+import RoomUsersList from "./RoomUsersList";
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -135,7 +135,7 @@ const Room = () => {
             <ButtonGrid handleVote={handleVote} />
           </Grid>
           <Grid item sm={6} xs={12}>
-            <Results
+            <RoomUsersList
               isOwner={isOwner}
               showVotes={showVotes}
               users={getActiveUsersUids().map(key => ({

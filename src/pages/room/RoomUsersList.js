@@ -1,22 +1,22 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {
-  Typography,
+  IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemSecondaryAction,
-  IconButton,
-  TextField
+  TextField,
+  Typography
 } from "@material-ui/core";
 import {
-  Timer,
   CheckCircle,
   Delete as DeleteIcon,
   Edit as EditIcon,
-  Save as SaveIcon
+  Save as SaveIcon,
+  Timer
 } from "@material-ui/icons";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
@@ -24,7 +24,13 @@ const useStyles = makeStyles(({ spacing }) => ({
   }
 }));
 
-const Results = ({ showVotes, users, removeUser, isOwner, updateUserName }) => {
+const RoomUsersList = ({
+  showVotes,
+  users,
+  removeUser,
+  isOwner,
+  updateUserName
+}) => {
   const classes = useStyles();
   const [state, setState] = useState({
     isEditingName: false,
@@ -33,7 +39,6 @@ const Results = ({ showVotes, users, removeUser, isOwner, updateUserName }) => {
   const { isEditingName } = state;
   return (
     <div className={classes.root}>
-      <Typography variant={"h6"}>Results</Typography>
       <List>
         {Array.isArray(users)
           ? users.map(({ name, vote, active, uid, isCurrentUser }, idx) => (
@@ -54,7 +59,7 @@ const Results = ({ showVotes, users, removeUser, isOwner, updateUserName }) => {
                 </ListItemIcon>
                 <TextField
                   InputProps={{
-                    readOnly: !isCurrentUser && !isEditingName
+                    readOnly: !isCurrentUser || !isEditingName
                   }}
                   value={isCurrentUser && isEditingName ? state.name : name}
                   onChange={e => setState({ ...state, name: e.target.value })}
@@ -111,7 +116,7 @@ const Results = ({ showVotes, users, removeUser, isOwner, updateUserName }) => {
   );
 };
 
-Results.propTypes = {
+RoomUsersList.propTypes = {
   isOwner: PropTypes.bool,
   showVotes: PropTypes.bool.isRequired,
   users: PropTypes.arrayOf(
@@ -125,4 +130,4 @@ Results.propTypes = {
   updateUserName: PropTypes.func.isRequired
 };
 
-export default Results;
+export default RoomUsersList;

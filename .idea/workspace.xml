@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a17e160a-c286-4fbe-bf88-4a931ad878da" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.firebase/hosting.YnVpbGQ.cache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/room/RoomUsersList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.firebase/hosting.YnVpbGQ.cache" beforeDir="false" afterPath="$PROJECT_DIR$/.firebase/hosting.YnVpbGQ.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/message/MessageInput.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/message/MessageInput.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/room/Results.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/room/Room.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/Room.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,15 +60,15 @@
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/functions" />
+      <recent name="$PROJECT_DIR$/src/components/auth" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/pages/room" />
       <recent name="$PROJECT_DIR$/public" />
       <recent name="$PROJECT_DIR$/src/assets" />
       <recent name="$PROJECT_DIR$/functions/prodTest" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/functions" />
-      <recent name="$PROJECT_DIR$/src/components/auth" />
     </key>
   </component>
   <component name="RestClientSettings">
@@ -127,7 +129,7 @@
       <workItem from="1586205457558" duration="1024000" />
       <workItem from="1586364825211" duration="7428000" />
       <workItem from="1586377553228" duration="13316000" />
-      <workItem from="1586453089455" duration="7977000" />
+      <workItem from="1586453089455" duration="11766000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <created>1584652843904</created>
@@ -255,7 +257,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586465298062</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Added fix for helper text">
+      <created>1586465635958</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1586465635958</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -280,13 +289,14 @@
     <MESSAGE value="Can kick users and edit name with messages started" />
     <MESSAGE value="Updated room header a lot" />
     <MESSAGE value="Added leader functionality" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added leader functionality" />
+    <MESSAGE value="Added fix for helper text" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added fix for helper text" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2" timestamp="1586465297626">
+    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2" timestamp="1586465635533">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1586465297626" />
+    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1586465635533" />
     <state x="1063" y="-975" key="EditFileWatcherDialog" timestamp="1584654749180">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
@@ -311,10 +321,10 @@
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
     <state x="906" y="-1121" key="SettingsEditor/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584745417193" />
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1586465299288">
+    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1586465637435">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1586465299288" />
+    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1586465637435" />
     <state x="586" y="-1029" width="782" height="550" key="find.popup" timestamp="1586457170747">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
