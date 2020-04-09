@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { reduce } from "lodash";
+import { isObject, reduce } from "lodash";
 import firebase from "firebase/app";
 import "@firebase/firestore";
 
@@ -31,6 +31,20 @@ export const useRoom = roomName => {
     history: [],
     lastVoteTimestamp: 0
   });
+
+  const {
+    docRef
+    // loading,
+    // error,
+    // exists,
+    // ownerId,
+    // sharedText,
+    // showVotes,
+    // messages,
+    // users,
+    // history,
+    // lastVoteTimestamp
+  } = state;
 
   useEffect(() => {
     let unsubscribe;
@@ -67,24 +81,21 @@ export const useRoom = roomName => {
           });
         });
     }
-    return () => {
-      if (unsubscribe) {
-        console.log("unsubscribing from connection");
-        unsubscribe();
-      }
-    };
+    return () => (unsubscribe ? unsubscribe() : {});
     // eslint-disable-next-line
   }, [roomName, currentUser]);
 
+  const getActiveUsersUids = () => {
+    const { users } = state;
+    return isObject(users)
+      ? Object.keys(users).filter(key => users[key].active)
+      : [];
+  };
+
   const addUser = () => {
     // Check for required data
-    if (
-      state.docRef &&
-      currentUser &&
-      currentUser.uid &&
-      currentUser.displayName
-    ) {
-      state.docRef.update({
+    if (docRef && currentUser && currentUser.uid && currentUser.displayName) {
+      docRef.update({
         [`users.${currentUser.uid}`]: {
           name: currentUser.displayName,
           active: true,
@@ -99,15 +110,16 @@ export const useRoom = roomName => {
   };
 
   const removeUser = uid => {
-    if (state.docRef) {
-      state.docRef.update({
+    if (docRef) {
+      docRef.update({
         [`users.${uid}.active`]: false
       });
     }
   };
 
-  const clearVotes = userUids => {
-    if (state.docRef && Array.isArray(userUids)) {
+  const clearVotes = () => {
+    if (docRef) {
+      const userUids = getActiveUsersUids();
       const updateObject = reduce(
         userUids,
         (acc, uid) => {
@@ -115,7 +127,7 @@ export const useRoom = roomName => {
         },
         {}
       );
-      state.docRef.update({
+      docRef.update({
         ...updateObject,
         showVotes: false,
         lastVoteTimestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -128,25 +140,24 @@ export const useRoom = roomName => {
   };
 
   const updateUserName = async name => {
-    if (state.docRef) {
+    if (docRef) {
       const oldName = currentUser.displayName;
       await currentUser.updateProfile({
         displayName: name
       });
-      await state.docRef.update({
+      await docRef.update({
         [`users.${currentUser.uid}.name`]: name,
         history: firebase.firestore.FieldValue.arrayUnion({
           action: `User ${oldName} has changed names to ${name}.`,
           timestamp: new Date().toISOString()
         })
       });
-      return;
     }
   };
 
   const setShowVotes = showVotes => {
-    if (state.docRef) {
-      state.docRef.update({
+    if (docRef) {
+      docRef.update({
         showVotes,
         lastVoteTimestamp: firebase.firestore.FieldValue.serverTimestamp(),
         history: firebase.firestore.FieldValue.arrayUnion({
@@ -158,8 +169,8 @@ export const useRoom = roomName => {
   };
 
   const handleVote = vote => {
-    if (state.docRef) {
-      state.docRef.update({
+    if (docRef) {
+      docRef.update({
         [`users.${currentUser.uid}.vote`]: vote,
         history: firebase.firestore.FieldValue.arrayUnion({
           action: `${currentUser.displayName} has voted.`,
@@ -170,8 +181,8 @@ export const useRoom = roomName => {
   };
 
   const setSharedText = sharedText => {
-    if (state.docRef) {
-      state.docRef.update({
+    if (docRef) {
+      docRef.update({
         sharedText
       });
     }
@@ -185,6 +196,7 @@ export const useRoom = roomName => {
     setShowVotes,
     handleVote,
     setSharedText,
-    updateUserName
+    updateUserName,
+    getActiveUsersUids
   };
 };

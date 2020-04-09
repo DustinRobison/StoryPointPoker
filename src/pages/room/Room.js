@@ -2,15 +2,15 @@ import React, { useContext, useEffect } from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { Redirect, useParams, useLocation } from "react-router-dom";
 import { Paper, Typography, Link, Divider, Grid } from "@material-ui/core";
-import { isObject } from "lodash";
 
 import { AuthContext } from "../../components/auth/Auth";
 import NameForm from "./NameForm";
 import LoadingPage from "../../components/loading/LoadingPage";
 import ButtonGrid from "./ButtonGrid";
-import RoomHeader from "./RoomHeader";
 import Results from "./Results";
 import { useRoom } from "./DbRoom";
+import RoomVotesManager from "./RoomVotesManager";
+import RoomResults from "./RoomResults";
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -39,7 +39,6 @@ const Room = () => {
     ownerId,
     users,
     messages,
-    sharedText,
     showVotes,
     lastVoteTimestamp,
     addUser,
@@ -48,7 +47,8 @@ const Room = () => {
     handleVote,
     setShowVotes,
     clearVotes,
-    updateUserName
+    updateUserName,
+    getActiveUsersUids
   } = roomData;
 
   useEffect(() => {
@@ -81,10 +81,6 @@ const Room = () => {
     return <NameForm addUser={addUser} />;
   }
 
-  const clearAllUserVotes = () => {
-    clearVotes(Object.keys(users));
-  };
-
   return (
     <div className={classes.root}>
       <Paper className={classes.contentContainer}>
@@ -100,15 +96,20 @@ const Room = () => {
         </Typography>
         <Divider />
         <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <RoomHeader
-              messages={messages}
-              lastVoteTimestamp={lastVoteTimestamp}
-              sharedText={sharedText}
-              setSharedText={setSharedText}
-              clearVotes={clearAllUserVotes}
-              showVotes={showVotes}
+          <Grid item sm={6} xs={12}>
+            <RoomVotesManager
               setShowVotes={setShowVotes}
+              showVotes={showVotes}
+              clearVotes={clearVotes}
+            />
+          </Grid>
+          <Grid item sm={6} xs={12}>
+            <RoomResults
+              showVotes={showVotes}
+              lastVoteTimestamp={lastVoteTimestamp}
+              votes={getActiveUsersUids().map(
+                activeUid => users[activeUid].vote
+              )}
             />
           </Grid>
           <Grid item sm={6} xs={12}>
@@ -118,17 +119,11 @@ const Room = () => {
             <Results
               isOwner={ownerId === currentUser.uid}
               showVotes={showVotes}
-              users={
-                isObject(users)
-                  ? Object.keys(users)
-                      .filter(key => users[key].active)
-                      .map(key => ({
-                        ...users[key],
-                        isCurrentUser: key === currentUser.uid,
-                        uid: key
-                      }))
-                  : []
-              }
+              users={getActiveUsersUids().map(key => ({
+                ...users[key],
+                isCurrentUser: key === currentUser.uid,
+                uid: key
+              }))}
               removeUser={removeUser}
               updateUserName={updateUserName}
             />
