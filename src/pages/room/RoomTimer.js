@@ -11,9 +11,9 @@ const useStyles = makeStyles(({ spacing }) => ({
   }
 }));
 
-const RoomTimer = () => {
+const RoomTimer = ({ lastVoteTimestamp }) => {
   const classes = useStyles();
-  const { seconds, minutes, hours, reset, pause, start } = useStopwatch({
+  const { seconds, minutes, hours, reset } = useStopwatch({
     autoStart: true
   });
   useEffect(() => {

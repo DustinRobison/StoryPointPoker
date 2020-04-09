@@ -2,15 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a17e160a-c286-4fbe-bf88-4a931ad878da" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pages/room/RoomResults.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/room/RoomTimer.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/room/RoomVotesManager.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/message/MessageInput.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/home/JoinRoom.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/home/JoinRoom.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/room/DbRoom.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/DbRoom.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/room/Room.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/Room.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/room/RoomHeader.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/room/RoomResults.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/RoomResults.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/room/RoomTimer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/RoomTimer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/room/RoomVotesManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/RoomVotesManager.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,7 +133,7 @@
       <workItem from="1586205457558" duration="1024000" />
       <workItem from="1586364825211" duration="7428000" />
       <workItem from="1586377553228" duration="13316000" />
-      <workItem from="1586453089455" duration="4808000" />
+      <workItem from="1586453089455" duration="7710000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <created>1584652843904</created>
@@ -247,7 +247,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586392558114</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="Updated room header a lot">
+      <created>1586459304870</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1586459304870</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -270,13 +277,14 @@
     <MESSAGE value="Basic Working functionality woo woo" />
     <MESSAGE value="Added not working functions to git repo" />
     <MESSAGE value="Can kick users and edit name with messages started" />
-    <option name="LAST_COMMIT_MESSAGE" value="Can kick users and edit name with messages started" />
+    <MESSAGE value="Updated room header a lot" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated room header a lot" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2" timestamp="1586392557662">
+    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2" timestamp="1586459304363">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1586392557662" />
+    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1586459304363" />
     <state x="1063" y="-975" key="EditFileWatcherDialog" timestamp="1584654749180">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
@@ -301,10 +309,10 @@
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
     <state x="906" y="-1121" key="SettingsEditor/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584745417193" />
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1586392559682">
+    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1586459306540">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1586392559682" />
+    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1586459306540" />
     <state x="586" y="-1029" width="782" height="550" key="find.popup" timestamp="1586457170747">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>

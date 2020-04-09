@@ -83,7 +83,8 @@ const JoinRoom = () => {
               action: `${currentUser.displayName} has created room ${debouncedRoomName}`,
               timestamp: new Date().toISOString()
             }
-          ]
+          ],
+          leaderOnly: false
         });
       history.push(`/room/${roomName}`);
     } catch (error) {

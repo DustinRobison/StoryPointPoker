@@ -29,7 +29,8 @@ export const useRoom = roomName => {
     messages: [],
     users: [],
     history: [],
-    lastVoteTimestamp: 0
+    lastVoteTimestamp: 0,
+    leaderOnly: false
   });
 
   const {
@@ -64,7 +65,8 @@ export const useRoom = roomName => {
             users,
             messages,
             history,
-            lastVoteTimestamp
+            lastVoteTimestamp,
+            leaderOnly
           } = doc.data();
           setState({
             ...state,
@@ -77,7 +79,8 @@ export const useRoom = roomName => {
             messages,
             history,
             lastVoteTimestamp:
-              (lastVoteTimestamp && lastVoteTimestamp.seconds) || 0
+              (lastVoteTimestamp && lastVoteTimestamp.seconds) || 0,
+            leaderOnly
           });
         });
     }
@@ -188,6 +191,14 @@ export const useRoom = roomName => {
     }
   };
 
+  const toggleLeaderOnlyActions = () => {
+    if (docRef) {
+      docRef.update({
+        leaderOnly: !state.leaderOnly
+      });
+    }
+  };
+
   return {
     ...state,
     addUser,
@@ -197,6 +208,7 @@ export const useRoom = roomName => {
     handleVote,
     setSharedText,
     updateUserName,
-    getActiveUsersUids
+    getActiveUsersUids,
+    toggleLeaderOnlyActions
   };
 };

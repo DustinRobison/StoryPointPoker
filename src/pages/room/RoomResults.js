@@ -1,6 +1,7 @@
 import React from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { Typography, Divider, Box } from "@material-ui/core";
+import { toNumber, isNaN } from "lodash";
 import PropTypes from "prop-types";
 import { Decimal } from "decimal.js";
 
@@ -16,15 +17,14 @@ const RoomResults = ({ votes }) => {
   const getAverageVote = () => {
     const sumObject = votes.reduce(
       (acc, vote) => {
-        try {
-          const voteNumber = parseInt(vote);
-          return {
-            total: acc.total + voteNumber,
-            votes: acc.votes + 1
-          };
-        } catch (err) {
+        const voteNumber = toNumber(vote);
+        if (isNaN(voteNumber)) {
           return acc;
         }
+        return {
+          total: acc.total + voteNumber,
+          votes: acc.votes + 1
+        };
       },
       { total: 0, votes: 0 }
     );

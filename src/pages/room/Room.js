@@ -11,6 +11,8 @@ import Results from "./Results";
 import { useRoom } from "./DbRoom";
 import RoomVotesManager from "./RoomVotesManager";
 import RoomResults from "./RoomResults";
+import RoomTimer from "./RoomTimer";
+import MessageInput from "../../components/message/MessageInput";
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -38,7 +40,8 @@ const Room = () => {
     exists,
     ownerId,
     users,
-    messages,
+    sharedText,
+    // messages,
     showVotes,
     lastVoteTimestamp,
     addUser,
@@ -48,8 +51,11 @@ const Room = () => {
     setShowVotes,
     clearVotes,
     updateUserName,
-    getActiveUsersUids
+    getActiveUsersUids,
+    leaderOnly,
+    toggleLeaderOnlyActions
   } = roomData;
+  const isOwner = currentUser && currentUser.uid && ownerId === currentUser.uid;
 
   useEffect(() => {
     document.title = `SPP: ${id}`;
@@ -97,27 +103,40 @@ const Room = () => {
         <Divider />
         <Grid container spacing={3}>
           <Grid item sm={6} xs={12}>
+            <MessageInput
+              label={"Description set by room leader"}
+              readOnly={!isOwner}
+              parentMessage={sharedText}
+              submitMessage={setSharedText}
+            />
             <RoomVotesManager
               setShowVotes={setShowVotes}
               showVotes={showVotes}
               clearVotes={clearVotes}
+              isOwner={isOwner}
+              leaderOnly={leaderOnly}
+              toggleLeaderOnlyActions={toggleLeaderOnlyActions}
             />
           </Grid>
           <Grid item sm={6} xs={12}>
-            <RoomResults
-              showVotes={showVotes}
-              lastVoteTimestamp={lastVoteTimestamp}
-              votes={getActiveUsersUids().map(
-                activeUid => users[activeUid].vote
-              )}
-            />
+            {showVotes ? (
+              <RoomResults
+                showVotes={showVotes}
+                lastVoteTimestamp={lastVoteTimestamp}
+                votes={getActiveUsersUids().map(
+                  activeUid => users[activeUid].vote
+                )}
+              />
+            ) : (
+              <RoomTimer lastVoteTimestamp={lastVoteTimestamp} />
+            )}
           </Grid>
           <Grid item sm={6} xs={12}>
             <ButtonGrid handleVote={handleVote} />
           </Grid>
           <Grid item sm={6} xs={12}>
             <Results
-              isOwner={ownerId === currentUser.uid}
+              isOwner={isOwner}
               showVotes={showVotes}
               users={getActiveUsersUids().map(key => ({
                 ...users[key],
