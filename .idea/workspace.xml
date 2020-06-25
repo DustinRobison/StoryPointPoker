@@ -2,10 +2,24 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a17e160a-c286-4fbe-bf88-4a931ad878da" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pages/room/RoomUsersList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.firebase/hosting.YnVpbGQ.cache" beforeDir="false" afterPath="$PROJECT_DIR$/.firebase/hosting.YnVpbGQ.cache" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/functions/http/test1.http" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/functions/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/functions/triggers/DeleteOldRooms" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/storypointers-firebase-key.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/watcherTasks.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/watcherTasks.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/room/Results.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/functions/.eslintrc.json" beforeDir="false" afterPath="$PROJECT_DIR$/functions/.eslintrc.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/functions/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/functions/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/functions/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/functions/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/functions/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/functions/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/functions/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/prodTest/createRoom.http" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/home/JoinRoom.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/home/JoinRoom.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/room/Room.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/Room.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -31,6 +45,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path />
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
+  </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="xvlosh86" />
   </component>
@@ -43,37 +63,57 @@
   </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="TERMINAL_CUSTOM_COMMANDS_GOT_IT" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="JavaScript" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="prettierjs.PrettierConfiguration.NodeInterpreter" value="/usr/local/bin/node" />
     <property name="prettierjs.PrettierConfiguration.Package" value="$PROJECT_DIR$/node_modules/prettier" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
     <property name="settings.editor.selected.configurable" value="watcher.settings" />
     <property name="show.migrate.to.gradle.popup" value="false" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/functions" />
-      <recent name="$PROJECT_DIR$/src/components/auth" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/pages/room" />
       <recent name="$PROJECT_DIR$/public" />
       <recent name="$PROJECT_DIR$/src/assets" />
       <recent name="$PROJECT_DIR$/functions/prodTest" />
     </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/functions" />
+      <recent name="$PROJECT_DIR$/src/components/auth" />
+    </key>
   </component>
   <component name="RestClientSettings">
     <option name="REQUEST_HISTORY">
       <list>
+        <RestClientRequest>
+          <option name="httpMethod" value="GET" />
+          <option name="urlBase" value="https://us-central1-storypointers.cloudfunctions.net/helloWorld" />
+          <option name="urlPath" value="" />
+          <option name="headers">
+            <list>
+              <KeyValuePair>
+                <option name="key" value="Accept" />
+                <option name="value" value="application/json" />
+              </KeyValuePair>
+            </list>
+          </option>
+          <option name="textToSend" value="" />
+          <option name="filesToSend" value="" />
+        </RestClientRequest>
         <RestClientRequest>
           <option name="httpMethod" value="POST" />
           <option name="urlBase" value="https://us-central1-storypointers.cloudfunctions.net/createRoom" />
@@ -93,15 +133,19 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="HTTP Request.createRoom#1 (1)">
+  <component name="RunManager" selected="HTTP Request.test1#1">
     <configuration name="createRoom#1 (1)" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" path="$PROJECT_DIR$/functions/prodTest/createRoom.http" runType="Run single request">
       <method v="2" />
     </configuration>
     <configuration name="createRoom#1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" path="$PROJECT_DIR$/createRoom.http" runType="Run single request">
       <method v="2" />
     </configuration>
+    <configuration name="test1#1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" path="$PROJECT_DIR$/functions/http/test1.http" runType="Run single request">
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="HTTP Request.test1#1" />
         <item itemvalue="HTTP Request.createRoom#1 (1)" />
         <item itemvalue="HTTP Request.createRoom#1" />
       </list>
@@ -130,6 +174,9 @@
       <workItem from="1586364825211" duration="7428000" />
       <workItem from="1586377553228" duration="13316000" />
       <workItem from="1586453089455" duration="11766000" />
+      <workItem from="1591829271414" duration="138000" />
+      <workItem from="1593029630942" duration="185000" />
+      <workItem from="1593034454013" duration="8535000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <created>1584652843904</created>
@@ -268,7 +315,7 @@
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="2" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
@@ -293,6 +340,10 @@
     <option name="LAST_COMMIT_MESSAGE" value="Added fix for helper text" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="3121" y="130" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1593041964270">
+      <screen x="1680" y="-367" width="2560" height="1417" />
+    </state>
+    <state x="3121" y="130" key="#com.intellij.fileTypes.FileTypeChooser/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593041964270" />
     <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2" timestamp="1586465635533">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
@@ -301,26 +352,31 @@
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
     <state x="1063" y="-975" key="EditFileWatcherDialog/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584654749180" />
-    <state width="1440" height="324" key="GridCell.Tab.0.bottom" timestamp="1584683893317">
-      <screen x="-346" y="-1417" width="2560" height="1417" />
+    <state width="1188" height="335" key="GridCell.Tab.0.bottom" timestamp="1593041965438">
+      <screen x="1680" y="-367" width="2560" height="1417" />
     </state>
     <state width="1440" height="324" key="GridCell.Tab.0.bottom/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584683893317" />
-    <state width="1440" height="324" key="GridCell.Tab.0.center" timestamp="1584683893316">
-      <screen x="-346" y="-1417" width="2560" height="1417" />
+    <state width="1188" height="335" key="GridCell.Tab.0.bottom/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593041965438" />
+    <state width="1188" height="335" key="GridCell.Tab.0.center" timestamp="1593041965437">
+      <screen x="1680" y="-367" width="2560" height="1417" />
     </state>
     <state width="1440" height="324" key="GridCell.Tab.0.center/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584683893316" />
-    <state width="1440" height="324" key="GridCell.Tab.0.left" timestamp="1584683893316">
-      <screen x="-346" y="-1417" width="2560" height="1417" />
+    <state width="1188" height="335" key="GridCell.Tab.0.center/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593041965437" />
+    <state width="1188" height="335" key="GridCell.Tab.0.left" timestamp="1593041965437">
+      <screen x="1680" y="-367" width="2560" height="1417" />
     </state>
     <state width="1440" height="324" key="GridCell.Tab.0.left/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584683893316" />
-    <state width="1440" height="324" key="GridCell.Tab.0.right" timestamp="1584683893317">
-      <screen x="-346" y="-1417" width="2560" height="1417" />
+    <state width="1188" height="335" key="GridCell.Tab.0.left/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593041965437" />
+    <state width="1188" height="335" key="GridCell.Tab.0.right" timestamp="1593041965438">
+      <screen x="1680" y="-367" width="2560" height="1417" />
     </state>
     <state width="1440" height="324" key="GridCell.Tab.0.right/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584683893317" />
-    <state x="906" y="-1121" key="SettingsEditor" timestamp="1584745417193">
-      <screen x="-346" y="-1417" width="2560" height="1417" />
+    <state width="1188" height="335" key="GridCell.Tab.0.right/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593041965438" />
+    <state x="2932" y="-71" key="SettingsEditor" timestamp="1593043785625">
+      <screen x="1680" y="-367" width="2560" height="1417" />
     </state>
     <state x="906" y="-1121" key="SettingsEditor/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584745417193" />
+    <state x="2932" y="-71" key="SettingsEditor/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593043785625" />
     <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1586465637435">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
@@ -329,6 +385,10 @@
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
     <state x="586" y="-1029" width="782" height="550" key="find.popup/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1586457170747" />
+    <state x="3148" y="105" key="jetbrains.nodejs.interpreters-dialog" timestamp="1593042921461">
+      <screen x="1680" y="-367" width="2560" height="1417" />
+    </state>
+    <state x="3148" y="105" key="jetbrains.nodejs.interpreters-dialog/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593042921461" />
     <state x="1119" y="-1017" width="670" height="676" key="search.everywhere.popup" timestamp="1584674585447">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>

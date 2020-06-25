@@ -1,8 +1,0 @@
-POST https://us-central1-storypointers.cloudfunctions.net/createRoom
-Content-Type: application/json
-
-{
-  "userId": "1234"
-}
-
-###

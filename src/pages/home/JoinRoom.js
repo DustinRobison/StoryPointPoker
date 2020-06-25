@@ -1,6 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import { Paper, Button, Grid, TextField, Typography } from "@material-ui/core";
+import {
+  Paper,
+  Button,
+  Grid,
+  TextField,
+  Typography,
+  InputAdornment,
+  CircularProgress
+} from "@material-ui/core";
 import firebase from "firebase/app";
 import "@firebase/firestore";
 import { useHistory } from "react-router-dom";
@@ -29,7 +37,7 @@ const JoinRoom = () => {
     exists: false
   });
   const { roomName, loading, error, exists } = state;
-  const debouncedRoomName = useDebounce(roomName, 800);
+  const debouncedRoomName = useDebounce(roomName, 250);
 
   useEffect(() => {
     if (debouncedRoomName && debouncedRoomName.length > 3) {
@@ -96,6 +104,11 @@ const JoinRoom = () => {
     }
   };
 
+  const isAwaitingValidInput =
+    roomName !== debouncedRoomName ||
+    debouncedRoomName.length < 4 ||
+    loading ||
+    error;
   return (
     <Paper className={classes.root}>
       <Grid container spacing={3}>
@@ -117,13 +130,21 @@ const JoinRoom = () => {
                 roomName: simpleStringOnly(e.target.value)
               })
             }
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position={"end"}>
+                  {loading ? <CircularProgress /> : ""}
+                </InputAdornment>
+              )
+            }}
           />
         </Grid>
         <Grid item xs={12}>
           <Button
             variant={"contained"}
+            color={isAwaitingValidInput || !exists ? "inherit" : "primary"}
             fullWidth
-            disabled={roomName.length < 4 || loading || error || !exists}
+            disabled={isAwaitingValidInput || !exists}
             onClick={joinRoom}
           >
             Join
@@ -132,8 +153,9 @@ const JoinRoom = () => {
         <Grid item xs={12}>
           <Button
             variant={"contained"}
+            color={isAwaitingValidInput || exists ? "inherit" : "primary"}
             fullWidth
-            disabled={roomName.length < 4 || loading || error || exists}
+            disabled={isAwaitingValidInput || exists}
             onClick={createRoom}
           >
             Create Room {debouncedRoomName}
