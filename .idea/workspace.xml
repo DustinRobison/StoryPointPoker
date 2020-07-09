@@ -4,10 +4,6 @@
     <list default="true" id="a17e160a-c286-4fbe-bf88-4a931ad878da" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.firebase/hosting.YnVpbGQ.cache" beforeDir="false" afterPath="$PROJECT_DIR$/.firebase/hosting.YnVpbGQ.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Firebase.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Firebase.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/home/JoinRoom.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/home/JoinRoom.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -188,7 +184,7 @@
       <workItem from="1593029630942" duration="185000" />
       <workItem from="1593034454013" duration="8739000" />
       <workItem from="1593118911356" duration="1634000" />
-      <workItem from="1594335962757" duration="298000" />
+      <workItem from="1594335962757" duration="788000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <created>1584652843904</created>
@@ -330,7 +326,14 @@
       <option name="project" value="LOCAL" />
       <updated>1593043972005</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Added Google analytics">
+      <created>1594336287740</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1594336287740</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -357,51 +360,45 @@
     <MESSAGE value="Added leader functionality" />
     <MESSAGE value="Added fix for helper text" />
     <MESSAGE value="Functions auto delete rooms after 3 hours of last vote and a few improvements to the ui" />
-    <option name="LAST_COMMIT_MESSAGE" value="Functions auto delete rooms after 3 hours of last vote and a few improvements to the ui" />
+    <MESSAGE value="Added Google analytics" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Google analytics" />
   </component>
   <component name="WindowStateProjectService">
     <state x="3121" y="130" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1593041964270">
       <screen x="1680" y="-367" width="2560" height="1417" />
     </state>
     <state x="3121" y="130" key="#com.intellij.fileTypes.FileTypeChooser/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593041964270" />
-    <state x="2721" y="-104" width="1149" height="795" key="CommitChangelistDialog2" timestamp="1593043971397">
+    <state x="2721" y="-104" width="1149" height="795" key="CommitChangelistDialog2" timestamp="1594336287368">
       <screen x="1680" y="-367" width="2560" height="1417" />
     </state>
     <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1586465635533" />
+    <state x="2721" y="-104" key="CommitChangelistDialog2/0.23.1680.1027/1680.-367.2560.1417@1680.-367.2560.1417" timestamp="1594336287368" />
     <state x="2721" y="-104" key="CommitChangelistDialog2/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593043971397" />
-    <state x="1063" y="-975" key="EditFileWatcherDialog" timestamp="1584654749180">
-      <screen x="-346" y="-1417" width="2560" height="1417" />
-    </state>
-    <state x="1063" y="-975" key="EditFileWatcherDialog/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584654749180" />
     <state width="1188" height="335" key="GridCell.Tab.0.bottom" timestamp="1593041965438">
       <screen x="1680" y="-367" width="2560" height="1417" />
     </state>
-    <state width="1440" height="324" key="GridCell.Tab.0.bottom/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584683893317" />
     <state width="1188" height="335" key="GridCell.Tab.0.bottom/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593041965438" />
     <state width="1188" height="335" key="GridCell.Tab.0.center" timestamp="1593041965437">
       <screen x="1680" y="-367" width="2560" height="1417" />
     </state>
-    <state width="1440" height="324" key="GridCell.Tab.0.center/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584683893316" />
     <state width="1188" height="335" key="GridCell.Tab.0.center/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593041965437" />
     <state width="1188" height="335" key="GridCell.Tab.0.left" timestamp="1593041965437">
       <screen x="1680" y="-367" width="2560" height="1417" />
     </state>
-    <state width="1440" height="324" key="GridCell.Tab.0.left/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584683893316" />
     <state width="1188" height="335" key="GridCell.Tab.0.left/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593041965437" />
     <state width="1188" height="335" key="GridCell.Tab.0.right" timestamp="1593041965438">
       <screen x="1680" y="-367" width="2560" height="1417" />
     </state>
-    <state width="1440" height="324" key="GridCell.Tab.0.right/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584683893317" />
     <state width="1188" height="335" key="GridCell.Tab.0.right/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593041965438" />
     <state x="2932" y="-71" key="SettingsEditor" timestamp="1593043785625">
       <screen x="1680" y="-367" width="2560" height="1417" />
     </state>
-    <state x="906" y="-1121" key="SettingsEditor/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584745417193" />
     <state x="2932" y="-71" key="SettingsEditor/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593043785625" />
-    <state x="3080" y="18" key="Vcs.Push.Dialog.v2" timestamp="1593043973668">
+    <state x="3080" y="18" key="Vcs.Push.Dialog.v2" timestamp="1594336288862">
       <screen x="1680" y="-367" width="2560" height="1417" />
     </state>
     <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1586465637435" />
+    <state x="3080" y="18" key="Vcs.Push.Dialog.v2/0.23.1680.1027/1680.-367.2560.1417@1680.-367.2560.1417" timestamp="1594336288862" />
     <state x="3080" y="18" key="Vcs.Push.Dialog.v2/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593043973668" />
     <state x="586" y="-1029" width="782" height="550" key="find.popup" timestamp="1586457170747">
       <screen x="-346" y="-1417" width="2560" height="1417" />
@@ -411,9 +408,5 @@
       <screen x="1680" y="-367" width="2560" height="1417" />
     </state>
     <state x="3148" y="105" key="jetbrains.nodejs.interpreters-dialog/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593042921461" />
-    <state x="1119" y="-1017" width="670" height="676" key="search.everywhere.popup" timestamp="1584674585447">
-      <screen x="-346" y="-1417" width="2560" height="1417" />
-    </state>
-    <state x="1119" y="-1017" width="670" height="676" key="search.everywhere.popup/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584674585447" />
   </component>
 </project>

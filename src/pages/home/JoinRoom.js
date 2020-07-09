@@ -30,14 +30,14 @@ const JoinRoom = () => {
   const classes = useStyles();
   const history = useHistory();
   const { currentUser } = useContext(AuthContext);
+  const [input, setInput] = useState("");
   const [state, setState] = useState({
-    roomName: "",
     loading: false,
     error: "",
     exists: false
   });
-  const { roomName, loading, error, exists } = state;
-  const debouncedRoomName = useDebounce(roomName, 500);
+  const { loading, error, exists } = state;
+  const debouncedRoomName = useDebounce(input, 300);
 
   useEffect(() => {
     if (debouncedRoomName && debouncedRoomName.length > 3) {
@@ -67,7 +67,7 @@ const JoinRoom = () => {
   }, [debouncedRoomName]);
 
   const joinRoom = async () => {
-    history.push(`/room/${roomName}`);
+    history.push(`/room/${debouncedRoomName}`);
   };
 
   const createRoom = async () => {
@@ -94,7 +94,7 @@ const JoinRoom = () => {
           ],
           leaderOnly: false
         });
-      history.push(`/room/${roomName}`);
+      history.push(`/room/${debouncedRoomName}`);
     } catch (error) {
       console.log(error);
       setState({
@@ -105,7 +105,7 @@ const JoinRoom = () => {
   };
 
   const isAwaitingValidInput =
-    roomName !== debouncedRoomName ||
+    input !== debouncedRoomName ||
     debouncedRoomName.length < 4 ||
     loading ||
     error;
@@ -123,12 +123,9 @@ const JoinRoom = () => {
             helperText={"Some character restrictions apply"}
             fullWidth
             inputProps={{ style: { textAlign: "center" } }}
-            value={roomName}
+            value={input}
             onChange={e =>
-              setState({
-                ...state,
-                roomName: simpleStringOnly(e.target.value)
-              })
+              setInput(simpleStringOnly(e.target.value))
             }
             InputProps={{
               endAdornment: (
