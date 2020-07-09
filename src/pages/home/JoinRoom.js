@@ -37,7 +37,7 @@ const JoinRoom = () => {
     exists: false
   });
   const { roomName, loading, error, exists } = state;
-  const debouncedRoomName = useDebounce(roomName, 250);
+  const debouncedRoomName = useDebounce(roomName, 500);
 
   useEffect(() => {
     if (debouncedRoomName && debouncedRoomName.length > 3) {

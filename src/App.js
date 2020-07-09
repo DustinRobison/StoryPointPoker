@@ -3,6 +3,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { CssBaseline } from "@material-ui/core";
 import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
 import "typeface-roboto";
+import ReactGA from 'react-ga';
 
 import { InitialState, StoreProvider } from "./store/Store";
 import Theme from "./styles/Theme";
@@ -13,6 +14,9 @@ import ScrollToTop from "./components/scroll/SpScrollToTop";
 import SpFooter from "./components/footer/SpFooter";
 import { AuthProvider } from "./components/auth/Auth";
 import FirebaseApp from "./Firebase";
+
+ReactGA.initialize("G-Y7TZMB6YT7");
+ReactGA.pageview(window.location.pathname + window.location.search);
 
 const APP_BAR_HEIGHT = 80;
 

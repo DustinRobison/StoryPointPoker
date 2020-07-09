@@ -2,25 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a17e160a-c286-4fbe-bf88-4a931ad878da" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/functions/http/test1.http" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/functions/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/functions/triggers/DeleteOldRooms" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/storypointers-firebase-key.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/watcherTasks.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/watcherTasks.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.firebase/hosting.YnVpbGQ.cache" beforeDir="false" afterPath="$PROJECT_DIR$/.firebase/hosting.YnVpbGQ.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/functions/.eslintrc.json" beforeDir="false" afterPath="$PROJECT_DIR$/functions/.eslintrc.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/functions/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/functions/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/functions/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/functions/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/functions/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/functions/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/functions/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/prodTest/createRoom.http" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Firebase.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Firebase.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/home/JoinRoom.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/home/JoinRoom.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/room/Room.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/Room.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,6 +55,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="TERMINAL_CUSTOM_COMMANDS_GOT_IT" value="true" />
@@ -134,6 +123,27 @@
     </option>
   </component>
   <component name="RunManager" selected="HTTP Request.test1#1">
+    <configuration default="true" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
+      <setting name="replType" value="NREPL" />
+      <setting name="execution" value="LEININGEN" />
+      <setting name="jvmArgs" value="" />
+      <setting name="parameters" value="" />
+      <setting name="workingDir" value="" />
+      <setting name="profiles" value="" />
+      <setting name="aliases" value="" />
+      <setting name="fixLineNumbers" value="false" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="ClojureREPL" factoryName="Remote" activateToolWindowBeforeRun="false">
+      <setting name="host" value="" />
+      <setting name="port" value="0" />
+      <setting name="replType" value="SOCKET" />
+      <setting name="configType" value="SPECIFY" />
+      <setting name="replPortFileType" value="STANDARD" />
+      <setting name="customPortFile" value="" />
+      <setting name="fixLineNumbers" value="false" />
+      <method v="2" />
+    </configuration>
     <configuration name="createRoom#1 (1)" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" path="$PROJECT_DIR$/functions/prodTest/createRoom.http" runType="Run single request">
       <method v="2" />
     </configuration>
@@ -176,7 +186,9 @@
       <workItem from="1586453089455" duration="11766000" />
       <workItem from="1591829271414" duration="138000" />
       <workItem from="1593029630942" duration="185000" />
-      <workItem from="1593034454013" duration="8535000" />
+      <workItem from="1593034454013" duration="8739000" />
+      <workItem from="1593118911356" duration="1634000" />
+      <workItem from="1594335962757" duration="298000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <created>1584652843904</created>
@@ -311,7 +323,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586465635958</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Functions auto delete rooms after 3 hours of last vote and a few improvements to the ui">
+      <created>1593043972005</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1593043972005</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -337,17 +356,19 @@
     <MESSAGE value="Updated room header a lot" />
     <MESSAGE value="Added leader functionality" />
     <MESSAGE value="Added fix for helper text" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added fix for helper text" />
+    <MESSAGE value="Functions auto delete rooms after 3 hours of last vote and a few improvements to the ui" />
+    <option name="LAST_COMMIT_MESSAGE" value="Functions auto delete rooms after 3 hours of last vote and a few improvements to the ui" />
   </component>
   <component name="WindowStateProjectService">
     <state x="3121" y="130" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1593041964270">
       <screen x="1680" y="-367" width="2560" height="1417" />
     </state>
     <state x="3121" y="130" key="#com.intellij.fileTypes.FileTypeChooser/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593041964270" />
-    <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2" timestamp="1586465635533">
-      <screen x="-346" y="-1417" width="2560" height="1417" />
+    <state x="2721" y="-104" width="1149" height="795" key="CommitChangelistDialog2" timestamp="1593043971397">
+      <screen x="1680" y="-367" width="2560" height="1417" />
     </state>
     <state x="695" y="-1154" width="1149" height="795" key="CommitChangelistDialog2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1586465635533" />
+    <state x="2721" y="-104" key="CommitChangelistDialog2/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593043971397" />
     <state x="1063" y="-975" key="EditFileWatcherDialog" timestamp="1584654749180">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
@@ -377,10 +398,11 @@
     </state>
     <state x="906" y="-1121" key="SettingsEditor/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1584745417193" />
     <state x="2932" y="-71" key="SettingsEditor/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593043785625" />
-    <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2" timestamp="1586465637435">
-      <screen x="-346" y="-1417" width="2560" height="1417" />
+    <state x="3080" y="18" key="Vcs.Push.Dialog.v2" timestamp="1593043973668">
+      <screen x="1680" y="-367" width="2560" height="1417" />
     </state>
     <state x="1054" y="-1032" key="Vcs.Push.Dialog.v2/0.23.1680.1027/-346.-1417.2560.1417@-346.-1417.2560.1417" timestamp="1586465637435" />
+    <state x="3080" y="18" key="Vcs.Push.Dialog.v2/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593043973668" />
     <state x="586" y="-1029" width="782" height="550" key="find.popup" timestamp="1586457170747">
       <screen x="-346" y="-1417" width="2560" height="1417" />
     </state>
