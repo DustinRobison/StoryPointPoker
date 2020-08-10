@@ -124,9 +124,7 @@ const JoinRoom = () => {
             fullWidth
             inputProps={{ style: { textAlign: "center" } }}
             value={input}
-            onChange={e =>
-              setInput(simpleStringOnly(e.target.value))
-            }
+            onChange={e => setInput(simpleStringOnly(e.target.value))}
             InputProps={{
               endAdornment: (
                 <InputAdornment position={"end"}>

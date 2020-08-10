@@ -4,6 +4,7 @@ import "firebase/auth";
 import "firebase/firestore";
 import "firebase/analytics";
 
+// These are not secret, they are only used for identifying my back end within firebase/google cloud
 const FirebaseApp = firebase.initializeApp({
   apiKey: "AIzaSyB_CSQJO3D0EEuw_tocXqUWtw251AGdRQU",
   authDomain: "storypointers.firebaseapp.com",

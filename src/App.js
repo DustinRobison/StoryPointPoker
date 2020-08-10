@@ -3,7 +3,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { CssBaseline } from "@material-ui/core";
 import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
 import "typeface-roboto";
-import ReactGA from 'react-ga';
+import ReactGA from "react-ga";
 
 import { InitialState, StoreProvider } from "./store/Store";
 import Theme from "./styles/Theme";
