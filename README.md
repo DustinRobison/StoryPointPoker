@@ -1,3 +1,48 @@
+
+<p align="center">
+  <a href="https://storypointpoker.com/" rel="noopener" target="_blank"><img width="150" src="https://storypointpoker.com/1024.png" alt="StoryPointPoker logo"></a></p>
+</p>
+
+
+<h1 align="center">Story Point Poker</h1>
+
+<div align="center">
+
+[Agile](https://en.wikipedia.org/wiki/Agile_software_development) tool for sharing task complexity estimates.
+
+</div>
+
+## Pre Requisites
+- [Node v10+/NPM v6+](https://nodejs.org/en/)
+
+## Installation
+1. Clone the repository and change directory into the project root
+
+    `git clone git@github.com:DustinRobison/StoryPointPoker.git && cd StoryPointPoker`
+    
+2. Install the dependencies with node package manager
+
+    `npm i`
+
+3. Run the app in development mode at default `http://localhost:3000`
+    
+    `npm start`
+
+
+## About
+This project is hosted by [Firebase](https://firebase.google.com/).  
+You can use the current server infrastructure if you are just working on front end features or add 
+
+This is a simple site that I did as a one night hacking session after being frustrated with currently available free tools.  Since then I have cleaned it up a little and added a few features but not much.
+
+If interested PR's will be reviewed and accepted as promptly as possible.
+
+
+## Contact
+[Twitter RobisonDustin](https://twitter.com/RobisonDustin)  I don't check often so please be patient.
+
+
+_____
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
