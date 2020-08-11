@@ -14,8 +14,10 @@
 
 ## Pre Requisites
 - [Node v10+/NPM v6+](https://nodejs.org/en/)
+- [Firebase Environment](https://firebase.google.com/)
 
 ## Installation
+> I was planing to allow use of storypointpoker.com backend but it turned out to be a financial risk so you need to create your own firebase environment
 1. Clone the repository and change directory into the project root
 
     `git clone git@github.com:DustinRobison/StoryPointPoker.git && cd StoryPointPoker`
@@ -27,11 +29,13 @@
 3. Run the app in development mode at default `http://localhost:3000`
     
     `npm start`
+    
+4. Get your [firebase web configuration](https://firebase.google.com/docs/web/setup) 
 
 
 ## About
 This project is hosted by [Firebase](https://firebase.google.com/).  
-You can use the current server infrastructure if you are just working on front end features or add 
+You cannot use the current server infrastructure because of an exploit risk, but it is free to setup your own firebase environment for working on front end features. 
 
 This is a simple site that I did as a one night hacking session after being frustrated with currently available free tools.  Since then I have cleaned it up a little and added a few features but not much.
 
