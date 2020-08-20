@@ -22,6 +22,7 @@ const RoomVotesManager = ({
   clearVotes,
   setShowVotes,
   isOwner,
+  roomCreatorName,
   leaderOnly,
   toggleLeaderOnlyActions
 }) => {
@@ -60,7 +61,7 @@ const RoomVotesManager = ({
                   color="primary"
                 />
               }
-              label="Only Room Creator can show, hide, clear vote controls"
+              label={`Only ${roomCreatorName} can show, hide, clear vote controls`}
             />
           </FormGroup>
         ) : null}
@@ -75,7 +76,8 @@ RoomVotesManager.propTypes = {
   setShowVotes: PropTypes.func,
   isOwner: PropTypes.bool,
   leaderOnly: PropTypes.bool,
-  toggleLeaderOnlyActions: PropTypes.func
+  toggleLeaderOnlyActions: PropTypes.func,
+  roomCreatorName: PropTypes.string
 };
 
 export default RoomVotesManager;

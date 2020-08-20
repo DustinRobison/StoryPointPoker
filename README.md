@@ -30,7 +30,17 @@
     
     `npm start`
     
-4. Get your [firebase web configuration](https://firebase.google.com/docs/web/setup) 
+4. Get your [firebase web configuration](https://firebase.google.com/docs/web/setup#config-object) and map it into a `.env` file as follows:
+    ```
+        REACT_APP_APIKEY=
+        REACT_APP_AUTHDOMAIN=
+        REACT_APP_DATABASEURL=
+        REACT_APP_PROJECTID=
+        REACT_APP_STORAGEBUCKET=
+        REACT_APP_MESSAGINGSENDERID=
+        REACT_APP_APPID=
+        REACT_APP_MEASUREMENTID=
+    ```
 
 
 ## About
