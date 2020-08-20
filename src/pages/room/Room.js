@@ -13,6 +13,7 @@ import {
   Tooltip
 } from "@material-ui/core";
 import { FileCopy } from "@material-ui/icons";
+import { get } from "lodash";
 
 import { AuthContext } from "../../components/auth/Auth";
 import NameForm from "./NameForm";
@@ -76,6 +77,7 @@ const Room = () => {
   const isOwner = currentUser && currentUser.uid && ownerId === currentUser.uid;
   const [isCopied, setIsCopied] = useState(false);
   const [tooltipOpen, setTooltipOpen] = useState(false);
+  const roomCreator = get(users, `${ownerId}.name`, "Room Creator");
 
   useEffect(() => {
     document.title = `SPP: ${id}`;
@@ -152,7 +154,7 @@ const Room = () => {
         <Grid container spacing={3}>
           <Grid item sm={6} xs={12}>
             <MessageInput
-              label={"Description set by room leader"}
+              label={`Description set by ${roomCreator}`}
               readOnly={!isOwner}
               parentMessage={sharedText}
               submitMessage={setSharedText}
@@ -164,6 +166,7 @@ const Room = () => {
               isOwner={isOwner}
               leaderOnly={leaderOnly}
               toggleLeaderOnlyActions={toggleLeaderOnlyActions}
+              roomCreatorName={roomCreator}
             />
           </Grid>
           <Grid item sm={6} xs={12}>

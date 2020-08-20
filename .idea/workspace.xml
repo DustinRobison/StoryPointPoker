@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a17e160a-c286-4fbe-bf88-4a931ad878da" name="Default Changelist" comment="Updated README.md">
-      <change beforePath="$PROJECT_DIR$/.firebase/hosting.YnVpbGQ.cache" beforeDir="false" afterPath="$PROJECT_DIR$/.firebase/hosting.YnVpbGQ.cache" afterDir="false" />
+    <list default="true" id="a17e160a-c286-4fbe-bf88-4a931ad878da" name="Default Changelist" comment="Updated docs after restricting key">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Firebase.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Firebase.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/room/Room.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/Room.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/room/RoomVotesManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/room/RoomVotesManager.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,6 +123,17 @@
     </option>
   </component>
   <component name="RunManager" selected="HTTP Request.test1#1">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
       <setting name="replType" value="NREPL" />
       <setting name="execution" value="LEININGEN" />
@@ -189,7 +203,8 @@
       <workItem from="1594335962757" duration="1081000" />
       <workItem from="1597092885124" duration="89000" />
       <workItem from="1597097286489" duration="4636000" />
-      <workItem from="1597161891797" duration="300000" />
+      <workItem from="1597161891797" duration="393000" />
+      <workItem from="1597962569817" duration="2519000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <created>1584652843904</created>
@@ -359,7 +374,14 @@
       <option name="project" value="LOCAL" />
       <updated>1597100950390</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Updated docs after restricting key">
+      <created>1597162234587</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1597162234587</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -390,18 +412,19 @@
     <MESSAGE value="Fixed input bug" />
     <MESSAGE value="Added Fork link a prettied it up" />
     <MESSAGE value="Updated README.md" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated README.md" />
+    <MESSAGE value="Updated docs after restricting key" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated docs after restricting key" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="3121" y="130" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1597098631085">
+    <state x="3121" y="130" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1597963995603">
       <screen x="1680" y="-367" width="2560" height="1417" />
     </state>
-    <state x="3121" y="130" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1680.1027/1680.-367.2560.1417@1680.-367.2560.1417" timestamp="1597098631085" />
+    <state x="3121" y="130" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1680.1027/1680.-367.2560.1417@1680.-367.2560.1417" timestamp="1597963995603" />
     <state x="3121" y="130" key="#com.intellij.fileTypes.FileTypeChooser/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593041964270" />
-    <state x="2721" y="-104" width="1149" height="795" key="CommitChangelistDialog2" timestamp="1597162121238">
+    <state x="2721" y="-104" width="1325" height="945" key="CommitChangelistDialog2" timestamp="1597965025671">
       <screen x="1680" y="-367" width="2560" height="1417" />
     </state>
-    <state x="2721" y="-104" key="CommitChangelistDialog2/0.23.1680.1027/1680.-367.2560.1417@1680.-367.2560.1417" timestamp="1597162121238" />
+    <state x="2721" y="-104" width="1325" height="945" key="CommitChangelistDialog2/0.23.1680.1027/1680.-367.2560.1417@1680.-367.2560.1417" timestamp="1597965025671" />
     <state x="2721" y="-104" key="CommitChangelistDialog2/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593043971397" />
     <state width="1188" height="335" key="GridCell.Tab.0.bottom" timestamp="1593041965438">
       <screen x="1680" y="-367" width="2560" height="1417" />
@@ -424,11 +447,15 @@
     </state>
     <state x="2932" y="-71" key="SettingsEditor/0.23.1680.1027/1680.-367.2560.1417@1680.-367.2560.1417" timestamp="1597097650062" />
     <state x="2932" y="-71" key="SettingsEditor/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593043785625" />
-    <state x="3080" y="18" key="Vcs.Push.Dialog.v2" timestamp="1597100952098">
+    <state x="3080" y="18" key="Vcs.Push.Dialog.v2" timestamp="1597162236152">
       <screen x="1680" y="-367" width="2560" height="1417" />
     </state>
-    <state x="3080" y="18" key="Vcs.Push.Dialog.v2/0.23.1680.1027/1680.-367.2560.1417@1680.-367.2560.1417" timestamp="1597100952098" />
+    <state x="3080" y="18" key="Vcs.Push.Dialog.v2/0.23.1680.1027/1680.-367.2560.1417@1680.-367.2560.1417" timestamp="1597162236152" />
     <state x="3080" y="18" key="Vcs.Push.Dialog.v2/1680.-367.2560.1417/0.23.1680.1027@1680.-367.2560.1417" timestamp="1593043973668" />
+    <state x="3007" y="139" width="586" height="490" key="find.popup" timestamp="1597965121028">
+      <screen x="1680" y="-367" width="2560" height="1417" />
+    </state>
+    <state x="3007" y="139" width="586" height="490" key="find.popup/0.23.1680.1027/1680.-367.2560.1417@1680.-367.2560.1417" timestamp="1597965121028" />
     <state x="3148" y="105" key="jetbrains.nodejs.interpreters-dialog" timestamp="1593042921461">
       <screen x="1680" y="-367" width="2560" height="1417" />
     </state>

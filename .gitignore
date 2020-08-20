@@ -24,3 +24,6 @@ yarn-error.log*
 
 
 storypointers-firebase-key.json
+
+.env.development
+.env.production
