@@ -27,3 +27,7 @@ storypointers-firebase-key.json
 
 .env.development
 .env.production
+
+# IDE files
+.idea
+.vscode
