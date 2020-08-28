@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import { Redirect, useParams, useLocation } from "react-router-dom";
 import {
@@ -15,7 +15,6 @@ import {
 import { FileCopy } from "@material-ui/icons";
 import { get } from "lodash";
 
-import { AuthContext } from "../../components/auth/Auth";
 import NameForm from "./NameForm";
 import LoadingPage from "../../components/loading/LoadingPage";
 import ButtonGrid from "./ButtonGrid";
@@ -25,6 +24,7 @@ import RoomResults from "./RoomResults";
 import RoomTimer from "./RoomTimer";
 import MessageInput from "../../components/message/MessageInput";
 import RoomUsersList from "./RoomUsersList";
+import { useStore } from "../../store/Store";
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   root: {
@@ -50,7 +50,7 @@ const Room = () => {
   const classes = useStyles();
   const { id } = useParams();
   const { pathname } = useLocation();
-  const { currentUser } = useContext(AuthContext);
+  const [{ user }] = useStore();
   const linkFieldRef = useRef(null);
   const roomData = useRoom(id);
   const {
@@ -74,7 +74,7 @@ const Room = () => {
     leaderOnly,
     toggleLeaderOnlyActions
   } = roomData;
-  const isOwner = currentUser && currentUser.uid && ownerId === currentUser.uid;
+  const isOwner = user && user.uid && ownerId === user.uid;
   const [isCopied, setIsCopied] = useState(false);
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const roomCreator = get(users, `${ownerId}.name`, "Room Creator");
@@ -85,18 +85,18 @@ const Room = () => {
 
   useEffect(() => {
     let uid;
-    if (currentUser && currentUser.uid && currentUser.displayName) {
-      uid = currentUser.uid;
-      if (currentUser && currentUser.displayName) {
+    if (user && user.uid && user.displayName) {
+      uid = user.uid;
+      if (user && user.displayName) {
         addUser();
       }
     }
     return () => (uid ? removeUser(uid) : {});
     // eslint-disable-next-line
-  }, [currentUser]);
+  }, [user]);
 
   // Loading while waiting for user
-  if (loading || !currentUser) {
+  if (loading || !user) {
     return <LoadingPage />;
   }
 
@@ -105,7 +105,7 @@ const Room = () => {
     return <Redirect to={"/"} />;
   }
 
-  if (currentUser && !currentUser.displayName) {
+  if (user && !user.displayName) {
     return <NameForm addUser={addUser} />;
   }
 
@@ -120,8 +120,7 @@ const Room = () => {
     <div className={classes.root}>
       <Paper className={classes.contentContainer}>
         <Typography variant={"h5"}>
-          Welcome {currentUser.displayName} to room{" "}
-          <Link href={pathname}>{id}</Link>
+          Welcome {user.displayName} to room <Link href={pathname}>{id}</Link>
         </Typography>
         <div className={classes.linkFieldContainer}>
           <TextField
@@ -191,7 +190,7 @@ const Room = () => {
               showVotes={showVotes}
               users={getActiveUsersUids().map(key => ({
                 ...users[key],
-                isCurrentUser: key === currentUser.uid,
+                isCurrentUser: key === user.uid,
                 uid: key
               }))}
               removeUser={removeUser}

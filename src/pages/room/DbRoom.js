@@ -1,10 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { isObject, reduce } from "lodash";
-import firebase from "firebase/app";
-import "@firebase/firestore";
-
-import FirebaseApp from "../../Firebase";
-import { AuthContext } from "../../components/auth/Auth";
+import { FirebaseContext } from "../../App";
 
 export const checkIfRoomExists = async roomName => {
   const fbDoc = await FirebaseApp.firestore()
@@ -15,7 +11,7 @@ export const checkIfRoomExists = async roomName => {
 };
 
 export const useRoom = roomName => {
-  const { currentUser } = useContext(AuthContext);
+  const firebaseApp = useContext(FirebaseContext);
   const [state, setState] = useState({
     docRef: FirebaseApp.firestore()
       .collection("/rooms")
@@ -49,7 +45,7 @@ export const useRoom = roomName => {
 
   useEffect(() => {
     let unsubscribe;
-    if (roomName && currentUser && currentUser.uid) {
+    if (roomName && user && user.uid) {
       setState({
         ...state,
         loading: true
@@ -86,7 +82,7 @@ export const useRoom = roomName => {
     }
     return () => (unsubscribe ? unsubscribe() : {});
     // eslint-disable-next-line
-  }, [roomName, currentUser]);
+  }, [roomName, user]);
 
   const getActiveUsersUids = () => {
     const { users } = state;
@@ -97,15 +93,15 @@ export const useRoom = roomName => {
 
   const addUser = () => {
     // Check for required data
-    if (docRef && currentUser && currentUser.uid && currentUser.displayName) {
+    if (docRef && user && user.uid && user.displayName) {
       docRef.update({
-        [`users.${currentUser.uid}`]: {
-          name: currentUser.displayName,
+        [`users.${user.uid}`]: {
+          name: user.displayName,
           active: true,
           vote: "-"
         },
         history: firebase.firestore.FieldValue.arrayUnion({
-          action: `User ${currentUser.displayName} has joined the room.`,
+          action: `User ${user.displayName} has joined the room.`,
           timestamp: new Date().toISOString()
         })
       });
@@ -135,7 +131,7 @@ export const useRoom = roomName => {
         showVotes: false,
         lastVoteTimestamp: firebase.firestore.FieldValue.serverTimestamp(),
         history: firebase.firestore.FieldValue.arrayUnion({
-          action: `${currentUser.displayName} has cleared the votes.`,
+          action: `${user.displayName} has cleared the votes.`,
           timestamp: new Date().toISOString()
         })
       });
@@ -144,12 +140,12 @@ export const useRoom = roomName => {
 
   const updateUserName = async name => {
     if (docRef) {
-      const oldName = currentUser.displayName;
-      await currentUser.updateProfile({
+      const oldName = user.displayName;
+      await user.updateProfile({
         displayName: name
       });
       await docRef.update({
-        [`users.${currentUser.uid}.name`]: name,
+        [`users.${user.uid}.name`]: name,
         history: firebase.firestore.FieldValue.arrayUnion({
           action: `User ${oldName} has changed names to ${name}.`,
           timestamp: new Date().toISOString()
@@ -164,7 +160,7 @@ export const useRoom = roomName => {
         showVotes,
         lastVoteTimestamp: firebase.firestore.FieldValue.serverTimestamp(),
         history: firebase.firestore.FieldValue.arrayUnion({
-          action: `${currentUser.displayName} has shown the votes.`,
+          action: `${user.displayName} has shown the votes.`,
           timestamp: new Date().toISOString()
         })
       });
@@ -174,9 +170,9 @@ export const useRoom = roomName => {
   const handleVote = vote => {
     if (docRef) {
       docRef.update({
-        [`users.${currentUser.uid}.vote`]: vote,
+        [`users.${user.uid}.vote`]: vote,
         history: firebase.firestore.FieldValue.arrayUnion({
-          action: `${currentUser.displayName} has voted.`,
+          action: `${user.displayName} has voted.`,
           timestamp: new Date().toISOString()
         })
       });

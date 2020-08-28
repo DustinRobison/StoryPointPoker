@@ -9,15 +9,12 @@ import {
   InputAdornment,
   CircularProgress
 } from "@material-ui/core";
-import firebase from "firebase/app";
-import "@firebase/firestore";
 import { useHistory } from "react-router-dom";
 
-import FirebaseApp from "../../Firebase";
 import { useDebounce } from "../../helpers/Debounce";
-import { AuthContext } from "../../components/auth/Auth";
 import { checkIfRoomExists } from "../room/DbRoom";
 import { simpleStringOnly } from "../../helpers/StringHelpers";
+import { FirebaseContext } from "../../App";
 
 const useStyles = makeStyles(({ spacing }) => ({
   root: {
@@ -29,7 +26,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 const JoinRoom = () => {
   const classes = useStyles();
   const history = useHistory();
-  const { currentUser } = useContext(AuthContext);
+  const firebaseApp = useContext(FirebaseContext);
   const [input, setInput] = useState("");
   const [state, setState] = useState({
     loading: false,
@@ -76,7 +73,9 @@ const JoinRoom = () => {
         ...state,
         loading: true
       });
-      await FirebaseApp.firestore()
+      const currentUser = firebaseApp.auth().currentUser;
+      await firebaseApp
+        .firestore()
         .collection("rooms")
         .doc(debouncedRoomName)
         .set({
@@ -84,8 +83,8 @@ const JoinRoom = () => {
           messages: [],
           users: {},
           showVotes: false,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-          lastVoteTimestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          createdAt: new Date().toISOString(), // TODO - change value to server tstamp
+          lastVoteTimestamp: new Date().toISOString(), // TODO - change value to server tstamp
           history: [
             {
               action: `${currentUser.displayName} has created room ${debouncedRoomName}`,

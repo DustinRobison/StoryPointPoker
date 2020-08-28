@@ -1,8 +1,5 @@
 // initialize firebase (https://firebase.google.com/docs/web/setup?authuser=0#config-object)
-import * as firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
-import "firebase/analytics";
+let firebaseInstance;
 
 const {
   REACT_APP_APIKEY,
@@ -15,8 +12,7 @@ const {
   REACT_APP_MEASUREMENTID
 } = process.env;
 
-// These are not secret, they are only used for identifying my back end within firebase/google cloud
-const FirebaseApp = firebase.initializeApp({
+const config = {
   apiKey: REACT_APP_APIKEY,
   authDomain: REACT_APP_AUTHDOMAIN,
   databaseURL: REACT_APP_DATABASEURL,
@@ -25,8 +21,18 @@ const FirebaseApp = firebase.initializeApp({
   messagingSenderId: REACT_APP_MESSAGINGSENDERID,
   appId: REACT_APP_APPID,
   measurementId: REACT_APP_MEASUREMENTID
-});
+};
 
-FirebaseApp.analytics();
+export const getFirebase = firebase => {
+  if (firebaseInstance) {
+    return firebaseInstance;
+  }
 
-export default FirebaseApp;
+  firebase.initializeApp(config);
+  firebaseInstance = firebase;
+
+  return firebase;
+};
+
+// These are not secret, they are only used for identifying my back end within firebase/google cloud
+export default firebaseInstance;
