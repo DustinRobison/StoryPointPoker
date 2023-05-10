@@ -1,16 +1,14 @@
 "use client";
 
 import { useState, useEffect, useContext } from "react";
-import { useRouter } from "next/router";
-import { firestore } from "@/firebase";
-import { serverTimestamp, setDoc, doc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 import { useDebounce } from "@/helpers/debounce";
 import { simpleStringOnly } from "@/helpers/string-helpers";
-import { checkIfRoomExists } from "@/firebase/db-room";
+import { createRoomRequest, getRoomSnapshotRequest } from "@/firebase/db-room";
 import { AuthContext } from "@/context/AuthContext";
 
 export default function JoinRoom() {
-  //   const router = useRouter();
+  const router = useRouter();
   const { user } = useContext(AuthContext);
   const [input, setInput] = useState("");
   const [state, setState] = useState({
@@ -28,11 +26,11 @@ export default function JoinRoom() {
         loading: true,
         error: "",
       });
-      checkIfRoomExists(debouncedRoomName)
-        .then((roomExists) =>
+      getRoomSnapshotRequest(debouncedRoomName)
+        .then((roomDoc) =>
           setState({
             ...state,
-            exists: roomExists,
+            exists: roomDoc.exists(),
             loading: false,
             error: "",
           })
@@ -49,7 +47,7 @@ export default function JoinRoom() {
   }, [debouncedRoomName]);
 
   const joinRoom = async () => {
-    // router.push(`/room/${debouncedRoomName}`);
+    router.push(`/room/${debouncedRoomName}`);
   };
 
   const createRoom = async () => {
@@ -58,22 +56,9 @@ export default function JoinRoom() {
         ...state,
         loading: true,
       });
-      const docRef = await setDoc(doc(firestore, "rooms", debouncedRoomName), {
-        ownerId: user?.uid,
-        messages: [],
-        users: {},
-        showVotes: false,
-        createdAt: serverTimestamp(),
-        lastVoteTimestamp: serverTimestamp(),
-        history: [
-          {
-            action: `${user?.displayName} has created room ${debouncedRoomName}`,
-            timestamp: new Date().toISOString(),
-          },
-        ],
-        leaderOnly: false,
-      });
-      //   router.push(`/room/${debouncedRoomName}`);
+      // @ts-ignore
+      await createRoomRequest(debouncedRoomName, user);
+      router.push(`/room/${debouncedRoomName}`);
     } catch (error) {
       console.log(error);
       setState({
@@ -114,7 +99,7 @@ export default function JoinRoom() {
         </div>
         <button
           type="submit"
-          disabled={isAwaitingValidInput}
+          disabled={isAwaitingValidInput && user !== null}
           className={`min-w-full ${
             isAwaitingValidInput
               ? "bg-slate-500"

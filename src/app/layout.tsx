@@ -1,4 +1,3 @@
-import { app } from "@/firebase";
 import Nav from "@/components/nav";
 import "./globals.css";
 import { Inter } from "next/font/google";
