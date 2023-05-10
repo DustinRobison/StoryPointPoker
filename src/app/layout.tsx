@@ -1,7 +1,9 @@
+import { app } from "@/firebase";
 import Nav from "@/components/nav";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Foot from "@/components/foot";
+import { AuthContextProvider } from "@/context/AuthContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Nav />
-        {children}
+        <AuthContextProvider>{children}</AuthContextProvider>
         <Foot />
       </body>
     </html>

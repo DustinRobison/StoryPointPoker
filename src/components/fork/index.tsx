@@ -8,7 +8,13 @@ export default function fork() {
         target="_blank"
         rel="noopener noreferrer"
       >
-        <Image src="/Forkme.svg" alt="Fork Me" width={128} height={128} />
+        <Image
+          src="/Forkme.svg"
+          alt="Fork Me"
+          width={128}
+          height={128}
+          priority={true}
+        />
       </a>
     </div>
   );
