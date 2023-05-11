@@ -9,13 +9,13 @@ import {
 } from "firebase/firestore";
 import { firestore } from "./";
 
-interface IUser {
+export interface IUser {
   name: string;
   active: boolean;
   vote: string;
 }
 
-interface IAction {
+export interface IAction {
   action: string;
   timestamp: string;
 }

@@ -84,17 +84,25 @@ export default function JoinRoom() {
           <input
             value={input}
             onChange={(e) => setInput(simpleStringOnly(e.target.value))}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !isAwaitingValidInput && user !== null) {
+                createRoom();
+              }
+            }}
             type="text"
             id="room_name"
             className="min-w-full bg-gray-50 border border-b-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             placeholder="Room name"
             required
+            autoFocus
           />
           <p className="text-xs md:text-sm text-gray-500 text-left pl-2">
             Some character restrictions apply
           </p>
           <div className="h-6">
-            <p className="text-xs md:text-sm text-red-800 text-left pl-2 "></p>
+            <p className="text-xs md:text-sm text-red-800 text-left pl-2 ">
+              {state.error}
+            </p>
           </div>
         </div>
         <button
@@ -105,9 +113,15 @@ export default function JoinRoom() {
               ? "bg-slate-500"
               : "bg-blue hover:opacity-90 drop-shadow-md"
           } text-white rounded-full  md:text-lg p-2`}
-          onClick={createRoom}
+          onClick={state.exists ? joinRoom : createRoom}
         >
-          {state.loading ? " Loading . . ." : " Create or join a room"}
+          {state.loading
+            ? " Loading . . ."
+            : user !== null && state.exists
+            ? "Join Existing Room"
+            : user !== null && !state.exists
+            ? "Create Room"
+            : "Create or Join Room"}
         </button>
       </div>
     </div>
