@@ -18,6 +18,7 @@ export default function RoomTimer({
   const [sessionTime, setSessionTime] = useState("");
   const [currentVoteTime, setCurrentVoteTime] = useState("");
 
+  // Update every 1 second
   useEffect(() => {
     let interval;
     if (lastVoteTimestamp && createdAtTimestamp) {
