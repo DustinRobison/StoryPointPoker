@@ -1,0 +1,4 @@
+GET https://us-central1-storypointers.cloudfunctions.net/helloWorld
+Accept: application/json
+
+###

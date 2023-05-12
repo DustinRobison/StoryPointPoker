@@ -1,0 +1,23 @@
+const admin = require("firebase-admin");
+const differenceInMinutes = require('date-fns/differenceInMinutes')
+
+module.exports = {
+    deleteOldRooms
+};
+
+function deleteOldRooms() {
+    const currentDate = new Date();
+    admin
+        .firestore()
+        .collection("rooms")
+        .get()
+        .then(querySnapshot => {
+            querySnapshot.forEach(doc => {
+                const data = doc.data();
+                const lastVoteDate = data.lastVoteTimestamp.toDate();
+                if (differenceInMinutes(currentDate, lastVoteDate) > 180) {
+                    admin.firestore().collection('rooms').doc(doc.id).delete()
+                }
+            });
+        });
+}
