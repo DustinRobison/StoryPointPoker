@@ -1,8 +1,9 @@
 import React from "react";
+import Image from "next/image";
 
 export default function Logo() {
   return (
-    <img
+    <Image
       src="/icon/64.png"
       alt="StoryPointers Logo"
       width={64}
