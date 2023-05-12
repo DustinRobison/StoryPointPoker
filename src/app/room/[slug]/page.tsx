@@ -161,7 +161,8 @@ export default function Page({ params }: { params: { slug: string } }) {
               showVotes={showVotes}
               ownerUid={ownerId}
               users={users}
-              updateUserName={() => {}}
+              updateUserName={updateUserName}
+              removeUser={removeUser}
             />
           </div>
         </div>

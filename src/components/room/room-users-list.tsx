@@ -1,10 +1,12 @@
 import { AuthContext } from "@/context/AuthContext";
 import { IUser } from "@/firebase/db-room";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   ClockIcon,
   PencilSquareIcon,
   TrashIcon,
+  XCircleIcon,
+  CheckIcon,
 } from "@heroicons/react/24/outline";
 
 interface RoomUsersListProps {
@@ -12,7 +14,7 @@ interface RoomUsersListProps {
   ownerUid: string;
   users: { [key: string]: IUser };
   updateUserName: Function;
-  removeUser?: Function;
+  removeUser: Function;
 }
 
 export default function RoomUsersList({
@@ -23,6 +25,8 @@ export default function RoomUsersList({
   removeUser,
 }: RoomUsersListProps) {
   const { user } = useContext(AuthContext);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [inputName, setInputName] = useState(user?.displayName || "");
 
   const activeUsersIds = Object.keys(users)
     .filter((userUid) => users[userUid]?.active)
@@ -63,6 +67,21 @@ export default function RoomUsersList({
     );
   };
 
+  const startEdit = () => {
+    setIsEditingName(true);
+    setInputName(user?.displayName || "");
+  };
+
+  const cancelEdit = () => {
+    setIsEditingName(false);
+    setInputName(user?.displayName || "");
+  };
+
+  const saveEdit = () => {
+    updateUserName(inputName);
+    setIsEditingName(false);
+  };
+
   return (
     <div>
       <div
@@ -98,7 +117,7 @@ export default function RoomUsersList({
               return (
                 <li
                   key={`usr-${uid}`}
-                  className="grid grid-cols-[32px_1fr_32px] gap-1"
+                  className="grid grid-cols-[32px_1fr_64px] gap-1"
                 >
                   <>
                     {showVotes || (uid === user?.uid && users[uid]?.vote) ? (
@@ -109,14 +128,37 @@ export default function RoomUsersList({
                       <ClockIcon height={24} width={24} className="" />
                     )}
                   </>
-                  <div className="text-left">{users[uid].name}</div>
+                  <div className="text-left">
+                    {!isEditingName || user?.uid !== uid ? (
+                      users[uid].name
+                    ) : (
+                      <input
+                        type="text"
+                        value={inputName}
+                        onChange={(e) => setInputName(e.target.value)}
+                      />
+                    )}
+                  </div>
                   <div className="text-center">
-                    {uid === user?.uid ? (
+                    {uid === user?.uid && isEditingName ? (
+                      <span className="flex">
+                        <button onClick={cancelEdit}>
+                          <XCircleIcon width={24} height={24} />
+                        </button>
+                        <button onClick={saveEdit}>
+                          <CheckIcon width={24} height={24} className="ml-4" />
+                        </button>
+                      </span>
+                    ) : uid === user?.uid ? (
                       <button>
-                        <PencilSquareIcon width={24} height={24} />
+                        <PencilSquareIcon
+                          width={24}
+                          height={24}
+                          onClick={startEdit}
+                        />
                       </button>
                     ) : user?.uid === ownerUid ? (
-                      <button>
+                      <button onClick={() => removeUser(uid)}>
                         <TrashIcon width={24} height={24} />
                       </button>
                     ) : null}
