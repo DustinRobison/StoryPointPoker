@@ -60,6 +60,7 @@ export const useRoom = (roomName: string) => {
               history,
               lastVoteTimestamp,
               leaderOnly,
+              createdAt,
             }: IRoom = roomDoc.data();
 
             setState({
@@ -73,6 +74,7 @@ export const useRoom = (roomName: string) => {
               history,
               lastVoteTimestamp: lastVoteTimestamp || new Date().toISOString(),
               leaderOnly,
+              createdAt,
             });
 
             setLoading(false);
@@ -131,6 +133,7 @@ export const useRoom = (roomName: string) => {
       ...updateObject,
       showVotes: false,
       lastVoteTimestamp: new Date().toISOString(),
+      sharedText: "",
       history: arrayUnion({
         action: `${user?.displayName} has cleared the votes.`,
         timestamp: new Date().toISOString(),
@@ -203,6 +206,14 @@ export const useRoom = (roomName: string) => {
     }
   };
 
+  const setSharedText = async (sharedText: string) => {
+    if (state.ownerId === user?.uid) {
+      setRoomUpdateRequest(roomName, {
+        sharedText,
+      });
+    }
+  };
+
   return {
     ...state,
     loading,
@@ -216,5 +227,6 @@ export const useRoom = (roomName: string) => {
     toggleShowVotes,
     toggleClearVotes,
     updateUserName,
+    setSharedText,
   };
 };

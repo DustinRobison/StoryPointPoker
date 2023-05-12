@@ -10,6 +10,7 @@ import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 import RoomTimer from "@/components/room/room-timer";
 import RoomUsersList from "@/components/room/room-users-list";
 import RoomVoteControls from "@/components/room/room-vote-controls";
+import { useDebounce } from "@/helpers/debounce";
 
 const ROOM_BUTTON_VALUES = ["0", "1", "2", "3", "5", "8", "13", "20", "?"];
 
@@ -24,6 +25,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     sharedText,
     // messages,
     showVotes,
+    createdAt,
     lastVoteTimestamp,
     addUser,
     removeUser,
@@ -38,7 +40,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   } = useRoom(params.slug);
 
   const [isCopied, setIsCopied] = useState(false);
-  const [descriptionText, setDescriptionText] = useState(sharedText);
+  const [ownerSharedTextInput, setOwnerSharedTextInput] = useState(sharedText);
 
   useEffect(() => {
     let uid: string;
@@ -51,6 +53,13 @@ export default function Page({ params }: { params: { slug: string } }) {
     return () => (uid ? removeUser(uid) : {});
     // eslint-disable-next-line
   }, [user?.uid]);
+
+  const debouncedOwnerSharedText = useDebounce(ownerSharedTextInput, 1000);
+
+  useEffect(() => {
+    // Update db with new shared text
+    setSharedText(debouncedOwnerSharedText);
+  }, [debouncedOwnerSharedText]);
 
   const roomCreator = users[ownerId]?.name;
   const isOwner = user?.uid && ownerId === user?.uid;
@@ -73,8 +82,6 @@ export default function Page({ params }: { params: { slug: string } }) {
     navigator.clipboard.writeText(window.location.href);
     setTimeout(() => setIsCopied(false), 2000);
   };
-
-  const handleSharedTextChange = (e) => {};
 
   return (
     <main className="flex justify-center md:p-12">
@@ -111,16 +118,18 @@ export default function Page({ params }: { params: { slug: string } }) {
               rows={2}
               disabled={!isOwner}
               className="resize-none"
-              value={descriptionText}
-              onChange={handleSharedTextChange}
+              value={isOwner ? ownerSharedTextInput : sharedText}
+              onChange={
+                isOwner
+                  ? (e) => setOwnerSharedTextInput(e.target.value)
+                  : undefined
+              }
             />
             <div>
               <RoomTimer
-                lastVoteTimestamp={
-                  lastVoteTimestamp.toString() || new Date().toISOString()
-                }
-              />{" "}
-              / results
+                createdAtTimestamp={createdAt}
+                lastVoteTimestamp={lastVoteTimestamp}
+              />
               <RoomVoteControls
                 showVotes={showVotes}
                 isOwner={user.uid === ownerId}
