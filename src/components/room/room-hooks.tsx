@@ -1,7 +1,6 @@
 "use client";
 
-import { AuthContext } from "@/context/AuthContext";
-import { firestore } from "@/firebase";
+import { FirebaseContext } from "@/context/FirebaseContext";
 import { IRoom, setRoomUpdateRequest } from "@/firebase/db-room";
 import {
   Unsubscribe,
@@ -30,7 +29,8 @@ const getInitRoomState = (): IRoom => ({
 
 export const useRoom = (roomName: string) => {
   const router = useRouter();
-  const { user, updateAuthProfileName } = useContext(AuthContext);
+  const { user, updateAuthProfileName, firestore } =
+    useContext(FirebaseContext);
   const [state, setState] = useState<IRoom>(getInitRoomState());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -100,24 +100,32 @@ export const useRoom = (roomName: string) => {
   const addUser = () => {
     // Check for required data
     if (user?.uid && user?.displayName) {
-      setRoomUpdateRequest(roomName, {
-        [`users.${user.uid}`]: {
-          name: user.displayName,
-          active: true,
-          vote: "-",
+      setRoomUpdateRequest(
+        roomName,
+        {
+          [`users.${user.uid}`]: {
+            name: user.displayName,
+            active: true,
+            vote: "-",
+          },
+          history: arrayUnion({
+            action: `User ${user.displayName} has joined the room.`,
+            timestamp: new Date().toISOString(),
+          }),
         },
-        history: arrayUnion({
-          action: `User ${user.displayName} has joined the room.`,
-          timestamp: new Date().toISOString(),
-        }),
-      });
+        firestore
+      );
     }
   };
 
   const removeUser = (uid: string) => {
-    setRoomUpdateRequest(roomName, {
-      [`users.${uid}.active`]: false,
-    });
+    setRoomUpdateRequest(
+      roomName,
+      {
+        [`users.${uid}.active`]: false,
+      },
+      firestore
+    );
   };
 
   const clearVotes = () => {
@@ -129,58 +137,78 @@ export const useRoom = (roomName: string) => {
       },
       {}
     );
-    setRoomUpdateRequest(roomName, {
-      ...updateObject,
-      showVotes: false,
-      lastVoteTimestamp: new Date().toISOString(),
-      sharedText: "",
-      history: arrayUnion({
-        action: `${user?.displayName} has cleared the votes.`,
-        timestamp: new Date().toISOString(),
-      }),
-    });
+    setRoomUpdateRequest(
+      roomName,
+      {
+        ...updateObject,
+        showVotes: false,
+        lastVoteTimestamp: new Date().toISOString(),
+        sharedText: "",
+        history: arrayUnion({
+          action: `${user?.displayName} has cleared the votes.`,
+          timestamp: new Date().toISOString(),
+        }),
+      },
+      firestore
+    );
   };
 
   const updateUserName = async (newName: string) => {
     const oldName = user?.displayName;
     await updateAuthProfileName(newName);
-    await setRoomUpdateRequest(roomName, {
-      [`users.${user?.uid}.name`]: newName,
-      history: arrayUnion({
-        action: `User ${oldName} has changed names to ${newName}.`,
-        timestamp: new Date().toISOString(),
-      }),
-    });
+    await setRoomUpdateRequest(
+      roomName,
+      {
+        [`users.${user?.uid}.name`]: newName,
+        history: arrayUnion({
+          action: `User ${oldName} has changed names to ${newName}.`,
+          timestamp: new Date().toISOString(),
+        }),
+      },
+      firestore
+    );
   };
 
   const handleVote = async (vote: string) => {
-    setRoomUpdateRequest(roomName, {
-      [`users.${user?.uid}.vote`]: vote,
-      history: arrayUnion({
-        action: `${user?.displayName} has voted.`,
-        timestamp: new Date().toISOString(),
-      }),
-    });
+    setRoomUpdateRequest(
+      roomName,
+      {
+        [`users.${user?.uid}.vote`]: vote,
+        history: arrayUnion({
+          action: `${user?.displayName} has voted.`,
+          timestamp: new Date().toISOString(),
+        }),
+      },
+      firestore
+    );
   };
 
   const toggleLeaderOnlyActions = async () => {
     if (user?.uid === state.ownerId) {
-      setRoomUpdateRequest(roomName, {
-        leaderOnly: !state.leaderOnly,
-      });
+      setRoomUpdateRequest(
+        roomName,
+        {
+          leaderOnly: !state.leaderOnly,
+        },
+        firestore
+      );
     }
   };
 
   const toggleShowVotes = async (showVotes: boolean) => {
     if (!state.leaderOnly || user?.uid === state.ownerId) {
-      setRoomUpdateRequest(roomName, {
-        showVotes,
-        lastVoteTimestamp: serverTimestamp(),
-        history: arrayUnion({
-          action: `${user?.displayName} has shown the votes.`,
-          timestamp: new Date().toISOString(),
-        }),
-      });
+      setRoomUpdateRequest(
+        roomName,
+        {
+          showVotes,
+          lastVoteTimestamp: serverTimestamp(),
+          history: arrayUnion({
+            action: `${user?.displayName} has shown the votes.`,
+            timestamp: new Date().toISOString(),
+          }),
+        },
+        firestore
+      );
     }
   };
 
@@ -194,23 +222,31 @@ export const useRoom = (roomName: string) => {
         },
         {}
       );
-      setRoomUpdateRequest(roomName, {
-        ...updateObject,
-        showVotes: false,
-        lastVoteTimestamp: serverTimestamp(),
-        history: arrayUnion({
-          action: `${user?.displayName} has cleared the votes.`,
-          timestamp: new Date().toISOString(),
-        }),
-      });
+      setRoomUpdateRequest(
+        roomName,
+        {
+          ...updateObject,
+          showVotes: false,
+          lastVoteTimestamp: serverTimestamp(),
+          history: arrayUnion({
+            action: `${user?.displayName} has cleared the votes.`,
+            timestamp: new Date().toISOString(),
+          }),
+        },
+        firestore
+      );
     }
   };
 
   const setSharedText = async (sharedText: string) => {
     if (state.ownerId === user?.uid) {
-      setRoomUpdateRequest(roomName, {
-        sharedText,
-      });
+      setRoomUpdateRequest(
+        roomName,
+        {
+          sharedText,
+        },
+        firestore
+      );
     }
   };
 

@@ -1,4 +1,4 @@
-import { AuthContext } from "@/context/AuthContext";
+import { FirebaseContext } from "@/context/FirebaseContext";
 import { IUser } from "@/firebase/db-room";
 import React, { useContext, useState } from "react";
 import {
@@ -24,7 +24,7 @@ export default function RoomUsersList({
   updateUserName,
   removeUser,
 }: RoomUsersListProps) {
-  const { user } = useContext(AuthContext);
+  const { user, firestore } = useContext(FirebaseContext);
   const [isEditingName, setIsEditingName] = useState(false);
   const [inputName, setInputName] = useState(user?.displayName || "");
 

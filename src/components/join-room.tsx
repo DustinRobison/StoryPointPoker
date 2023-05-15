@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
 import { useDebounce } from "@/helpers/debounce";
 import { simpleStringOnly } from "@/helpers/string-helpers";
 import { createRoomRequest, getRoomSnapshotRequest } from "@/firebase/db-room";
-import { AuthContext } from "@/context/AuthContext";
+import { FirebaseContext } from "@/context/FirebaseContext";
 
 export default function JoinRoom() {
   const router = useRouter();
-  const { user } = useContext(AuthContext);
+  const { user, firestore } = useContext(FirebaseContext);
   const [input, setInput] = useState("");
   const [state, setState] = useState({
     loading: false,
@@ -26,7 +26,7 @@ export default function JoinRoom() {
         loading: true,
         error: "",
       });
-      getRoomSnapshotRequest(debouncedRoomName)
+      getRoomSnapshotRequest(debouncedRoomName, firestore)
         .then((roomDoc) =>
           setState({
             ...state,

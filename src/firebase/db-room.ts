@@ -1,13 +1,13 @@
-import { FieldValue } from "@google-cloud/firestore";
 import { User } from "firebase/auth";
 import {
+  FieldValue,
+  Firestore,
   doc,
   getDoc,
   serverTimestamp,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { firestore } from "./";
 
 export interface IUser {
   name: string;
@@ -33,7 +33,11 @@ export interface IRoom {
   leaderOnly: boolean;
 }
 
-export const createInitialRoomData = (roomName: string, user: User): IRoom => {
+export const createInitialRoomData = (
+  roomName: string,
+  user: User,
+  firestore: Firestore
+): IRoom => {
   return {
     exists: true,
     ownerId: user?.uid,
@@ -55,22 +59,30 @@ export const createInitialRoomData = (roomName: string, user: User): IRoom => {
   };
 };
 
-export const createRoomRequest = async (roomName: string, user: User) => {
+export const createRoomRequest = async (
+  roomName: string,
+  user: User,
+  firestore: Firestore
+) => {
   const docRef = await setDoc(
     doc(firestore, "rooms", roomName),
-    createInitialRoomData(roomName, user)
+    createInitialRoomData(roomName, user, firestore)
   );
   return docRef;
 };
 
-export const getRoomSnapshotRequest = async (roomName: string) => {
+export const getRoomSnapshotRequest = async (
+  roomName: string,
+  firestore: Firestore
+) => {
   const docRef = doc(firestore, "/rooms", roomName);
   return await getDoc(docRef);
 };
 
 export const setRoomUpdateRequest = async (
   roomName: string,
-  updateObj: object
+  updateObj: object,
+  firestore: Firestore
 ) => {
   const docRef = doc(firestore, "/rooms", roomName);
   return await updateDoc(docRef, updateObj);

@@ -2,7 +2,7 @@ import Nav from "@/components/nav";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Foot from "@/components/foot";
-import { AuthContextProvider } from "@/context/AuthContext";
+import { FirebaseContextProvider } from "@/context/FirebaseContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Nav />
-        <AuthContextProvider>{children}</AuthContextProvider>
+        <FirebaseContextProvider>{children}</FirebaseContextProvider>
         <Foot />
       </body>
     </html>

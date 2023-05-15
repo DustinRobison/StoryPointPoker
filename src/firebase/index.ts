@@ -1,9 +1,8 @@
 "use client";
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-// import firebaseConfig from "./config";
 
-// TODO debug and find out why .env.local vars arent working in browser when prefixed as docs recommend: https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables#exposing-environment-variables-to-the-browser
 const {
   NEXT_PUBLIC_APIKEY,
   NEXT_PUBLIC_AUTHDOMAIN,
@@ -26,5 +25,17 @@ const firebaseConfig = {
   measurementId: NEXT_PUBLIC_MEASUREMENTID,
 };
 
-export const app = initializeApp(firebaseConfig);
-export const firestore = getFirestore(app);
+export default () => {
+  console.log(`init firebase app: ${firebaseConfig.apiKey}`);
+  console.log(process.env);
+  const app = initializeApp(firebaseConfig);
+  console.log(app);
+  const firestore = getFirestore(app);
+  const auth = getAuth(app);
+
+  return {
+    app,
+    firestore,
+    auth,
+  };
+};

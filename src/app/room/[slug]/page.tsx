@@ -4,7 +4,7 @@ import Card from "@/components/card";
 import PageLoad from "@/components/page-load";
 import NameCard from "@/components/room/name-card";
 import { useRoom } from "@/components/room/room-hooks";
-import { AuthContext } from "@/context/AuthContext";
+import { FirebaseContext } from "@/context/FirebaseContext";
 import { Suspense, useContext, useEffect, useState } from "react";
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 import RoomTimer from "@/components/room/room-timer";
@@ -15,7 +15,7 @@ import { useDebounce } from "@/helpers/debounce";
 const ROOM_BUTTON_VALUES = ["0", "1", "2", "3", "5", "8", "13", "20", "?"];
 
 export default function Page({ params }: { params: { slug: string } }) {
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(FirebaseContext);
   const {
     loading,
     error,
@@ -50,7 +50,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         addUser();
       }
     }
-    return () => (uid ? removeUser(uid) : {});
+    return (uid) => (uid ? removeUser(uid) : {});
     // eslint-disable-next-line
   }, [user?.uid]);
 

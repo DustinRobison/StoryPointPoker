@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import Card from "@/components/card";
 import { simpleStringOnly } from "@/helpers/string-helpers";
 import { useDebounce } from "@/helpers/debounce";
-import { AuthContext } from "@/context/AuthContext";
+import { FirebaseContext } from "@/context/FirebaseContext";
 
 interface NameCardProps {
   addUser: Function;
@@ -18,7 +18,7 @@ export default function NameCard({ addUser }: NameCardProps) {
 
   const { loading, error, exists } = state;
   const debouncedRoomName = useDebounce(inputName, 100);
-  const { user, updateAuthProfileName } = useContext(AuthContext);
+  const { user, updateAuthProfileName } = useContext(FirebaseContext);
 
   const isAwaitingValidInput =
     inputName !== debouncedRoomName ||
