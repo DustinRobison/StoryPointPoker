@@ -123,6 +123,8 @@ export default function RoomUsersList({
                       <span className="text-center font-bold">
                         {users[uid]?.vote}
                       </span>
+                    ) : users[uid]?.vote !== "-" ? (
+                      <CheckIcon height={24} width={24} />
                     ) : (
                       <ClockIcon height={24} width={24} className="" />
                     )}
