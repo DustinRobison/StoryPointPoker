@@ -2,6 +2,7 @@ import Nav from "@/components/nav";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Foot from "@/components/foot";
+import { Analytics } from "@vercel/analytics/react";
 import { FirebaseContextProvider } from "@/context/FirebaseContext";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -23,6 +24,7 @@ export default function RootLayout({
         <Nav />
         <FirebaseContextProvider>{children}</FirebaseContextProvider>
         <Foot />
+        <Analytics />
       </body>
     </html>
   );
