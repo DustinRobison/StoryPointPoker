@@ -28,6 +28,7 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.194"
+    "@types/lodash": "^4.14.194",
+    "encoding": "^0.1.13"
   }
 }
