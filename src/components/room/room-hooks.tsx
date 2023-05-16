@@ -1,7 +1,6 @@
 "use client";
 
-import { FirebaseContext } from "@/context/FirebaseContext";
-import { IRoom, setRoomUpdateRequest } from "@/firebase/db-room";
+import { FirebaseContext, IRoom } from "@/context/FirebaseContext";
 import {
   Unsubscribe,
   arrayUnion,
@@ -29,7 +28,7 @@ const getInitRoomState = (): IRoom => ({
 
 export const useRoom = (roomName: string) => {
   const router = useRouter();
-  const { user, updateAuthProfileName, firestore } =
+  const { user, updateAuthProfileName, firestore, setRoomUpdateRequest } =
     useContext(FirebaseContext);
   const [state, setState] = useState<IRoom>(getInitRoomState());
   const [loading, setLoading] = useState(true);

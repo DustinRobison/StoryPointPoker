@@ -5,7 +5,7 @@ import PageLoad from "@/components/page-load";
 import NameCard from "@/components/room/name-card";
 import { useRoom } from "@/components/room/room-hooks";
 import { FirebaseContext } from "@/context/FirebaseContext";
-import { Suspense, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
 import RoomTimer from "@/components/room/room-timer";
 import RoomUsersList from "@/components/room/room-users-list";

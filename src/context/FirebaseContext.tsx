@@ -10,7 +10,40 @@ import {
 } from "firebase/auth";
 import PageLoad from "@/components/page-load";
 import { FirebaseApp, initializeApp } from "firebase/app";
-import { Firestore, getFirestore } from "firebase/firestore";
+import {
+  FieldValue,
+  Firestore,
+  doc,
+  getDoc,
+  getFirestore,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+
+export interface IUser {
+  name: string;
+  active: boolean;
+  vote: string;
+}
+
+export interface IAction {
+  action: string;
+  timestamp: string;
+}
+
+export interface IRoom {
+  exists: boolean;
+  ownerId: string;
+  sharedText: string;
+  messages: object[];
+  users: { [key: string]: IUser };
+  showVotes: boolean;
+  createdAt: string | FieldValue;
+  lastVoteTimestamp: string | FieldValue;
+  history: IAction[];
+  leaderOnly: boolean;
+}
 
 interface FirebaseContextData {
   app: FirebaseApp | null;
@@ -19,6 +52,9 @@ interface FirebaseContextData {
   user: User | null;
   loading: boolean;
   updateAuthProfileName: Function;
+  createRoomRequest: Function;
+  getRoomSnapshotRequest: Function;
+  setRoomUpdateRequest: Function;
 }
 
 const defaultContext = {
@@ -28,6 +64,17 @@ const defaultContext = {
   user: null,
   loading: true,
   updateAuthProfileName: (newUsername: string) => {},
+  createRoomRequest: async (
+    roomName: string,
+    user: User,
+    firestore: Firestore
+  ) => {},
+  getRoomSnapshotRequest: async (roomName: string, firestore: Firestore) => {},
+  setRoomUpdateRequest: async (
+    roomName: string,
+    updateObj: object,
+    firestore: Firestore
+  ) => {},
 };
 
 export const FirebaseContext =
@@ -87,9 +134,74 @@ export const FirebaseContextProvider = ({
     throw new Error("Non Authenticated user name change failed!");
   };
 
+  const createInitialRoomData = (
+    roomName: string,
+    user: User,
+    firestore: Firestore
+  ): IRoom => {
+    return {
+      exists: true,
+      ownerId: user?.uid,
+      sharedText: "",
+      messages: [],
+      users: {},
+      showVotes: false,
+      createdAt: serverTimestamp(),
+      lastVoteTimestamp: serverTimestamp(),
+      history: [
+        {
+          action: `${
+            user?.displayName || user?.uid
+          } has created room ${roomName}`,
+          timestamp: new Date().toISOString(),
+        },
+      ],
+      leaderOnly: false,
+    };
+  };
+
+  const createRoomRequest = async (
+    roomName: string,
+    user: User,
+    firestore: Firestore
+  ) => {
+    const docRef = await setDoc(
+      doc(firestore, "rooms", roomName),
+      createInitialRoomData(roomName, user, firestore)
+    );
+    return docRef;
+  };
+
+  const getRoomSnapshotRequest = async (
+    roomName: string,
+    firestore: Firestore
+  ) => {
+    const docRef = doc(firestore, "/rooms", roomName);
+    return await getDoc(docRef);
+  };
+
+  const setRoomUpdateRequest = async (
+    roomName: string,
+    updateObj: object,
+    firestore: Firestore
+  ) => {
+    const docRef = doc(firestore, "/rooms", roomName);
+    return await updateDoc(docRef, updateObj);
+  };
+
   return (
     <FirebaseContext.Provider
-      value={{ user, loading, updateAuthProfileName, app, auth, firestore }}
+      value={{
+        user,
+        loading,
+        updateAuthProfileName,
+        app,
+        auth,
+        firestore,
+        createRoomRequest,
+        getRoomSnapshotRequest,
+        setRoomUpdateRequest,
+      }}
     >
       {user?.uid ? children : <PageLoad />}
     </FirebaseContext.Provider>

@@ -1,5 +1,4 @@
-import { FirebaseContext } from "@/context/FirebaseContext";
-import { IUser } from "@/firebase/db-room";
+import { FirebaseContext, IUser } from "@/context/FirebaseContext";
 import React, { useContext, useState } from "react";
 import {
   ClockIcon,

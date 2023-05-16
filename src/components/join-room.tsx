@@ -4,12 +4,12 @@ import { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { useDebounce } from "@/helpers/debounce";
 import { simpleStringOnly } from "@/helpers/string-helpers";
-import { createRoomRequest, getRoomSnapshotRequest } from "@/firebase/db-room";
 import { FirebaseContext } from "@/context/FirebaseContext";
 
 export default function JoinRoom() {
   const router = useRouter();
-  const { user, firestore } = useContext(FirebaseContext);
+  const { user, firestore, getRoomSnapshotRequest } =
+    useContext(FirebaseContext);
   const [input, setInput] = useState("");
   const [state, setState] = useState({
     loading: false,
