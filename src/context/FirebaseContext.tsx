@@ -20,6 +20,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import { getAnalytics, Analytics } from "firebase/analytics";
 
 export interface IUser {
   name: string;
@@ -90,6 +91,7 @@ export const FirebaseContextProvider = ({
   const [app, setApp] = React.useState<FirebaseApp | null>(null);
   const [auth, setAuth] = React.useState<Auth | null>(null);
   const [firestore, setFirestore] = React.useState<Firestore | null>(null);
+  const [analytics, setAnalytics] = React.useState<Analytics | null>(null);
   const [user, setUser] = React.useState<User | null>(null);
   const [loading, setLoading] = React.useState(true);
 
@@ -106,9 +108,11 @@ export const FirebaseContextProvider = ({
     });
     const firestore = getFirestore(firebase);
     const auth = getAuth(firebase);
+    const analytics = getAnalytics(firebase);
     setApp(firebase);
     setAuth(auth);
     setFirestore(firestore);
+    setAnalytics(analytics);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       signInAnonymously(auth)
         .then((userCredentail) => {
