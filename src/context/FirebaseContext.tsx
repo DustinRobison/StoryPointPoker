@@ -134,11 +134,7 @@ export const FirebaseContextProvider = ({
     throw new Error("Non Authenticated user name change failed!");
   };
 
-  const createInitialRoomData = (
-    roomName: string,
-    user: User,
-    firestore: Firestore
-  ): IRoom => {
+  const createInitialRoomData = (roomName: string, user: User): IRoom => {
     return {
       exists: true,
       ownerId: user?.uid,
@@ -160,31 +156,29 @@ export const FirebaseContextProvider = ({
     };
   };
 
-  const createRoomRequest = async (
-    roomName: string,
-    user: User,
-    firestore: Firestore
-  ) => {
+  const createRoomRequest = async (roomName: string, user: User) => {
+    if (firestore === null) {
+      return null;
+    }
     const docRef = await setDoc(
       doc(firestore, "rooms", roomName),
-      createInitialRoomData(roomName, user, firestore)
+      createInitialRoomData(roomName, user)
     );
     return docRef;
   };
 
-  const getRoomSnapshotRequest = async (
-    roomName: string,
-    firestore: Firestore
-  ) => {
+  const getRoomSnapshotRequest = async (roomName: string) => {
+    if (firestore === null) {
+      return null;
+    }
     const docRef = doc(firestore, "/rooms", roomName);
     return await getDoc(docRef);
   };
 
-  const setRoomUpdateRequest = async (
-    roomName: string,
-    updateObj: object,
-    firestore: Firestore
-  ) => {
+  const setRoomUpdateRequest = async (roomName: string, updateObj: object) => {
+    if (firestore === null) {
+      return null;
+    }
     const docRef = doc(firestore, "/rooms", roomName);
     return await updateDoc(docRef, updateObj);
   };

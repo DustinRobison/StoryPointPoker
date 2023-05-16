@@ -8,7 +8,7 @@ import { FirebaseContext } from "@/context/FirebaseContext";
 
 export default function JoinRoom() {
   const router = useRouter();
-  const { user, firestore, getRoomSnapshotRequest } =
+  const { user, firestore, getRoomSnapshotRequest, createRoomRequest } =
     useContext(FirebaseContext);
   const [input, setInput] = useState("");
   const [state, setState] = useState({
