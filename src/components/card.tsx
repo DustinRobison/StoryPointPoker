@@ -7,7 +7,7 @@ interface CardProps {
 
 export default function Card({ title, children }: CardProps) {
   return (
-    <div className="min-w-full md:min-w-[50%] max-w-3xl rounded overflow-hidden shadow-lg bg-white text-black p-4">
+    <div className="min-w-full md:min-w-[50%] max-w-prose rounded overflow-hidden shadow-lg bg-white text-black p-4">
       <h3 className="text-xl py-6 text-center font-semibold">{title}</h3>
       <div className="flex flex-col">{children}</div>
     </div>
