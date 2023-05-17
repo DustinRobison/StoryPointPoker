@@ -38,7 +38,7 @@ export default function RoomVoteControls({
           } text-white font-semibold rounded  py-2`}
           onClick={() => handleShowVotes(!showVotes)}
         >
-          Show Votes
+          {showVotes ? "Hide Votes" : "Show Votes"}
         </button>
       </div>
       <div>

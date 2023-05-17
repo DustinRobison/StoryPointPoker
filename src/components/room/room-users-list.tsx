@@ -1,5 +1,5 @@
 import { FirebaseContext, IUser } from "@/context/FirebaseContext";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import {
   ClockIcon,
   PencilSquareIcon,
@@ -7,6 +7,7 @@ import {
   XCircleIcon,
   CheckIcon,
 } from "@heroicons/react/24/outline";
+import { simpleStringOnly } from "@/helpers/string-helpers";
 
 interface RoomUsersListProps {
   showVotes: boolean;
@@ -26,6 +27,14 @@ export default function RoomUsersList({
   const { user, firestore } = useContext(FirebaseContext);
   const [isEditingName, setIsEditingName] = useState(false);
   const [inputName, setInputName] = useState(user?.displayName || "");
+
+  const nameInputRef = useRef(null);
+
+  useEffect(() => {
+    if (isEditingName) {
+      nameInputRef.current.focus();
+    }
+  }, [isEditingName]);
 
   const activeUsersIds = Object.keys(users)
     .filter((userUid) => users[userUid]?.active)
@@ -116,27 +125,29 @@ export default function RoomUsersList({
               return (
                 <li
                   key={`usr-${uid}`}
-                  className="grid grid-cols-[32px_1fr_64px] gap-1"
+                  className="grid grid-cols-[32px_1fr_64px] gap-1 h-8"
                 >
-                  <>
+                  <span className="flex font-bold content-center justify-center">
                     {showVotes || (uid === user?.uid && users[uid]?.vote) ? (
-                      <span className="text-center font-bold">
-                        {users[uid]?.vote}
-                      </span>
+                      users[uid]?.vote
                     ) : users[uid]?.vote !== "-" ? (
                       <CheckIcon height={24} width={24} />
                     ) : (
-                      <ClockIcon height={24} width={24} className="" />
+                      <ClockIcon height={24} width={24} />
                     )}
-                  </>
+                  </span>
                   <div className="text-left">
-                    {!isEditingName || user?.uid !== uid ? (
+                    {user?.uid !== uid ? (
                       users[uid].name
                     ) : (
                       <input
                         type="text"
+                        ref={nameInputRef}
                         value={inputName}
-                        onChange={(e) => setInputName(e.target.value)}
+                        disabled={!isEditingName}
+                        onChange={(e) =>
+                          setInputName(simpleStringOnly(e.target.value))
+                        }
                       />
                     )}
                   </div>
