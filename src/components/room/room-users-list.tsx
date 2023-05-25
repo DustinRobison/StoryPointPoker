@@ -8,6 +8,7 @@ import {
   CheckIcon,
 } from "@heroicons/react/24/outline";
 import { simpleStringOnly } from "@/helpers/string-helpers";
+import Chart from "react-apexcharts";
 
 interface RoomUsersListProps {
   showVotes: boolean;
@@ -89,6 +90,38 @@ export default function RoomUsersList({
     updateUserName(inputName);
     setIsEditingName(false);
   };
+
+  const convertVotesToApexSeries = () => {
+    const kvVotesQuantity = Object.keys(users).reduce((acc, uid) => {
+      let vote = isNaN(Number(users[uid].vote))
+        ? "Abstain"
+        : `${users[uid].vote} Points`;
+      if (vote in acc) {
+        acc[vote] += 1;
+        return acc;
+      }
+      return { ...acc, [vote]: 1 };
+    }, {});
+
+    const totalVotes = Object.keys(users).length;
+    const arrayLabelsAndPercent = Object.keys(kvVotesQuantity).map(
+      (storyPointValue) => {
+        return {
+          label: storyPointValue,
+          percent:
+            Math.round((kvVotesQuantity[storyPointValue] / totalVotes) * 100) /
+            100,
+        };
+      }
+    );
+
+    return {
+      labels: arrayLabelsAndPercent.map((i) => i.label),
+      series: arrayLabelsAndPercent.map((i) => i.percent),
+    };
+  };
+
+  const apexOptions = showVotes && users ? convertVotesToApexSeries() : null;
 
   return (
     <div>
@@ -180,6 +213,18 @@ export default function RoomUsersList({
             })
           : null}
       </ul>
+      <div className={`${showVotes ? "block" : "hidden"} `}>
+        <hr className="mb-2" />
+        <Chart
+          options={{
+            labels: apexOptions?.labels || [],
+            chart: { id: "results-chart" },
+          }}
+          series={apexOptions?.series || []}
+          type="pie"
+          width="300"
+        />
+      </div>
     </div>
   );
 }

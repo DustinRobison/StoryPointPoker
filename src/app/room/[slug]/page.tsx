@@ -143,17 +143,19 @@ export default function Page({ params }: { params: { slug: string } }) {
           <hr />
           {/* Content: Vote Buttons and User List */}
           <div className="grid md:grid-cols-2 gap-4 py-4">
-            {/* Vote Buttons */}
-            <div className="grid grid-cols-3 gap-4">
-              {ROOM_BUTTON_VALUES.map((buttonVal) => (
-                <button
-                  key={`btn-${buttonVal}`}
-                  className=" bg-blue text-white font-bold text-xl rounded-md hover:opacity-50 shadow-lg"
-                  onClick={() => handleVote(buttonVal)}
-                >
-                  {buttonVal}
-                </button>
-              ))}
+            <div>
+              {/* Vote Buttons */}
+              <div className="grid grid-cols-3 gap-4">
+                {ROOM_BUTTON_VALUES.map((buttonVal) => (
+                  <button
+                    key={`btn-${buttonVal}`}
+                    className=" bg-blue text-white font-bold text-xl rounded-md hover:opacity-50 shadow-lg"
+                    onClick={() => handleVote(buttonVal)}
+                  >
+                    {buttonVal}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* User List */}

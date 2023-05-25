@@ -15,12 +15,12 @@ export default function Nav() {
         </div>
       </div>
       <ul className="flex">
-        <li className="pr-4 border-r-2">
-          <Link href="/about">
+        <li className="pr-4 border-r-2 flex align-center">
+          <Link href="/about" className="flex align-center justify-center">
             <button className="text-white hover:opacity-50">About</button>
           </Link>
         </li>
-        <li className="px-4 border-x-2">
+        <li className="px-4 border-x-2 flex align-center">
           <a
             href="https://github.com/DustinRobison/StoryPointPoker/issues"
             target="_blank"
@@ -31,7 +31,7 @@ export default function Nav() {
             </button>
           </a>
         </li>
-        <li className="px-4 border-l-2">
+        <li className="px-4 border-l-2 flex align-center justify-center">
           <a
             href="https://www.patreon.com/ScrumStoryPoints"
             target="_blank"
