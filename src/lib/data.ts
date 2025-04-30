@@ -54,3 +54,10 @@ export const defaultStoryPointValues = [
   "20",
   "?"
 ]
+
+export const defaultRoomValues = {
+  users: [],
+  description: "",
+  restrictControl: false,
+  showVotes: false
+}

@@ -1,30 +1,110 @@
 <!-- src/routes/+page.svelte -->
-<script>
+<script lang="ts">
+	import { urlSafeRegex } from '$lib/form-schema.js';
+	import { debounce } from '$lib/helpers.js';
 	import { Button, Card, Input, Label } from 'flowbite-svelte';
 	import { fade } from 'svelte/transition';
 
+	let roomName = $state<string>('');
 	let buttonText = $state('Create Room');
-	let buttonDisabled = $state(true);
+	let loading = $state(false);
+	let valid = $state(false);
+
+	function handleInput(event: Event) {
+		const target = event.target as HTMLInputElement;
+		const value = target.value;
+		if (urlSafeRegex.test(value)) {
+			roomName = value;
+		} else {
+			// Revert to last valid searchTerm if invalid
+			target.value = roomName;
+		}
+	}
+
+	const handleDebouncedInput = debounce(async (inputName) => {
+		valid =
+			typeof inputName === 'string' &&
+			urlSafeRegex.test(inputName) &&
+			inputName.length > 3 &&
+			inputName.length < 20;
+		if (!valid) {
+			return;
+		}
+		loading = true;
+		let roomExists = false;
+		// Make an api call to check if the room exists
+		try {
+			const response = await fetch(`/api/room/${roomName}`);
+			if (response.ok) {
+				const data = await response.json();
+				roomExists = data.exists;
+			} else {
+				console.error('Error fetching room data:', response.statusText);
+			}
+		} catch (error) {
+			console.error('Error fetching room data:', error);
+		} finally {
+			if (roomExists) {
+				buttonText = 'Join Room';
+			} else {
+				buttonText = 'Create Room';
+			}
+			loading = false;
+		}
+	}, 300);
+
+	$effect(() => {
+		handleDebouncedInput(roomName);
+	});
 </script>
 
-<div class="flex my-12 items-center justify-center">
+<div class="my-12 flex items-center justify-center">
 	<!-- Fade-in Card to center of the screen -->
 	<div transition:fade={{ duration: 600 }} class="flex w-full justify-center">
 		<Card size="lg" class="flex flex-col items-center justify-between">
-			<h5 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+			<h5
+				class="w-full text-center text-4xl font-bold tracking-tight text-gray-900 dark:text-white"
+			>
 				Create or join a room:
 			</h5>
+			<form action="?/room" method="POST" class="w-full">
+				<!-- Hidden honeypot field -->
+				<input
+					type="text"
+					name="honeypot"
+					class="hidden"
+					autocomplete="off"
+					tabindex="-2"
+					aria-hidden="true"
+				/>
+				<!-- Hidden bound field for "create" or "join" -->
+				<input
+					name="action"
+					type="text"
+					class="hidden"
+					autocomplete="off"
+					tabindex="-1"
+					aria-hidden="true"
+					value={buttonText === 'Join Room' ? 'join' : 'create'}
+				/>
 
-			<form class="mt-8 w-full px-2">
-				<div class="mb-6">
-					<Label for="large-input" class="mb-2 block">Room name:</Label>
-					<Input id="large-input" size="lg" placeholder="secret_room_12" />
-					<p class="text-sm text-gray-500 dark:text-shadow-white">
-						Some character restrictions apply
-					</p>
+				<div class="mb-6 w-full">
+					<Label for="roomName" class="mb-2 block">Room name:</Label>
+					<Input
+						id="roomName"
+						size="lg"
+						name="roomName"
+						placeholder="my_team_name"
+						oninput={handleInput}
+						required
+						autocomplete="off"
+					/>
+					<p class="text-sm">Room name can only contain letters, numbers, and -._~</p>
 				</div>
 
-				<Button class="mt-6 w-full" disabled={buttonDisabled}>{buttonText}</Button>
+				<Button class="mt-6 w-full" type="submit" disabled={loading || !valid}
+					>{loading ? 'Loading...' : buttonText}</Button
+				>
 			</form>
 		</Card>
 	</div>

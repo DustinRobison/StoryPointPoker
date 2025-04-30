@@ -1,0 +1,35 @@
+// src/hooks.server.js
+import { createInstance } from '$lib/server/pocketbase';
+
+
+/** @type {import('@sveltejs/kit').Handle} */
+export async function handle({ event, resolve }) {
+  const pb = createInstance();
+
+  // load the store data from the request cookie string
+	pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
+	try {
+		// get an up-to-date auth store state by verifying and refreshing the loaded auth model (if any)
+		if (pb.authStore.isValid) {
+			await pb.collection('users').authRefresh();
+		}
+	} catch {
+		// clear the auth store on failed refresh
+		pb.authStore.clear();
+	}
+
+  event.locals.pb = pb;
+	//console.log('pb', pb.authStore);
+	event.locals.user = pb.authStore.record;
+
+	const response = await resolve(event);
+
+	// send back the default 'pb_auth' cookie to the client with the latest store state
+
+	// response.headers.set(
+	// 	'set-cookie',
+	// 	pb.authStore.exportToCookie({ httpOnly: false, sameSite: 'lax', secure: !dev })
+	// );
+
+  return response;
+}
