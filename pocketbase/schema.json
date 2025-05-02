@@ -178,7 +178,7 @@
         "createRule": "",
         "updateRule": "id = @request.auth.id",
         "deleteRule": "id = @request.auth.id",
-        "name": "users_original",
+        "name": "users",
         "type": "auth",
         "fields": [
             {
@@ -316,8 +316,8 @@
             }
         ],
         "indexes": [
-            "CREATE UNIQUE INDEX `idx_tokenKey__pb_users_auth_` ON `users_original` (`tokenKey`)",
-            "CREATE UNIQUE INDEX `idx_email__pb_users_auth_` ON `users_original` (`email`) WHERE `email` != ''"
+            "CREATE UNIQUE INDEX `idx_tokenKey__pb_users_auth_` ON `users` (`tokenKey`)",
+            "CREATE UNIQUE INDEX `idx_email__pb_users_auth_` ON `users` (`email`) WHERE `email` != ''"
         ],
         "system": false,
         "authRule": "",
@@ -788,7 +788,7 @@
         "viewRule": "",
         "createRule": "",
         "updateRule": "",
-        "deleteRule": "",
+        "deleteRule": null,
         "name": "rooms",
         "type": "base",
         "fields": [
@@ -897,92 +897,9 @@
                 "type": "autodate"
             }
         ],
-        "indexes": [],
-        "system": false
-    },
-    {
-        "id": "pbc_4093909562",
-        "listRule": "",
-        "viewRule": "",
-        "createRule": "",
-        "updateRule": "",
-        "deleteRule": "",
-        "name": "users",
-        "type": "base",
-        "fields": [
-            {
-                "autogeneratePattern": "[a-z0-9]{15}",
-                "hidden": false,
-                "id": "text3208210256",
-                "max": 15,
-                "min": 15,
-                "name": "id",
-                "pattern": "^[a-z0-9]+$",
-                "presentable": false,
-                "primaryKey": true,
-                "required": true,
-                "system": true,
-                "type": "text"
-            },
-            {
-                "autogeneratePattern": "",
-                "hidden": false,
-                "id": "text1579384326",
-                "max": 0,
-                "min": 0,
-                "name": "name",
-                "pattern": "",
-                "presentable": false,
-                "primaryKey": false,
-                "required": false,
-                "system": false,
-                "type": "text"
-            },
-            {
-                "hidden": false,
-                "id": "bool3318317249",
-                "name": "is_anonymous",
-                "presentable": false,
-                "required": false,
-                "system": false,
-                "type": "bool"
-            },
-            {
-                "hidden": false,
-                "id": "file376926767",
-                "maxSelect": 1,
-                "maxSize": 0,
-                "mimeTypes": [],
-                "name": "avatar",
-                "presentable": false,
-                "protected": false,
-                "required": false,
-                "system": false,
-                "thumbs": [],
-                "type": "file"
-            },
-            {
-                "hidden": false,
-                "id": "autodate2990389176",
-                "name": "created",
-                "onCreate": true,
-                "onUpdate": false,
-                "presentable": false,
-                "system": false,
-                "type": "autodate"
-            },
-            {
-                "hidden": false,
-                "id": "autodate3332085495",
-                "name": "updated",
-                "onCreate": true,
-                "onUpdate": true,
-                "presentable": false,
-                "system": false,
-                "type": "autodate"
-            }
+        "indexes": [
+            "CREATE INDEX `idx_sK9QKGBsQR` ON `rooms` (`roomName`)"
         ],
-        "indexes": [],
         "system": false
     }
 ]

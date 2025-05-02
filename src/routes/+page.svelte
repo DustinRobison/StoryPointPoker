@@ -5,6 +5,8 @@
 	import { Button, Card, Input, Label } from 'flowbite-svelte';
 	import { fade } from 'svelte/transition';
 
+	const { data } = $props();
+
 	let roomName = $state<string>('');
 	let buttonText = $state('Create Room');
 	let loading = $state(false);

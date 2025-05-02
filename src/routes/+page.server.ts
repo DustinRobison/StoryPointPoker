@@ -1,22 +1,18 @@
 import { defaultRoomValues } from '$lib/data.js';
-import { roomNameSchema, urlSafeRegex } from '$lib/form-schema';
-import { getAnonymousIdFromCookie } from '$lib/helpers.js';
-import { pb } from '$lib/server/pocketbase.js';
+import { urlSafeRegex } from '$lib/form-schema';
+import { pb } from '$lib/pocketbase.js';
 import { fail, redirect } from '@sveltejs/kit';
-import { superValidate } from 'sveltekit-superforms';
-import { zod } from 'sveltekit-superforms/adapters';
 
-export const load = async () => {
-	const form = await superValidate(zod(roomNameSchema));
-	return { form };
+export const load = async ({ locals }) => {
+	return { user: locals.user };
 };
 
 export const actions = {
-	room: async ({ request }) => {
-		// extract anonymousId from cookie
-		const anonymousId = getAnonymousIdFromCookie(request.headers.get('cookie'));
-		if (!anonymousId) {
-			return fail(400, { form: { error: 'Anonymous ID not found' } });
+	room: async ({ request, locals }) => {
+		// get user
+		const user = locals.user;
+		if (!user) {
+			return fail(401, { form: { error: 'Unauthorized' } });
 		}
 		// extract form data
 		const data = await request.formData();
@@ -39,28 +35,22 @@ export const actions = {
 		}
 		if (action === 'create') {
 			// Create room logic here
-			console.log(`Creating room: ${roomName}`);
-			const res = await pb.collection('rooms').create({
+			await pb.collection('rooms').create({
 				...defaultRoomValues,
 				roomName,
-				ownerId: anonymousId,
-				users: [
-					{
-						id: anonymousId,
-						name: '',
-						vote: ''
+				ownerId: user.id,
+				users: {
+					[user.id]: {
+						name: user.name || '',
+						vote: '-'
 					}
-				]
+				}
 			});
-			console.log(res);
-		} else if (action === 'join') {
-			// Join room logic here
-			console.log(`Joining room: ${roomName}`);
-		} else {
-			// Invalid action
-			return fail(400, { form: { error: 'Invalid action' } });
 		}
 
+		if (!user.name) {
+			return redirect(303, `/profile?room=${roomName}`);
+		}
 		return redirect(303, `/room/${roomName}`);
 	}
 };

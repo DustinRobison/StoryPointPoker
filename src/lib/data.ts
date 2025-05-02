@@ -56,7 +56,7 @@ export const defaultStoryPointValues = [
 ]
 
 export const defaultRoomValues = {
-  users: [],
+  users: {},
   description: "",
   restrictControl: false,
   showVotes: false

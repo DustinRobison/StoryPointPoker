@@ -1,4 +1,4 @@
-import { pb } from '$lib/server/pocketbase';
+import { pb } from '$lib/pocketbase';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({params}) => {
@@ -15,7 +15,7 @@ export const GET: RequestHandler = async ({params}) => {
         return new Response(JSON.stringify({ exists: true }), { status: 200 });
     } catch (error) {
         console.log(error)
-        if ((error as { status?: number }).status === 400) {
+        if ((error as { status?: number }).status === 404) {
             // Room does not exist
             return new Response(JSON.stringify({ exists: false }), { status: 200 });
         }

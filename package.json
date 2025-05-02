@@ -41,6 +41,8 @@
 		"zod": "^3.24.3"
 	},
 	"dependencies": {
-		"pocketbase": "^0.26.0"
+		"date-fns": "^4.1.0",
+		"pocketbase": "^0.26.0",
+		"uuid": "^11.1.0"
 	}
 }
