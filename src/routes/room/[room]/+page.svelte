@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { defaultStoryPointValues } from '$lib/data';
 	import { debounce } from '$lib/helpers.js';
@@ -13,11 +14,11 @@
 		Textarea,
 		TextPlaceholder
 	} from 'flowbite-svelte';
-	import { CheckCircleSolid, ClockSolid } from 'flowbite-svelte-icons';
+	import { CheckCircleSolid, ClockSolid, TrashBinSolid } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 
-	const roomName = page.params.room;
+	const roomName = page.params.room.toLowerCase();
 	const { data } = $props();
 	let isInitializing = $state(true);
 	let roomDescription = $state('');
@@ -147,7 +148,14 @@
 
 		(async () => {
 			// Create pocketbase subscription to rooms collection for record with roomName = page.params.room
-			roomData = await pb.collection('rooms').getFirstListItem(`roomName="${roomName}"`);
+			try {
+				roomData = await pb.collection('rooms').getFirstListItem(`roomName="${roomName}"`);
+			} catch {
+				// Throw a SvelteKit error to trigger the +error.svelte page
+				goto(`/error?roomName=${roomName}`)
+				return;
+			}
+			
 
 			if (!roomData || !roomData?.id) {
 				// If no room data, redirect to home page
@@ -308,6 +316,11 @@
 									<div class="flex-1 text-sm font-medium text-gray-900 dark:text-white">
 										{user.name}
 									</div>
+
+									<!-- Show kick icon if is host -->
+									 <div class="flex items-center">
+										<TrashBinSolid class="h-6 w-6 hover:text-red-500" />
+									 </div>
 								</div>
 							{/each}
 						</div>

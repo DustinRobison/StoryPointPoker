@@ -24,7 +24,7 @@ export const actions = {
 		}
 		// Validate form data
 		const action = data.get('action') as string;
-		const roomName = data.get('roomName') as string;
+		const roomName = (data.get('roomName') as string).toLowerCase().trim();
 
 		// Validate roomName
 		const valid = roomName.length >= 4 && roomName.length <= 20 && urlSafeRegex.test(roomName);
