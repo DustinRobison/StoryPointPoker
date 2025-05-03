@@ -1,6 +1,5 @@
 import { defaultRoomValues } from '$lib/data.js';
 import { urlSafeRegex } from '$lib/form-schema';
-import { pb } from '$lib/pocketbase.js';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const load = async ({ locals }) => {
@@ -9,6 +8,8 @@ export const load = async ({ locals }) => {
 
 export const actions = {
 	room: async ({ request, locals }) => {
+		console.log('request.headers.origin: ', request.headers.get('origin'));
+		const pb = locals.pb;
 		// get user
 		const user = locals.user;
 		if (!user) {

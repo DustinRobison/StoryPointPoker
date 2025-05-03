@@ -4,6 +4,7 @@
 	import { defaultStoryPointValues } from '$lib/data';
 	import { debounce } from '$lib/helpers.js';
 	import { pb, type RoomType } from '$lib/pocketbase.js';
+	import { toast } from '$lib/stores/toast.js';
 	import { formatDistanceToNow } from 'date-fns';
 	import {
 		Button,
@@ -12,9 +13,16 @@
 		ListPlaceholder,
 		Skeleton,
 		Textarea,
-		TextPlaceholder
+		TextPlaceholder,
+		Tooltip
 	} from 'flowbite-svelte';
-	import { CheckCircleSolid, ClockSolid, TrashBinSolid } from 'flowbite-svelte-icons';
+	import {
+		CheckCircleSolid,
+		ClockSolid,
+		FileCopySolid,
+		StarSolid,
+		TrashBinSolid
+	} from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 
@@ -123,6 +131,25 @@
 		return tempUserList;
 	}
 
+	function copyRoomLink() {
+		const roomLink = `${window.location.origin}/room/${roomData?.roomName}`;
+		navigator.clipboard.writeText(roomLink);
+		toast.set({
+			show: true,
+			message: 'Room link copied to clipboard',
+			type: 'success',
+			icon: 'check'
+		});
+		setTimeout(() => {
+			toast.set({
+				show: false,
+				message: '',
+				type: '',
+				icon: ''
+			});
+		}, 2000);
+	}
+
 	function calculateAverageVotes() {
 		const votes = Object.values(roomData?.users || {}).map((user) => user.vote);
 		// Filter out non-numeric votes
@@ -152,10 +179,9 @@
 				roomData = await pb.collection('rooms').getFirstListItem(`roomName="${roomName}"`);
 			} catch {
 				// Throw a SvelteKit error to trigger the +error.svelte page
-				goto(`/error?roomName=${roomName}`)
+				goto(`/error?roomName=${roomName}`);
 				return;
 			}
-			
 
 			if (!roomData || !roomData?.id) {
 				// If no room data, redirect to home page
@@ -214,9 +240,11 @@
 					</div>
 				</div>
 			{:else}
-				<h5 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-					Welcome {data.user.name} to room {roomData?.roomName}:
-				</h5>
+				<div class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+					Welcome {data.user.name} to room <Button color="alternative" onclick={copyRoomLink}
+						><FileCopySolid /> {roomData?.roomName}</Button
+					>
+				</div>
 
 				<div class="grid w-full grid-cols-1 py-4 md:grid-cols-2">
 					<!-- COLUMN 1 LEFT -->
@@ -276,7 +304,7 @@
 
 						<hr class="" />
 
-						<div class="flex justify-between my-4">
+						<div class="my-4 flex justify-between">
 							<div class="flex space-x-4">
 								<span class="mr-4">Average:</span>
 								{#if roomData?.showVotes}
@@ -301,7 +329,7 @@
 						</div>
 
 						<div class="my-4">
-							{#each userList as user}
+							{#each userList as user, idx}
 								<div class="flex items-center space-x-4">
 									<div class="min-w-8">
 										{#if roomData?.showVotes}
@@ -314,13 +342,24 @@
 									</div>
 
 									<div class="flex-1 text-sm font-medium text-gray-900 dark:text-white">
-										{user.name}
+										{#if idx === 0}
+											<!-- User is host, show a star -->
+											<span class="flex space-x-1 align-middle"
+												>{user.name}<StarSolid id="host-star" /><Tooltip triggeredBy="#host-star"
+													>Room Creator</Tooltip
+												></span
+											>
+										{:else}
+											{user.name}
+										{/if}
 									</div>
 
 									<!-- Show kick icon if is host -->
-									 <div class="flex items-center">
-										<TrashBinSolid class="h-6 w-6 hover:text-red-500" />
-									 </div>
+									{#if roomData?.ownerId === data.user.id && idx !== 0}
+										<div class="flex items-center">
+											<TrashBinSolid class="h-6 w-6 hover:text-red-500" />
+										</div>
+									{/if}
 								</div>
 							{/each}
 						</div>

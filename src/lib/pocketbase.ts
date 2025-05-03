@@ -2,11 +2,11 @@ import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
 import PocketBase from 'pocketbase';
 
 
-export async function createInstance() {
+export function createInstance() {
   return new PocketBase(PUBLIC_POCKETBASE_URL || 'http://localhost:8090')
 }
 
-export const pb = await createInstance();
+export const pb = createInstance();
 
 export type UserType = {
   id: string;

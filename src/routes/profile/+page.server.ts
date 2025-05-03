@@ -7,7 +7,8 @@ export const load = (async () => {
 }) satisfies PageServerLoad;
 
 export const actions = {
-	name: async ({ request, params, locals }) => {
+	name: async ({ request, locals }) => {
+		const pb = locals.pb;
 		// extract anonymousId from cookie
 		const user = locals.user;
 		if (!user) {
@@ -26,12 +27,12 @@ export const actions = {
 		}
 
 		// Update the user name in pocketbase user table
-		const updatedUser = await locals.pb.collection('users').update(user.id, {
+		const updatedUser = await pb.collection('users').update(user.id, {
 			name: username
 		});
 		if (roomName) {
 			// Get the room data from pocketbase
-			const roomData = await locals.pb
+			const roomData = await pb
 				.collection('rooms')
 				.getFirstListItem(`roomName="${roomName}"`);
 			if (!roomData) {
@@ -43,7 +44,7 @@ export const actions = {
 			const userInRoom = roomUsers[user.id];
 			if (userInRoom) {
 				// Update the user name in the room
-				const res = await locals.pb.collection('rooms').update(roomData.id, {
+				const res = await pb.collection('rooms').update(roomData.id, {
 					users: {
 						...roomUsers,
 						[user.id]: {
@@ -54,7 +55,7 @@ export const actions = {
 				});
 			} else {
 				// Add the user to the room
-				await locals.pb.collection('rooms').update(roomData.id, {
+				await pb.collection('rooms').update(roomData.id, {
 					users: {
 						...roomUsers,
 						[user.id]: {

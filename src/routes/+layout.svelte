@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { links, meta } from '$lib/data';
+	import { toast } from '$lib/stores/toast';
 	import {
 		Footer,
 		FooterCopyright,
@@ -9,16 +10,29 @@
 		NavBrand,
 		NavHamburger,
 		NavLi,
-		NavUl
+		NavUl,
+		Toast
 	} from 'flowbite-svelte';
 	import '../app.css';
 
 	let { children } = $props();
 </script>
 
+<!-- Toast in abosolute postion appears on z-top -->
+ <div class="fixed bottom-0 right-0 z-50 m-4">
+	{#if $toast.show}
+		<Toast
+			id={`ToastTime`}
+			toastStatus={$toast.show}
+		>
+			{$toast.message}
+		</Toast>
+	{/if}
+</div>
+
 <div class="flex min-h-[calc(100svh)] w-full flex-col md:min-h-screen">
 	<div class="relative px-8">
-		<Navbar class="px-2 sm:px-4 py-2.5 fixed w-full z-20 top-0 start-0 border-b">
+		<Navbar class="fixed start-0 top-0 z-20 w-full border-b px-2 py-2.5 sm:px-4">
 			<NavBrand href="/">
 				<img src={meta.logo} class="me-3 h-6 sm:h-9" alt="Flowbite Logo" />
 				<div>

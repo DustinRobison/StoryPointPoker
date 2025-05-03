@@ -1,6 +1,6 @@
 // src/hooks.server.js
 import { dev } from '$app/environment';
-import { createServerInstance } from '$lib/pocketbase.server';
+import { createInstance } from '$lib/pocketbase';
 import { v4 as uuidv4 } from 'uuid';
 
 const DEFAULT_ANONYMOUS_USER = {
@@ -11,7 +11,7 @@ const DEFAULT_ANONYMOUS_USER = {
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
-	const pb = await createServerInstance();
+	const pb = await createInstance();
 
   // load the store data from the request cookie string
 	pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');

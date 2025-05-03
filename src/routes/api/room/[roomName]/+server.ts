@@ -1,8 +1,8 @@
-import { pb } from '$lib/pocketbase';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({params}) => {
-    const { roomName } = params;
+export const GET: RequestHandler = async ({params, locals}) => {
+    const pb = locals.pb;
+    const roomName = (params.roomName as string).toLowerCase().trim();
 
     // Validate the roomName parameter
     if (!roomName || typeof roomName !== 'string' || roomName.length < 3 || roomName.length > 20) {
