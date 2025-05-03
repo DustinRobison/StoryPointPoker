@@ -1,6 +1,13 @@
 # Stage 1: Build SvelteKit app
 FROM node:20-alpine AS builder
 WORKDIR /app
+
+# Define build arguments for public environment variables
+ARG PUBLIC_POCKETBASE_URL
+ARG PUBLIC_POCKETBASE_ADMIN
+ENV PUBLIC_POCKETBASE_URL=$PUBLIC_POCKETBASE_URL
+ENV PUBLIC_POCKETBASE_ADMIN=$PUBLIC_POCKETBASE_ADMIN
+
 COPY package.json package-lock.json ./
 RUN npm install
 COPY . .
@@ -35,4 +42,4 @@ RUN mkdir -p /pb/pb_data
 EXPOSE 3000 8090
 
 # Start both SvelteKit and PocketBase
-CMD ["/bin/sh", "-c", "/pb/pocketbase migrate --dir=/pb/pb_data && /pb/pocketbase serve --http=0.0.0.0:8090 --dir=/pb/pb_data & node build"]
+CMD ["/bin/sh", "-c", "/pb/pocketbase serve --http=0.0.0.0:8090 --dir=/pb/pb_data & node build"]

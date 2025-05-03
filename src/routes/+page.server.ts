@@ -8,7 +8,6 @@ export const load = async ({ locals }) => {
 
 export const actions = {
 	room: async ({ request, locals }) => {
-		console.log('request.headers.origin: ', request.headers.get('origin'));
 		const pb = locals.pb;
 		// get user
 		const user = locals.user;

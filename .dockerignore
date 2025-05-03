@@ -1,0 +1,29 @@
+# flyctl launch added from .gitignore
+**/node_modules
+
+# Output
+**/.output
+**/.vercel
+**/.netlify
+**/.wrangler
+.svelte-kit
+build
+
+# OS
+**/.DS_Store
+**/Thumbs.db
+
+# Env
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.test
+
+# Vite
+**/vite.config.js.timestamp-*
+**/vite.config.ts.timestamp-*
+
+# Pocketbase
+**/pb/pocketbase
+**/pb/pb_data
+fly.toml
