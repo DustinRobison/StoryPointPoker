@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for scrumstorypoints-svelte on 2025-05-03T13:20:40-07:00
+# fly.toml app configuration file generated for scrumstorypoints-svelte on 2025-05-06T19:09:15-07:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -7,11 +7,16 @@ app = 'scrumstorypoints-svelte'
 primary_region = 'den'
 
 [build]
-  dockerfile = "Dockerfile"
+  dockerfile = 'Dockerfile'
 
-[build.args]
-  PUBLIC_POCKETBASE_URL = "http://localhost:8090"
-  PUBLIC_POCKETBASE_ADMIN = "http://localhost:8090/_"
+  [build.args]
+    PUBLIC_POCKETBASE_ADMIN = 'https://scrumstorypoints-pb.fly.dev/_'
+    PUBLIC_POCKETBASE_URL = 'https://scrumstorypoints-pb.fly.dev/'
+
+[env]
+  PORT = '3000'
+  PUBLIC_POCKETBASE_ADMIN = 'https://scrumstorypoints-pb.fly.dev/_'
+  PUBLIC_POCKETBASE_URL = 'https://scrumstorypoints-pb.fly.dev/'
 
 [http_service]
   internal_port = 3000
@@ -20,15 +25,6 @@ primary_region = 'den'
   auto_start_machines = true
   min_machines_running = 0
   processes = ['app']
-
-[mounts]
-  source = "pb_data"
-  destination = "/pb/pb_data"
-
-[env]
-  PORT = "3000" # SvelteKit listens on this port
-  PUBLIC_POCKETBASE_URL="http://localhost:8090/"
-  PUBLIC_POCKETBASE_ADMIN="http://localhost:8090/_"
 
 [[vm]]
   memory = '1gb'
