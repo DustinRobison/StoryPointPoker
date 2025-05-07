@@ -14,7 +14,7 @@
 
 	function handleInput(event: Event) {
 		const target = event.target as HTMLInputElement;
-		const value = target.value;
+		const value = target.value.toLowerCase();
 		if (urlSafeRegex.test(value)) {
 			roomName = value;
 		} else {
@@ -60,9 +60,9 @@
 	});
 </script>
 
-<div class="my-12 flex items-center justify-center">
+<div transition:fade={{ duration: 300 }}  class="my-12 flex items-center justify-center">
 	<!-- Fade-in Card to center of the screen -->
-	<div transition:fade={{ duration: 600 }} class="flex w-full justify-center">
+	<div class="flex w-full justify-center">
 		<Card size="lg" class="flex flex-col items-center justify-between">
 			<h5
 				class="w-full text-center text-4xl font-bold tracking-tight text-gray-900 dark:text-white"

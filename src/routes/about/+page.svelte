@@ -1,14 +1,8 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-
-	let title = 'About Agile, Scrum, and Scrum Story Points';
-
-	onMount(() => {
-		document.title = title;
-	});
+	import { fade } from 'svelte/transition';
 </script>
 
-<div class="mx-auto my-8 max-w-4xl rounded-lg bg-white p-8">
+<div class="mx-auto my-8 max-w-4xl rounded-lg bg-white p-8" transition:fade={{ duration: 300 }}>
 	<h1 class="mb-6 text-3xl font-bold text-gray-800">About Agile, Scrum, and Scrum Story Points</h1>
 
 	<h2 class="mb-4 text-2xl font-semibold text-gray-700">What is Agile?</h2>

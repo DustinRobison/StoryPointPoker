@@ -13,18 +13,17 @@
 		NavUl,
 		Toast
 	} from 'flowbite-svelte';
+	import { fade } from 'svelte/transition';
 	import '../app.css';
 
 	let { children } = $props();
+	let visible = $state(true);
 </script>
 
 <!-- Toast in abosolute postion appears on z-top -->
- <div class="fixed bottom-0 right-0 z-50 m-4">
+<div class="fixed right-0 bottom-0 z-50 m-4">
 	{#if $toast.show}
-		<Toast
-			id={`ToastTime`}
-			toastStatus={$toast.show}
-		>
+		<Toast id={`ToastTime`} toastStatus={$toast.show}>
 			{$toast.message}
 		</Toast>
 	{/if}
@@ -57,7 +56,9 @@
 	<div class="h-[74px]"></div>
 
 	<main class={`mx-auto my-4 w-full max-w-5xl flex-grow overflow-x-clip px-2`}>
-		{@render children()}
+		<div transition:fade={{ duration: 300 }}>
+			{@render children()}
+		</div>
 	</main>
 
 	<Footer>

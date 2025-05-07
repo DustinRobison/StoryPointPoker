@@ -223,7 +223,7 @@
 
 <div class="flex items-center justify-center">
 	<!-- Fade-in Card to center of the screen -->
-	<div transition:fade={{ duration: 600 }} class="flex w-full justify-center">
+	<div transition:fade={{ duration: 300 }} class="flex w-full justify-center">
 		<Card size="lg" class="flex min-h-80 flex-col items-center justify-between">
 			{#if isInitializing}
 				<!-- LOADING SKELETON -->

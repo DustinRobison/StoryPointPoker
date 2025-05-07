@@ -27,7 +27,7 @@
 
 <div class="flex items-center justify-center">
 	<!-- Fade-in Card to center of the screen -->
-	<div transition:fade={{ duration: 600 }} class="flex w-full justify-center">
+	<div transition:fade={{ duration: 300 }} class="flex w-full justify-center">
 		<Card
 			class="flex min-h-screen flex-col items-center justify-center text-gray-900 dark:text-white"
 		>
