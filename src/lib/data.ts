@@ -15,8 +15,8 @@ export const links = [
     inNavBar: true
   },
   {
-    name: "Message Board",
-    url: "/message-board",
+    name: "Guestbook",
+    url: "/guestbook",
     inNavBar: true
   },
   {

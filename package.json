@@ -34,7 +34,6 @@
 		"prettier-plugin-tailwindcss": "^0.6.11",
 		"svelte": "^5.0.0",
 		"svelte-check": "^4.0.0",
-		"sveltekit-superforms": "^2.24.1",
 		"tailwindcss": "^4.0.0",
 		"typescript": "^5.0.0",
 		"typescript-eslint": "^8.20.0",
@@ -42,6 +41,7 @@
 		"zod": "^3.24.3"
 	},
 	"dependencies": {
+		"bad-words": "^4.0.0",
 		"date-fns": "^4.1.0",
 		"pocketbase": "^0.26.0",
 		"uuid": "^11.1.0"
