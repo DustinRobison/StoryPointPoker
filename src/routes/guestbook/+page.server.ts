@@ -10,10 +10,15 @@ interface CustomError {
 }
 
 export const load = (async ({locals}) => {
+    const user = locals.user;
     const posts = await locals.pb.collection('posts').getFullList({
-        sort: "-created"
+        sort: "-created",
+        expand: "author, likes",
+        fields: 'content,created,expand.author.name,expand.likes.id,tags,replies'
     })
+    
 	return {
+        user,
         posts
     };
 }) satisfies PageServerLoad;
