@@ -11,10 +11,9 @@ export const GET: RequestHandler = async ({params, locals}) => {
 
     try {
         // Query PocketBase to check if a room with the given name exists
-        await pb.collection('rooms').getFirstListItem(`roomName="${roomName}"`);
+        await pb.collection('rooms').getFirstListItem(`name="${roomName}"`);
         return new Response(JSON.stringify({ exists: true }), { status: 200 });
     } catch (error) {
-        console.log(error)
         if ((error as { status?: number }).status === 404) {
             // Room does not exist
             return new Response(JSON.stringify({ exists: false }), { status: 200 });

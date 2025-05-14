@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { page } from '$app/state';
 	import { defaultStoryPointValues } from '$lib/data';
 	import { debounce } from '$lib/helpers.js';
-	import { pb, type RoomType } from '$lib/pocketbase.js';
+	import { pb } from '$lib/pocketbase.js';
 	import { toast } from '$lib/stores/toast.js';
 	import { formatDistanceToNow } from 'date-fns';
 	import {
@@ -26,18 +24,17 @@
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 
-	const roomName = page.params.room.toLowerCase();
 	const { data } = $props();
 	let isInitializing = $state(true);
-	let roomDescription = $state('');
+	let roomDescription = $state(data.room.description || '');
 	let timeElapsed = $state('');
-	let roomData = $state<RoomType | null>(null);
-	let userList = $derived(getUserList(roomData?.users || {}, roomData?.ownerId || ''));
+	let roomData = $state(data.room);
+	let userList = $derived(getUserList(roomData.votes, roomData?.owner || ''));
 
 	// Debounce function to limit the rate at which the description is updated
 	const handleDebouncedInput = debounce(async (...args: unknown[]) => {
 		const inputDescription = args[0] as string;
-		if (roomData?.ownerId === data.user.id) {
+		if (roomData?.owner === data.user.id) {
 			roomDescription = inputDescription;
 			await pb.collection('rooms').update(roomData.id, { description: roomDescription });
 		}
@@ -47,10 +44,10 @@
 		// Update the vote in db for user by id
 		if (roomData?.id)
 			await pb.collection('rooms').update(roomData.id, {
-				users: {
-					...roomData?.users,
+				votes: {
+					...roomData?.votes,
 					[data.user.id]: {
-						...roomData?.users[data.user.id],
+						...roomData?.votes[data.user.id],
 						vote: value
 					}
 				}
@@ -68,15 +65,16 @@
 
 	const handleClearVotes = debounce(async () => {
 		if (roomData?.id) {
-			const newUsers: Record<string, { name: string; vote: string }> = {};
-			for (const userId in roomData?.users) {
+			const newUsers: Record<string, { name: string; avatar: string; vote: string }> = {};
+			for (const userId in roomData?.votes) {
 				newUsers[userId] = {
-					name: roomData?.users[userId].name,
+					name: roomData?.votes[userId].name,
+					avatar: roomData?.votes[userId].avatar,
 					vote: '-'
 				};
 			}
 			await pb.collection('rooms').update(roomData.id, {
-				users: newUsers,
+				votes: newUsers,
 				showVotes: false
 			});
 		}
@@ -84,7 +82,6 @@
 
 	const handleShowVotes = debounce(async () => {
 		if (roomData?.id) {
-			const newUsers: Record<string, { name: string; vote: string }> = {};
 			await pb.collection('rooms').update(roomData.id, {
 				showVotes: true
 			});
@@ -95,32 +92,38 @@
 		timeElapsed = roomData?.created ? formatDistanceToNow(new Date(roomData.created)) : 'Unknown';
 	}
 
-	function getUserList(users: Record<string, { name: string; vote: string }>, ownerId: string) {
+	// Transform the votes object into a list of users
+	// with their names and votes
+	// The first user is the host, the second user is the current user (if they are not the host)
+	function getUserList(users: Record<string, { name: string; vote: string }>, owner: string) {
 		let tempUserList: { name: string; vote: string }[] = [];
+
+		console.log('users', {...users});
 		// check if users is empty
 		if (!users || Object.keys(users).length === 0) {
 			return tempUserList;
 		}
+
 		// The first user is the host
-		const roomHost = users[ownerId];
+		const roomHost = users[owner];
 		tempUserList.push({
-			name: roomHost.name,
-			vote: roomHost.vote
+			name: roomHost?.name || '',
+			vote: roomHost?.vote || '-'
 		});
 
 		// The second user is the current user (if they are not the host)
-		if (data.user.id !== roomData?.ownerId) {
+		if (data.user.id !== roomData?.owner) {
 			const currentRoomUser = users[data.user.id];
 			tempUserList.push({
-				name: currentRoomUser.name,
-				vote: currentRoomUser.vote
+				name: currentRoomUser?.name,
+				vote: currentRoomUser?.vote
 			});
 		}
 
 		// The rest of the users are the other users
-		for (const userId in users) {
-			if (userId !== roomData?.ownerId && userId !== data.user.id) {
-				const user = users[userId];
+		for (const publicUserId in users) {
+			if (publicUserId !== roomData?.owner && publicUserId !== data.user.id) {
+				const user = users[publicUserId];
 				if (!user || !user.name) continue;
 				tempUserList.push({
 					name: user.name,
@@ -132,7 +135,7 @@
 	}
 
 	function copyRoomLink() {
-		const roomLink = `${window.location.origin}/room/${roomData?.roomName}`;
+		const roomLink = `${window.location.origin}/room/${data.room.name}`;
 		navigator.clipboard.writeText(roomLink);
 		toast.set({
 			show: true,
@@ -151,7 +154,7 @@
 	}
 
 	function calculateAverageVotes() {
-		const votes = Object.values(roomData?.users || {}).map((user) => user.vote);
+		const votes = Object.values(roomData?.votes || {}).map((user) => user.vote);
 		// Filter out non-numeric votes
 		const numericVotes = votes.filter((vote) => !isNaN(parseInt(vote)));
 		if (numericVotes.length === 0) {
@@ -164,7 +167,7 @@
 	}
 
 	function calculateAbstainVotes() {
-		const abstainVotes = Object.values(roomData?.users || {}).filter((user) =>
+		const abstainVotes = Object.values(roomData?.votes || {}).filter((user) =>
 			isNaN(parseInt(user.vote))
 		);
 		return abstainVotes.length;
@@ -174,31 +177,16 @@
 		let interval: ReturnType<typeof setInterval>;
 
 		(async () => {
-			// Create pocketbase subscription to rooms collection for record with roomName = page.params.room
-			try {
-				roomData = await pb.collection('rooms').getFirstListItem(`roomName="${roomName}"`);
-			} catch {
-				// Throw a SvelteKit error to trigger the +error.svelte page
-				goto(`/error?roomName=${roomName}`);
-				return;
-			}
-
-			if (!roomData || !roomData?.id) {
-				// If no room data, redirect to home page
-				window.location.href = '/';
-				return;
-			}
-
+			// Create room subscription
 			pb.collection('rooms').subscribe(roomData.id, (e) => {
 				if (e.action === 'update') {
-					roomData = e.record as unknown as RoomType;
+					roomData = e.record ;
 				}
 			});
 
 			// Set the isInitializing state to false after the data is loaded
 			isInitializing = false;
-			roomDescription = roomData.description || '';
-			userList = getUserList(roomData.users, roomData.ownerId);
+			userList = getUserList(roomData.votes, roomData.owner);
 
 			// Update time every minute
 			updateTime();
@@ -241,8 +229,8 @@
 				</div>
 			{:else}
 				<div class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-					Welcome {data.user.name} to room <Button color="alternative" onclick={copyRoomLink}
-						><FileCopySolid /> {roomData?.roomName}</Button
+					Welcome {data.user.name} to room <Button color="alternative" class="text-xl font-bold mx-2" onclick={copyRoomLink}
+						><FileCopySolid class="mr-2" /> {roomData?.name}</Button
 					>
 				</div>
 
@@ -250,7 +238,7 @@
 					<!-- COLUMN 1 LEFT -->
 					<div class="flex flex-col p-4">
 						<!-- TODO if host text area otherwise <p> -->
-						{#if roomData?.ownerId === data.user.id}
+						{#if roomData?.owner === data.user.id}
 							<Textarea
 								id="description"
 								placeholder={`Text that will update for all users in the room`}
@@ -287,15 +275,15 @@
 
 						<div class="my-4 flex space-x-2">
 							<Button
-								disabled={roomData?.restrictControl && data.user.id !== roomData.ownerId}
+								disabled={roomData?.restrictControl && data.user.id !== roomData.owner}
 								onclick={() => handleClearVotes()}>Clear Votes</Button
 							>
 							<Button
-								disabled={roomData?.restrictControl && data.user.id !== roomData.ownerId}
+								disabled={roomData?.restrictControl && data.user.id !== roomData.owner}
 								onclick={() => handleShowVotes()}>Show Votes</Button
 							>
 						</div>
-						{#if roomData?.ownerId === data.user.id}
+						{#if roomData?.owner === data.user.id}
 							<div class="flex space-x-2">
 								<Checkbox onchange={(e) => handleRestrictControls(e)} />
 								<p>Lock controls to room creator</p>
@@ -355,7 +343,7 @@
 									</div>
 
 									<!-- Show kick icon if is host -->
-									{#if roomData?.ownerId === data.user.id && idx !== 0}
+									{#if roomData?.owner === data.user.id && idx !== 0}
 										<div class="flex items-center">
 											<TrashBinSolid class="h-6 w-6 hover:text-red-500" />
 										</div>

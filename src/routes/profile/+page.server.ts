@@ -1,4 +1,5 @@
-import { urlSafeRegex } from '$lib/form-schema';
+import { userNameSchema } from '$lib/form-schema';
+import { validateData } from '$lib/utils';
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
@@ -15,61 +16,33 @@ export const actions = {
 			return fail(400, { form: { error: 'Anonymous ID not found' } });
 		}
 
-		// extract form data
-		const data = await request.formData();
-		const username = (data.get('name') as string) || '';
-		const roomName = (data.get('roomName') as string) || '';
+		const { formData, errors } = await validateData(
+			await request.formData(),
+			userNameSchema
+		);
 
-		// Validate username
-		const valid = username.length > 1 && username.length < 20 && urlSafeRegex.test(username);
-		if (!valid) {
-			return fail(400, { form: { error: 'Invalid username' } });
+		if (errors) {
+			return fail(400, {
+				data: formData,
+				errors: errors.fieldErrors
+			});
 		}
 
 		// Update the user name in pocketbase user table
-		const updatedUser = await pb.collection('users').update(user.id, {
-			name: username
+		await pb.collection('users_public').update(user.public, {
+			name: formData.name
 		});
-		if (roomName) {
-			// Get the room data from pocketbase
-			const roomData = await pb
-				.collection('rooms')
-				.getFirstListItem(`roomName="${roomName}"`);
-			if (!roomData) {
-				return fail(400, { form: { error: 'Room not found' } });
-			}
 
-			const roomUsers = roomData.users;
-			// Check if the user is already in the room
-			const userInRoom = roomUsers[user.id];
-			if (userInRoom) {
-				// Update the user name in the room
-				const res = await pb.collection('rooms').update(roomData.id, {
-					users: {
-						...roomUsers,
-						[user.id]: {
-							name: username,
-							vote: userInRoom.vote
-						}
-					}
-				});
-			} else {
-				// Add the user to the room
-				await pb.collection('rooms').update(roomData.id, {
-					users: {
-						...roomUsers,
-						[user.id]: {
-							name: username,
-							vote: '-'
-						}
-					}
-				});
+		// get url search param redirectTo
+		const url = new URL(request.url);
+		const redirectTo = url.searchParams.get('redirectTo');
+		if (redirectTo) {
+			throw redirect(303, redirectTo);
+		} else {
+			return {
+				success: true,
+				message: 'Username updated successfully'
 			}
-			redirect(303, `/room/${roomData.roomName}`);
-		}
-
-		return {
-			user: updatedUser
 		}
 	}
 } satisfies Actions;

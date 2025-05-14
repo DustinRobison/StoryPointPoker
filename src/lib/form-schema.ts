@@ -25,7 +25,7 @@ export const roomNameSchema = z.object({
 // USER NAME
 // ------------------------------
 export const userNameSchema = z.object({
-  roomName: z
+  name: z
     .string()
     .min(2, { message: 'Name must be at least 2 characters long' })
     .max(12, { message: 'Name must be at most 12 characters long' })
@@ -49,4 +49,12 @@ export const createGuestBookPostSchema = z.object({
 		.refine((value) => !filter.isProfane(value), {
 			message: 'Message contains inappropriate language'
 		})
+});
+
+// ------------------------------
+// LIKE GUEST BOOK POST
+// ------------------------------
+export const likeGuestBookPostSchema = z.object({
+	postId: z.string(),
+	currentUserId: z.string()
 });

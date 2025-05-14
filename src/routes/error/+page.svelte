@@ -10,7 +10,7 @@
 	// Extract the roomName from the query parameters
 	onMount(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		roomName = urlParams.get('roomName');
+		roomName = urlParams.get('name');
 
 		// Start the countdown timer
 		const interval = setInterval(() => {

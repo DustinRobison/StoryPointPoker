@@ -1,16 +1,46 @@
-import { redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ locals, params }) => {
     // Check if the user is authenticated
     const user = locals.user;
-
-    // If the user does not have a name redirect to the profile page
-    if (!user || !user.name) {
-        return redirect(303, `/profile?room=${params.room}`);
+    if (!user) {
+        throw error(401, 'Unauthorized');
     }
+
+    // Get user public data
+    const userPublic = await locals.pb.collection('users_public').getOne(user.public);
+    // If the user does not exist or is missing a name redirect to the profile page
+    if (!userPublic || !userPublic.name) {
+        return redirect(303, `/profile?redirectTo=/room/${params.room}`);
+    }
+
+    //  Query pocketbase for room by name
+    let room = await locals.pb.collection('rooms').getFirstListItem(`name="${params.room}"`);
+    if (!room) {
+        throw error(404, 'Room not found');
+    }
+
+    // Check if the room has the user in the votes list
+    const voteUser = room.votes[userPublic.id];
+    if (!voteUser) {
+        // If not add the user to the room as a vote
+        room = await locals.pb.collection('rooms').update(room.id, {
+            'votes': {
+                ...room.votes, 
+                [userPublic.id]: {
+                    'vote': "-",
+                    'name': userPublic.name,
+                    'avatar': userPublic.avatar,
+                } 
+            } 
+        });
+    }
+    
 	return {
-        user
+        userId: user.id,
+        user: userPublic,
+        room: room
     };
 }) satisfies PageServerLoad;
 

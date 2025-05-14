@@ -1,19 +1,19 @@
 // src/hooks.server.js
 import { dev } from '$app/environment';
 import { createInstance } from '$lib/pocketbase';
-import { v4 as uuidv4 } from 'uuid';
-
-const DEFAULT_ANONYMOUS_USER = {
-	is_anonymous: true,
-	password: "SuperSecretPassword",
-	passwordConfirm: "SuperSecretPassword",
-};
+import { createAnonymousUser } from '$lib/pocketbase.server';
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
+	// Remove an annoying request from Chrome DevTools
+	if (event.url.pathname.startsWith('/.well-known/appspecific/com.chrome.devtools')) {
+		return new Response(null, { status: 204 }); // Return empty response with 204 No Content
+	}
+
+	// Create a new PocketBase instance
 	const pb = await createInstance();
 
-  // load the store data from the request cookie string
+	// load the store data from the request cookie string
 	pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
 	try {
 		// get an up-to-date auth store state by verifying and refreshing the loaded auth model (if any)
@@ -23,7 +23,7 @@ export async function handle({ event, resolve }) {
 	} catch {
 		// clear the auth store on failed refresh
 		pb.authStore.clear();
-	}	
+	}
 
 	event.locals.pb = pb;
 	event.locals.user = pb.authStore.record;
@@ -33,19 +33,13 @@ export async function handle({ event, resolve }) {
 		try {
 			// Check if the client has an anonymous user token in the auth store
 			if (!pb.authStore.isValid) {
-				// Create a new anonymous user
-				const uniqueEmail = `anon_${uuidv4()}@example.com`;
-				await pb.collection('users').create({...DEFAULT_ANONYMOUS_USER, email: uniqueEmail});
-				// Authenticate the anonymouse user to set the auth store
-				await pb.collection('users').authWithPassword(uniqueEmail, DEFAULT_ANONYMOUS_USER.password);
+				await createAnonymousUser(pb);
 			}
-			
 			event.locals.user = pb.authStore.record;
 		} catch (error) {
 			console.error('Error creating anonymous user:', error);
-		}	
+		}
 	}
-
 
 	const response = await resolve(event);
 	response.headers.set(
@@ -53,5 +47,5 @@ export async function handle({ event, resolve }) {
 		event.locals.pb.authStore.exportToCookie({ httpOnly: false, sameSite: 'lax', secure: !dev })
 	);
 
-  return response;
+	return response;
 }

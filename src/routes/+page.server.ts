@@ -37,20 +37,24 @@ export const actions = {
 			// Create room logic here
 			await pb.collection('rooms').create({
 				...defaultRoomValues,
-				roomName,
-				ownerId: user.id,
-				users: {
-					[user.id]: {
-						name: user.name || '',
-						vote: '-'
-					}
-				}
+				name: roomName,
+				owner: user.public,
+				votes: {}
 			});
 		}
 
-		if (!user.name) {
-			return redirect(303, `/profile?room=${roomName}`);
+		// Get name from users_public collection
+		try {
+			const userPublic = await pb.collection('users_public').getOne(user.public);
+			if (!userPublic.name) {
+				return redirect(303, `/profile?redirectTo=/room/${roomName}`);
+			}
+		} catch (error) {
+			if ((error as { status?: number }).status === 404) {
+				console.warn('user public not found');
+			}
 		}
+
 		return redirect(303, `/room/${roomName}`);
 	}
 };
