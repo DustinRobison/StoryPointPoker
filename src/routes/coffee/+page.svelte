@@ -1,7 +1,104 @@
 <script lang="ts">
+    import { PUBLIC_STRIPE_KEY } from '$env/static/public';
+    import { loadStripe, type Stripe } from '@stripe/stripe-js';
+    import { Button, Card, Input, Label } from 'flowbite-svelte';
+    import { PaperPlaneSolid } from 'flowbite-svelte-icons';
+    import { onMount } from 'svelte';
+    import { fade } from 'svelte/transition';
     import type { PageData } from './$types';
 
-    let { data }: { data: PageData } = $props();
+	let { data }: { data: PageData } = $props();
+
+    let amount: any = $state();
+
+    let stripePromise: Promise<Stripe | null> | undefined;
+
+    
+    async function handleDonate() {
+        const stripe = await stripePromise;
+        if (!stripe) {
+            console.error('Stripe.js not loaded');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/donate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ amount }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const { sessionId } = await response.json();
+            const result = await stripe.redirectToCheckout({ sessionId });
+
+            if (result.error) {
+                console.error(result.error.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while processing your donation. Please try again.');
+        }
+    }
+
+    onMount(async() => {
+        // Load Stripe and generate BTC QR code on mount
+		stripePromise = loadStripe(PUBLIC_STRIPE_KEY);
+    })
+
+	const prices = [1, 5, 10, 20, 50, 100];
+
+    function donationMessage(amount: number) {
+		const boldAmount = `<span class="font-bold bg-success text-success-foreground">$${amount || '0'}</span>`;
+		if (!amount) return 'Enter an amount to donate, or choose from the options below.';
+		if (amount === 1) return `Thank you for your ${boldAmount} donation! Every bit helps.`;
+		if (amount <= 5) return `Your ${boldAmount} donation is a coffee!`;
+		if (amount <= 10) return `Thank you for your ${boldAmount} donation! That's multiple coffees.`;
+		if (amount <= 20)
+			return `Thank you for your ${boldAmount} donation! I drink my brew to you.`;
+		if (amount <= 50) return `A ${boldAmount} donation is amazing! I bathe in coffee.`;
+		if (amount <= 100)
+			return `Your ${boldAmount} donation is deeply appreciated. Pools of coffee!`;
+
+		return `You are donating ${boldAmount}. Thank you for your contribution!`;
+	}
 </script>
 
-Coffee
+<div class="flex gap-4" transition:fade={{ duration: 300 }}>
+	<!-- Donate Card -->
+	<Card class="w-1/2">
+		<h5 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Donate:</h5>
+		<p class="mb-2 text-sm text-gray-500 dark:text-shadow-white min-h-12">
+			{@html donationMessage(amount)}
+		</p>
+
+		<div  class="my-4">
+			<Label for="name" class="mb-2 block">One time amount:</Label>
+			<div class="flex items-center space-x-2">
+				<Input id="name" name="name" size="lg" type="number" bind:value={amount} min="1" placeholder="Enter amount" required />
+
+				<Button onclick={handleDonate}>
+					<span>Donate</span>
+                    <PaperPlaneSolid class="ml-2 rotate-90" />
+				</Button>
+			</div>
+		</div>
+
+        <div class="my-4 grid grid-cols-3 gap-2">
+            {#each prices as amt}
+                <Button
+                    class="w-full"
+                    type="button"
+                    on:click={() => (amount = amt)}
+                >
+                    {amt}
+                </Button>
+            {/each}
+	</Card>
+	<!-- Subscribe Card -->
+</div>
