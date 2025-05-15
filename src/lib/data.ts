@@ -31,7 +31,7 @@ export const links = [
   },
   {
     name: "Terms of Service",
-    url: "/terms-of-service",
+    url: "/tos",
     inNavBar: false
   },
   {
