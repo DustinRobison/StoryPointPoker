@@ -1,7 +1,9 @@
 <script lang="ts">
+	import Background from '$lib/components/Background.svelte';
 	import { links, meta } from '$lib/data';
 	import { toast } from '$lib/stores/toast';
 	import {
+		Button,
 		Footer,
 		FooterCopyright,
 		FooterLink,
@@ -11,8 +13,10 @@
 		NavHamburger,
 		NavLi,
 		NavUl,
-		Toast
+		Toast,
+		Tooltip
 	} from 'flowbite-svelte';
+	import { GithubSolid } from 'flowbite-svelte-icons';
 	import { fade } from 'svelte/transition';
 	import '../app.css';
 
@@ -29,7 +33,13 @@
 	{/if}
 </div>
 
-<div class="flex min-h-[calc(100svh)] w-full flex-col md:min-h-screen">
+
+  <!-- Just Delete this P tag for Viewing the Dot Center Pattern -->
+  <Background
+    class="[mask-image:radial-gradient(600px_circle_at_center,white,transparent)] -z-50"
+  />
+
+<div class="flex min-h-[calc(100svh)] w-full flex-col md:min-h-screen z-10">
 	<div class="relative px-8">
 		<Navbar class="fixed start-0 top-0 z-20 w-full border-b px-2 py-2.5 sm:px-4">
 			<NavBrand href="/">
@@ -43,7 +53,25 @@
 					<h5>{meta.subTitle}</h5>
 				</div>
 			</NavBrand>
-			<NavHamburger />
+
+			<div class="flex items-center md:order-2">
+				<div>
+					<Tooltip triggeredBy="#fork-button" placement="bottom" color="green"
+						>Fork me on Github</Tooltip
+					>
+					<Button
+						id="fork-button"
+						href="https://github.com/DustinRobison/StoryPointPoker"
+						target="_blank"
+						color="alternative"
+						pill
+					>
+						<GithubSolid class="h-5 w-5" />
+					</Button>
+				</div>
+				<NavHamburger />
+			</div>
+
 			<NavUl>
 				{#each links as link}
 					{#if link.inNavBar}

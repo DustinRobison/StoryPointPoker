@@ -37,7 +37,7 @@ export const links = [
   {
     name: "Fork On GitHub",
     url: "https://github.com/DustinRobison/StoryPointPoker",
-    inNavBar: true
+    inNavBar: false
   }
 ]
 

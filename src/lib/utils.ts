@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
 export const validateData = async (formData: any, schema: any) => {
 	const body = Object.fromEntries(formData);
 
@@ -18,3 +21,8 @@ export const validateData = async (formData: any, schema: any) => {
 		};
 	}
 };
+
+
+export function cn(...inputs: ClassValue[]) {
+	return twMerge(clsx(inputs));
+ }
