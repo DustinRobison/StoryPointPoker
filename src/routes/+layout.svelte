@@ -36,7 +36,7 @@
 
   <!-- Just Delete this P tag for Viewing the Dot Center Pattern -->
   <Background
-    class="[mask-image:radial-gradient(600px_circle_at_center,white,transparent)] -z-50"
+    class="fixed [mask-image:radial-gradient(600px_circle_at_center,white,transparent)] -z-50"
   />
 
 <div class="flex min-h-[calc(100svh)] w-full flex-col md:min-h-screen z-10">

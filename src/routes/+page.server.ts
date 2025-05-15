@@ -3,7 +3,34 @@ import { urlSafeRegex } from '$lib/form-schema';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const load = async ({ locals }) => {
-	return { user: locals.user };
+
+	// Load posts
+	const userPublic = await locals.pb.collection('users_public').getOne(locals.user?.public);
+	const posts = await locals.pb.collection('posts').getList(1, 20, {
+		expand: 'author',
+		sort: '-created',
+		fields: 'id,expand.author.name,expand.author.avatar,created,updated,likes,content'
+	});
+	const announcements = await locals.pb.collection('announcements').getList(1, 20)
+
+	const userPublicTransformed = {
+		id: userPublic?.id || '',
+		avatar: userPublic?.avatar || '',
+		name: userPublic?.name || '',
+		email: locals.user?.email || '',
+	}
+
+	const transformedPosts = posts.items.map((post) => ({
+		id: post.id,
+		created: post.created,
+		updated: post.updated,
+		content: post.content,
+		likes: post.likes.length,
+		author: post?.expand?.author?.name,
+		avatar: post?.expand?.author?.avatar,
+	}));
+
+	return { userPublic: userPublicTransformed, posts: transformedPosts, announcements: announcements.items };
 };
 
 export const actions = {

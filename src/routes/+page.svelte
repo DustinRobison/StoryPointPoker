@@ -1,5 +1,6 @@
 <!-- src/routes/+page.svelte -->
 <script lang="ts">
+	import LandingFeed from '$lib/components/LandingFeed.svelte';
 	import { urlSafeRegex } from '$lib/form-schema.js';
 	import { debounce } from '$lib/helpers.js';
 	import { Button, Card, Input, Label } from 'flowbite-svelte';
@@ -60,7 +61,7 @@
 	});
 </script>
 
-<div transition:fade={{ duration: 300 }}  class="my-12 flex items-center justify-center">
+<div transition:fade={{ duration: 300 }} class="my-12">
 	<!-- Fade-in Card to center of the screen -->
 	<div class="flex w-full justify-center">
 		<Card size="lg" class="flex flex-col items-center justify-between">
@@ -110,10 +111,8 @@
 			</form>
 		</Card>
 	</div>
-</div>
 
-<!-- Sponsors TODO -->
-<div>
-	<h6>Big thanks to the following Sponsors:</h6>
-	<p>https://github.com/codyaverett</p>
+	<div class="my-8">
+		<LandingFeed announcements={data.announcements} guestbook={data.posts} />
+	</div>
 </div>
