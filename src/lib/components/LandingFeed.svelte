@@ -8,7 +8,7 @@
 </script>
 
 <div
-	class="bg-background relative flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-lg border py-12 md:shadow-xl"
+	class="bg-background relative flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-lg border py-12 md:shadow-xl border-gray-200"
 >
 	<h3 class=" my-4 text-lg font-bold dark:text-white">Announcements</h3>
 	<Marquee pauseOnHover class="[--duration:20s]">
