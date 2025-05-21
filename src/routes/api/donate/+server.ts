@@ -9,10 +9,13 @@ if (import.meta.env.MODE === 'development') {
 	console.log('Running in production mode');
 }
 
-const stripe = new Stripe(env.SECRET_STRIPE_KEY);
-
 export const POST: RequestHandler = async ({ request }) => {
 	const { amount } = await request.json();
+
+	if (!env.STRIPE_SECRET_KEY) {
+    throw new Error('STRIPE_SECRET_KEY not set');
+  }
+	const stripe = new Stripe(env.SECRET_STRIPE_KEY);
 
 	try {
 		const session = await stripe.checkout.sessions.create({
