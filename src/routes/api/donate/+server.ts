@@ -1,5 +1,6 @@
 import { env } from '$env/dynamic/private';
 import { PUBLIC_BASE_URL } from '$env/static/public';
+import process from 'process';
 import Stripe from 'stripe';
 import type { RequestHandler } from './$types';
 
@@ -11,11 +12,11 @@ if (import.meta.env.MODE === 'development') {
 
 export const POST: RequestHandler = async ({ request }) => {
 	const { amount } = await request.json();
-
-	if (!env.STRIPE_SECRET_KEY) {
+	const stripeSecretKey = env.SECRET_STRIPE_KEY || process.env.SECRET_STRIPE_KEY;
+	if (!stripeSecretKey) {
     throw new Error('STRIPE_SECRET_KEY not set');
   }
-	const stripe = new Stripe(env.SECRET_STRIPE_KEY);
+	const stripe = new Stripe(stripeSecretKey);
 
 	try {
 		const session = await stripe.checkout.sessions.create({

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { PUBLIC_STRIPE_KEY } from '$env/static/public';
 	import { loadStripe, type Stripe } from '@stripe/stripe-js';
 	import { Button, Card, Input, Label } from 'flowbite-svelte';
 	import { PaperPlaneSolid } from 'flowbite-svelte-icons';
@@ -48,7 +47,7 @@
 
 	onMount(async () => {
 		// Load Stripe and generate BTC QR code on mount
-		stripePromise = loadStripe(PUBLIC_STRIPE_KEY);
+		stripePromise = loadStripe(data.stripePublicKey);
 	});
 
 	const prices = [1, 5, 10, 20, 50, 100];
