@@ -29,7 +29,7 @@
 	let roomDescription = $state(data.room.description || '');
 	let timeElapsed = $state('');
 	let roomData = $state(data.room);
-	let roomBannedUsers = $state(roomData?.banned || []);
+	let roomBannedUsers = $derived(roomData.banned || []);
 	let userList = $derived(getUserList(roomData.votes, roomData?.owner || ''));
 
 	// Debounce function to limit the rate at which the description is updated
