@@ -393,7 +393,7 @@
 							<hr class="my-4" />
 							<div class="text-red-500">
 								<p class="font-bold">Banned Users: {roomBannedUsers.length}</p>
-								<Button size="sm" onclick={() => unbanUsers()}>Unban all users</Button>
+								<Button size="sm" color="alternative" onclick={() => unbanUsers()}>Unban all users</Button>
 							</div>
 						{/if}
 						<div></div>
