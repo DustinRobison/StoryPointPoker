@@ -2,10 +2,11 @@ import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ locals, params }) => {
+    let room;
     // Check if the user is authenticated
     const user = locals.user;
     if (!user) {
-        throw error(401, 'Unauthorized');
+        return error(401, 'Unauthorized');
     }
 
     // Get user public data
@@ -16,9 +17,17 @@ export const load = (async ({ locals, params }) => {
     }
 
     //  Query pocketbase for room by name
-    let room = await locals.pb.collection('rooms').getFirstListItem(`name="${params.room}"`);
-    if (!room) {
-        throw error(404, 'Room not found');
+    try {
+        room = await locals.pb.collection('rooms').getFirstListItem(`name="${params.room}"`);
+    } catch {
+        return error(404, `Room ${params.room} not found`);
+    }
+    
+
+    const bannedUsers = room.banned || [];
+    // Check if the user is banned from the room
+    if (bannedUsers.includes(userPublic.id)) {
+        return error(403, 'You are banned from this room');
     }
 
     // Check if the room has the user in the votes list

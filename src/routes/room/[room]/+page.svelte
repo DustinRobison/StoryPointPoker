@@ -29,6 +29,7 @@
 	let roomDescription = $state(data.room.description || '');
 	let timeElapsed = $state('');
 	let roomData = $state(data.room);
+	let roomBannedUsers = $state(roomData?.banned || []);
 	let userList = $derived(getUserList(roomData.votes, roomData?.owner || ''));
 
 	// Debounce function to limit the rate at which the description is updated
@@ -96,9 +97,8 @@
 	// with their names and votes
 	// The first user is the host, the second user is the current user (if they are not the host)
 	function getUserList(users: Record<string, { name: string; vote: string }>, owner: string) {
-		let tempUserList: { name: string; vote: string }[] = [];
+		let tempUserList: { name: string; vote: string; id: string }[] = [];
 
-		console.log('users', {...users});
 		// check if users is empty
 		if (!users || Object.keys(users).length === 0) {
 			return tempUserList;
@@ -108,7 +108,8 @@
 		const roomHost = users[owner];
 		tempUserList.push({
 			name: roomHost?.name || '',
-			vote: roomHost?.vote || '-'
+			vote: roomHost?.vote || '-',
+			id: owner || ''
 		});
 
 		// The second user is the current user (if they are not the host)
@@ -116,18 +117,23 @@
 			const currentRoomUser = users[data.user.id];
 			tempUserList.push({
 				name: currentRoomUser?.name,
-				vote: currentRoomUser?.vote
+				vote: currentRoomUser?.vote,
+				id: data.user.id
 			});
 		}
 
 		// The rest of the users are the other users
 		for (const publicUserId in users) {
-			if (publicUserId !== roomData?.owner && publicUserId !== data.user.id) {
+			if (
+				(publicUserId !== roomData?.owner && publicUserId !== data.user.id) ||
+				roomBannedUsers.includes(publicUserId)
+			) {
 				const user = users[publicUserId];
 				if (!user || !user.name) continue;
 				tempUserList.push({
 					name: user.name,
-					vote: user.vote
+					vote: user.vote,
+					id: publicUserId
 				});
 			}
 		}
@@ -173,6 +179,26 @@
 		return abstainVotes.length;
 	}
 
+	function kickUser(userId: string) {
+		if (roomData?.owner === data.user.id && roomData?.id) {
+			const updatedVotes = { ...roomData.votes };
+			delete updatedVotes[userId];
+			pb.collection('rooms').update(roomData.id, {
+				votes: updatedVotes,
+				banned: [...roomData.banned, userId]
+			});
+		}
+	}
+
+	function unbanUsers() {
+		if (roomData?.owner === data.user.id && roomData?.id) {
+			pb.collection('rooms').update(roomData.id, {
+				banned: []
+			});
+			roomBannedUsers = [];
+		}
+	}
+
 	onMount(() => {
 		let interval: ReturnType<typeof setInterval>;
 
@@ -180,7 +206,7 @@
 			// Create room subscription
 			pb.collection('rooms').subscribe(roomData.id, (e) => {
 				if (e.action === 'update') {
-					roomData = e.record ;
+					roomData = e.record;
 				}
 			});
 
@@ -207,6 +233,12 @@
 	$effect(() => {
 		handleDebouncedInput(roomDescription);
 	});
+
+	$effect(() => {
+		if (roomBannedUsers.includes(data.user.id)) {
+			throw new Error('You have been banned from this room');
+		}
+	});
 </script>
 
 <div class="flex items-center justify-center">
@@ -229,8 +261,10 @@
 				</div>
 			{:else}
 				<div class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-					Welcome {data.user.name} to room <Button color="alternative" class="text-xl font-bold mx-2" onclick={copyRoomLink}
-						><FileCopySolid class="mr-2" /> {roomData?.name}</Button
+					Welcome {data.user.name} to room <Button
+						color="alternative"
+						class="mx-2 text-xl font-bold"
+						onclick={copyRoomLink}><FileCopySolid class="mr-2" /> {roomData?.name}</Button
 					>
 				</div>
 
@@ -345,12 +379,24 @@
 									<!-- Show kick icon if is host -->
 									{#if roomData?.owner === data.user.id && idx !== 0}
 										<div class="flex items-center">
-											<TrashBinSolid class="h-6 w-6 hover:text-red-500" />
+											<TrashBinSolid
+												class="h-6 w-6 hover:text-red-500"
+												onclick={() => kickUser(user.id)}
+											/>
 										</div>
 									{/if}
 								</div>
 							{/each}
 						</div>
+
+						{#if roomBannedUsers.length > 0}
+							<hr class="my-4" />
+							<div class="text-red-500">
+								<p class="font-bold">Banned Users: {roomBannedUsers.length}</p>
+								<Button size="sm" onclick={() => unbanUsers()}>Unban all users</Button>
+							</div>
+						{/if}
+						<div></div>
 					</div>
 				</div>
 			{/if}
