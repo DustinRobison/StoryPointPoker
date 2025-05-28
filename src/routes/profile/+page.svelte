@@ -2,12 +2,21 @@
 	import { enhance } from '$app/forms';
 	import { page } from '$app/state';
 	import { Button, Card, Input, Label, Spinner } from 'flowbite-svelte';
+	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 	let isSubmitting = $state(false)
 
 	const redirectTo = page.url.searchParams.get('redirectTo');
+
+	onMount(() => {
+		// Focus the input field when the component mounts
+		const input = document.getElementById('name') as HTMLInputElement;
+		if (input) {
+			input.focus();
+		}
+	})
 </script>
 
 <div class="flex items-center justify-center">
@@ -35,7 +44,7 @@
 				
 				<div class="my-4 w-full">
 					<Label for="name" class="mb-2 block">Name:</Label>
-					<Input id="name" name="name" size="lg" placeholder="Dustin" required />
+					<Input id="name" name="name" size="lg" placeholder="Dustin" required tabindex={0}/>
 					<p class="ml-1 text-sm text-gray-500 dark:text-shadow-white">
 						Some character restrictions apply
 					</p>
