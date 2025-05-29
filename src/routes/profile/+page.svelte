@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
 
-	let { data }: { data: PageData } = $props();
+	let { data, form }: { data: PageData } = $props();
 	let isSubmitting = $state(false)
 
 	const redirectTo = page.url.searchParams.get('redirectTo');
@@ -48,6 +48,9 @@
 					<p class="ml-1 text-sm text-gray-500 dark:text-shadow-white">
 						Some character restrictions apply
 					</p>
+					{#if form?.errors?.name}
+						<p class="text-sm text-red-500">{form.errors.name}</p>
+					{/if}
 				</div>
 
 				<Button type="submit" class="mt-4 w-full" disabled={isSubmitting}>
