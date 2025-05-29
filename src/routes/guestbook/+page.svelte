@@ -7,7 +7,7 @@
 	import { fade } from 'svelte/transition';
 	import type { PageData } from './$types';
 
-	let { data }: { data: PageData } = $props();
+	let { data, form }: { data: PageData } = $props();
 
 	let isLoading = $state(true);
 	let isSubmitting = $state(false);
@@ -78,6 +78,11 @@
 						</Button>
 					</form>
 				</div>
+				{#if form?.errors?.content.length > 0}
+					<p id="guestbook-error" class="h-8 w-full text-sm text-red-500">
+						{form.errors.content[0]}
+					</p>
+				{/if}
 			{/if}
 		</div>
 
