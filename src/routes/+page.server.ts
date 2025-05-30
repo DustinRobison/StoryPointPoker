@@ -3,7 +3,6 @@ import { urlSafeRegex } from '$lib/form-schema';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const load = async ({ locals }) => {
-
 	// Load posts
 	const userPublic = await locals.pb.collection('users_public').getOne(locals.user?.public);
 	const posts = await locals.pb.collection('posts').getList(1, 20, {

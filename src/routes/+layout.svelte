@@ -2,6 +2,7 @@
 	import Background from '$lib/components/Background.svelte';
 	import { links, meta } from '$lib/data';
 	import { toast } from '$lib/stores/toast';
+	import { UmamiAnalytics } from '@lukulent/svelte-umami';
 	import {
 		Button,
 		Footer,
@@ -20,9 +21,12 @@
 	import { fade } from 'svelte/transition';
 	import '../app.css';
 
-	let { children } = $props();
+	let { children, data } = $props();
 	let visible = $state(true);
 </script>
+{#if data.umamiID}
+	<UmamiAnalytics websiteID={data.umamiID} srcURL="https://cloud.umami.is/script.js" />
+{/if}
 
 <!-- Toast in abosolute postion appears on z-top -->
 <div class="fixed right-0 bottom-0 z-50 m-4">
