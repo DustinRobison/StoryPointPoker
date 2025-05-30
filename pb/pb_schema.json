@@ -887,6 +887,20 @@
                 "type": "number"
             },
             {
+                "autogeneratePattern": "",
+                "hidden": false,
+                "id": "text3277192334",
+                "max": 0,
+                "min": 0,
+                "name": "stripeId",
+                "pattern": "",
+                "presentable": false,
+                "primaryKey": false,
+                "required": false,
+                "system": false,
+                "type": "text"
+            },
+            {
                 "hidden": false,
                 "id": "autodate2990389176",
                 "name": "created",
@@ -908,7 +922,8 @@
             }
         ],
         "indexes": [
-            "CREATE INDEX `idx_u8VZLXeh8z` ON `donators` (`user`)"
+            "CREATE INDEX `idx_u8VZLXeh8z` ON `donators` (`user`)",
+            "CREATE INDEX `idx_UEOWE0wMj8` ON `donators` (`stripeId`)"
         ],
         "system": false
     },
@@ -1110,6 +1125,19 @@
                 "maxSelect": 1,
                 "minSelect": 0,
                 "name": "owner",
+                "presentable": false,
+                "required": false,
+                "system": false,
+                "type": "relation"
+            },
+            {
+                "cascadeDelete": false,
+                "collectionId": "pbc_3409774286",
+                "hidden": false,
+                "id": "relation2605256118",
+                "maxSelect": 999,
+                "minSelect": 0,
+                "name": "banned",
                 "presentable": false,
                 "required": false,
                 "system": false,
