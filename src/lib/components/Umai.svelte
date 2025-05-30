@@ -1,4 +1,4 @@
-<!-- <script defer src="https://cloud.umami.is/script.js" data-website-id="2fe3dbf5-81ae-4665-a9c0-6c824f7b5efc"></script> -->
+<!-- <script defer src="https://cloud.umami.is/script.js data-website-id="" ></script> -->
 
 <script>
   import { page } from '$app/state';
