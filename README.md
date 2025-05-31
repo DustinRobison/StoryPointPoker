@@ -1,14 +1,17 @@
 <p align="center">
-  <a href="https://scrumstorypoints.com/" rel="noopener" target="_blank"><img width="150" src="/static/android-chrome-512x512.png" alt="StoryPointPoker logo"></a>
+  <a href="https://scrumstorypoints.com/" rel="noopener" target="_blank">
+  <img width="150" src="/static/android-chrome-512x512.png" alt="StoryPointPoker logo" />
+  </a>
 </p>
 <h1 align="center">Scrum Story Points</h1>
 
-<img width="150" src="/.github/lighthouse.png" alt="Lighthouse report">
+
 
 <div align="center">
 
 [Agile](https://en.wikipedia.org/wiki/Agile_software_development) tool for sharing task complexity estimates.
 
+<img width="300" src="/.github/lighthouse.png" alt="Lighthouse report" />
 </div>
 
 ## Pre Requisites
