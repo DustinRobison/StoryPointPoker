@@ -1,7 +1,9 @@
 <p align="center">
-  <a href="https://scrumstorypoints.com/" rel="noopener" target="_blank"><img width="150" src="/static/android-chrome-512x512.png" alt="StoryPointPoker logo"></a></p>
+  <a href="https://scrumstorypoints.com/" rel="noopener" target="_blank"><img width="150" src="/static/android-chrome-512x512.png" alt="StoryPointPoker logo"></a>
 </p>
 <h1 align="center">Scrum Story Points</h1>
+
+<img width="150" src="/.github/lighthouse.png" alt="Lighthouse report">
 
 <div align="center">
 
