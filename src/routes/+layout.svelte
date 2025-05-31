@@ -28,6 +28,22 @@
 	<UmamiAnalytics websiteID={data.umamiID} srcURL="https://cloud.umami.is/script.js" />
 {/if}
 
+<svelte:head>
+	<title>Scrum Story Points</title>
+	<meta name="description" content="Free developer Agile Scrum, real time, story point estimation tool." />
+	<!-- Open Graph / Facebook -->
+    <meta property="og:title" content="Scrum Story Points" />
+    <meta property="og:description" content="Free developer Agile Scrum, real time, story point estimation tool." />
+    <meta property="og:image" content="https://scrumstorypoints.com/images/logo_white.png" />
+    <meta property="og:type" content="website" />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Scrum Story Points" />
+    <meta name="twitter:description" content="Free developer Agile Scrum, real time, story point estimation tool." />
+    <meta name="twitter:image" content="https://scrumstorypoints.com/images/logo_white.png" />
+
+</svelte:head>
+
 <!-- Toast in abosolute postion appears on z-top -->
 <div class="fixed right-0 bottom-0 z-50 m-4">
 	{#if $toast.show}
