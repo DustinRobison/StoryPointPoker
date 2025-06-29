@@ -60,6 +60,16 @@ export const actions = {
 			return fail(400, { form: { error: 'Invalid room name' } });
 		}
 		if (action === 'create') {
+			// Check if room already exists
+			try {
+				await pb.collection('rooms').getOne(`name="${roomName}"`);
+				return redirect(303, `/room/${roomName}`);
+			} catch (error) {
+				if ((error as { status?: number }).status === 404) {
+					// Room does not exist, proceed to create
+				}
+			}
+
 			// Create room logic here
 			await pb.collection('rooms').create({
 				...defaultRoomValues,
