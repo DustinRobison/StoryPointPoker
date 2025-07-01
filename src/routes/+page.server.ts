@@ -75,7 +75,7 @@ export const actions = {
 				...defaultRoomValues,
 				name: roomName,
 				owner: user.public,
-				votes: {}
+				voteClear: new Date().toISOString(),
 			});
 		}
 

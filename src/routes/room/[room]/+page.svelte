@@ -3,7 +3,7 @@
 	import { debounce } from '$lib/helpers.js';
 	import { pb } from '$lib/pocketbase.js';
 	import { toast } from '$lib/stores/toast.js';
-	import { formatDistanceToNow } from 'date-fns';
+	import { formatDistanceToNow, isAfter } from 'date-fns';
 	import {
 		Button,
 		Card,
@@ -24,120 +24,77 @@
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 
+	interface User {
+		id: string;
+		name: string;
+		avatar?: string;
+		vote?: string;
+		voteTime?: Date;
+		updated?: string;
+	}
+
 	const { data } = $props();
 	let isInitializing = $state(true);
 	let roomDescription = $state(data.room.description || '');
 	let timeElapsed = $state('');
 	let roomData = $state(data.room);
 	let roomBannedUsers = $derived(roomData.banned || []);
-	let userList = $derived(getUserList(roomData.votes, roomData?.owner || ''));
+	let users = $state<User[]>(data.users);
 
 	// Debounce function to limit the rate at which the description is updated
 	const handleDebouncedInput = debounce(async (...args: unknown[]) => {
-		const inputDescription = args[0] as string;
-		if (roomData?.owner === data.user.id) {
-			roomDescription = inputDescription;
-			await pb.collection('rooms').update(roomData.id, { description: roomDescription });
-		}
+		const formData = new FormData();
+		formData.append('description', args[0] as string);
+		await fetch('?/' + 'description', {
+			method: 'POST',
+			body: formData
+		});
 	}, 600);
 
 	const handleVoteClick = debounce(async (value) => {
-		// Update the vote in db for user by id
-		if (roomData?.id)
-			await pb.collection('rooms').update(roomData.id, {
-				votes: {
-					...roomData?.votes,
-					[data.user.id]: {
-						...roomData?.votes[data.user.id],
-						vote: value
-					}
-				}
-			});
+		// Update public_users collection with the user's vote
+		// call svelte action to update the user's vote in the room
+		const formData = new FormData();
+		formData.append('vote', value);
+		await fetch('?/' + 'vote', {
+			method: 'POST',
+			body: formData
+		});
 	}, 200);
 
 	const handleRestrictControls = debounce(async (e: unknown) => {
-		const target = (e as Event).target as HTMLInputElement;
-		if (roomData?.id) {
-			await pb.collection('rooms').update(roomData.id, {
-				restrictControl: target.checked
-			});
-		}
+		// Update the room's restrictControl field based on the checkbox state
+		const formData = new FormData();
+		formData.append(
+			'restrictControl',
+			((e as Event)?.target as HTMLInputElement)?.checked?.toString()
+		);
+		await fetch('?/' + 'restrictControl', {
+			method: 'POST',
+			body: formData
+		});
 	}, 200);
 
 	const handleClearVotes = debounce(async () => {
-		if (roomData?.id) {
-			const newUsers: Record<string, { name: string; avatar: string; vote: string }> = {};
-			for (const userId in roomData?.votes) {
-				newUsers[userId] = {
-					name: roomData?.votes[userId].name,
-					avatar: roomData?.votes[userId].avatar,
-					vote: '-'
-				};
-			}
-			await pb.collection('rooms').update(roomData.id, {
-				votes: newUsers,
-				showVotes: false
-			});
-		}
+		const formData = new FormData();
+		formData.append('clearVotes', 'true');
+		await fetch('?/' + 'clearVotes', {
+			method: 'POST',
+			body: formData
+		});
 	}, 200);
 
 	const handleShowVotes = debounce(async () => {
-		if (roomData?.id) {
-			await pb.collection('rooms').update(roomData.id, {
-				showVotes: true
-			});
-		}
+		const formData = new FormData();
+		formData.append('showVotes', 'true');
+		await fetch('?/' + 'showVotes', {
+			method: 'POST',
+			body: formData
+		});
 	}, 200);
 
 	function updateTime() {
 		timeElapsed = roomData?.created ? formatDistanceToNow(new Date(roomData.created)) : 'Unknown';
-	}
-
-	// Transform the votes object into a list of users
-	// with their names and votes
-	// The first user is the host, the second user is the current user (if they are not the host)
-	function getUserList(users: Record<string, { name: string; vote: string }>, owner: string) {
-		let tempUserList: { name: string; vote: string; id: string }[] = [];
-
-		// check if users is empty
-		if (!users || Object.keys(users).length === 0) {
-			return tempUserList;
-		}
-
-		// The first user is the host
-		const roomHost = users[owner];
-		tempUserList.push({
-			name: roomHost?.name || '',
-			vote: roomHost?.vote || '-',
-			id: owner || ''
-		});
-
-		// The second user is the current user (if they are not the host)
-		if (data.user.id !== roomData?.owner) {
-			const currentRoomUser = users[data.user.id];
-			tempUserList.push({
-				name: currentRoomUser?.name,
-				vote: currentRoomUser?.vote,
-				id: data.user.id
-			});
-		}
-
-		// The rest of the users are the other users
-		for (const publicUserId in users) {
-			if (
-				(publicUserId !== roomData?.owner && publicUserId !== data.user.id) ||
-				roomBannedUsers.includes(publicUserId)
-			) {
-				const user = users[publicUserId];
-				if (!user || !user.name) continue;
-				tempUserList.push({
-					name: user.name,
-					vote: user.vote,
-					id: publicUserId
-				});
-			}
-		}
-		return tempUserList;
 	}
 
 	function copyRoomLink() {
@@ -160,7 +117,8 @@
 	}
 
 	function calculateAverageVotes() {
-		const votes = Object.values(roomData?.votes || {}).map((user) => user.vote);
+		// Get users votes
+		const votes = users.map((user) => isAfter(new Date(user.voteTime), new Date(roomData.voteClear || roomData.created)) ? user.vote : "-");
 		// Filter out non-numeric votes
 		const numericVotes = votes.filter((vote) => !isNaN(parseInt(vote)));
 		if (numericVotes.length === 0) {
@@ -173,9 +131,16 @@
 	}
 
 	function calculateAbstainVotes() {
-		const abstainVotes = Object.values(roomData?.votes || {}).filter((user) =>
-			isNaN(parseInt(user.vote))
-		);
+		// Get users votes
+		const abstainVotes = users.filter((user) => isNaN(parseInt(user.vote)) || isAfter(new Date(roomData.voteClear || roomData.created), new Date(user.voteTime)));
+		// If no abstain votes, return 0
+		if (abstainVotes.length === 0) {
+			return 0;
+		} 
+
+		// const abstainVotes = Object.values(roomData?.votes || {}).filter((user) =>
+		// 	isNaN(parseInt(user.vote))
+		// );
 		return abstainVotes.length;
 	}
 
@@ -199,20 +164,54 @@
 		}
 	}
 
+	function hasVoted(vote: string, voteTime: string): boolean {
+		return vote !== '-' && isAfter(new Date(voteTime), new Date(roomData.voteClear || roomData.created));
+	}
+
 	onMount(() => {
 		let interval: ReturnType<typeof setInterval>;
 
 		(async () => {
-			// Create room subscription
+			// Subscribe to the room data
 			pb.collection('rooms').subscribe(roomData.id, (e) => {
 				if (e.action === 'update') {
 					roomData = e.record;
 				}
 			});
+			// Subscribe to all users_public where room equals roomData.id
+			pb.collection('users_public').subscribe(
+				'*',
+				(e) => {
+					if (e.action === 'create' || e.action === 'update') {
+						// Update the users state with the new user data
+						const updatedUser = {
+							id: e.record.id,
+							name: e.record.name,
+							avatar: e.record.avatar || '',
+							vote: e.record.vote || '-',
+							voteTime: e.record.voteTime || roomData.created,
+						};
+						const existingUserIndex = users.findIndex((user) => user.id === updatedUser.id);
+						if (existingUserIndex !== -1) {
+							// Update existing user
+							users[existingUserIndex] = updatedUser;
+						} else {
+							// Add new user and sort by name
+							users = [...users, updatedUser].sort((a, b) => {
+								const nameA = a.name || '';
+								const nameB = b.name || '';
+								return nameA.localeCompare(nameB);
+							});
+						}
+					}
+				},
+				{
+					filter: `room="${roomData.id}"`
+				}
+			);
 
 			// Set the isInitializing state to false after the data is loaded
 			isInitializing = false;
-			userList = getUserList(roomData.votes, roomData.owner);
 
 			// Update time every minute
 			updateTime();
@@ -222,10 +221,7 @@
 		})();
 
 		return () => {
-			if (roomData?.id) {
-				// Unsubscribe from the room data when the component is destroyed
-				pb.collection('rooms').unsubscribe(roomData.id);
-			}
+			pb.collection('rooms').unsubscribe('*');
 			clearInterval(interval);
 		};
 	});
@@ -351,20 +347,20 @@
 						</div>
 
 						<div class="my-4">
-							{#each userList as user, idx}
+							{#each users as user}
 								<div class="flex items-center space-x-4">
 									<div class="min-w-8">
 										{#if roomData?.showVotes}
-											{user.vote}
-										{:else if user.vote === '-'}
-											<ClockSolid class="h-6 w-6 text-gray-500" />
-										{:else}
+											{isAfter(new Date(user.voteTime), new Date(roomData.voteClear || roomData.created)) ? user.vote : '-'}
+										{:else if hasVoted(user?.vote || '-', user?.voteTime)}
 											<CheckCircleSolid class="h-6 w-6 text-green-500" />
+										{:else}
+											<ClockSolid class="h-6 w-6 text-gray-500" />
 										{/if}
 									</div>
 
 									<div class="flex-1 text-sm font-medium text-gray-900 dark:text-white">
-										{#if idx === 0}
+										{#if roomData?.owner === user.id}
 											<!-- User is host, show a star -->
 											<span class="flex space-x-1 align-middle"
 												>{user.name}<StarSolid id="host-star" /><Tooltip triggeredBy="#host-star"
@@ -377,7 +373,7 @@
 									</div>
 
 									<!-- Show kick icon if is host -->
-									{#if roomData?.owner === data.user.id && idx !== 0}
+									{#if roomData?.owner === data.user.id && roomData?.owner !== user.id}
 										<div class="flex items-center">
 											<TrashBinSolid
 												class="h-6 w-6 hover:text-red-500"
@@ -393,7 +389,9 @@
 							<hr class="my-4" />
 							<div class="text-red-500">
 								<p class="font-bold">Banned Users: {roomBannedUsers.length}</p>
-								<Button size="sm" color="alternative" onclick={() => unbanUsers()}>Unban all users</Button>
+								<Button size="sm" color="alternative" onclick={() => unbanUsers()}
+									>Unban all users</Button
+								>
 							</div>
 						{/if}
 						<div></div>
