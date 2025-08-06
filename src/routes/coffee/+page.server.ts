@@ -17,11 +17,17 @@ export const load = (async ({locals}) => {
     // Get donators from patreon
     
 
+    // Get featured donators from the database
+    const featuredDonators = await locals.pb.collection('featured_donators').getFullList( 10, {
+		sort: '-rank',
+	});
+
 
     return {
         stripePublicKey,
         donators: [
             ...pbDonators
-        ]
+        ],
+        featuredDonators
     };
 }) satisfies PageServerLoad;
