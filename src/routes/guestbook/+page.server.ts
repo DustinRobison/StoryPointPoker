@@ -25,7 +25,7 @@ export const load = (async ({ locals }) => {
 		content: post.content,
 		created: post.created,
 		id: post.id,
-		authorName: usersPublic?.find(usr => usr.id === post.author).name || "Anonymous",
+		authorName: usersPublic?.find(usr => usr.id === post.author)?.name || "Anonymous",
 		likes: post.likes || [],
 		tags: post.tags,
 		replies: post.replies,
