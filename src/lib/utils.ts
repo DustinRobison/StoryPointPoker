@@ -13,8 +13,9 @@ export const validateData = async (formData: any, schema: any) => {
 			errors: null
 		};
 	} catch (err: any) {
-		console.log('Error: ', err);
-		const errors = err.flatten();
+		// Avoid logging the entire error object (Zod errors can be hard to serialize
+		// and may crash console inspection in some environments).
+		const errors = typeof err?.flatten === 'function' ? err.flatten() : { formErrors: [], fieldErrors: {} };
 		return {
 			formData: body,
 			errors

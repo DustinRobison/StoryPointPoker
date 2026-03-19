@@ -21,8 +21,10 @@ export const actions = {
 
 		if (errors) {
 			return fail(400, {
-				data: formData,
-				errors: errors.fieldErrors
+				form: {
+					data: formData,
+					errors: errors.fieldErrors
+				}
 			});
 		}
 

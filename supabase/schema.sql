@@ -49,7 +49,7 @@ create table public.announcements (
 
 create table public.donators (
   id uuid primary key default gen_random_uuid(),
-  user uuid references public.users_public(id) on delete set null,
+  "user" uuid references public.users_public(id) on delete set null,
   amount numeric,
   stripe_id text,
   created timestamptz not null default now(),

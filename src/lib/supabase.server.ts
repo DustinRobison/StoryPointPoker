@@ -13,17 +13,12 @@ export function createSupabaseServerClient(event: any) {
 			get: (key: string) => event.cookies.get(key),
 			set: (key: string, value: string, options?: Record<string, unknown>) => {
 				// Supabase needs cookies available to the server on future requests.
-				event.cookies.set(key, value, {
-					...options,
-					// SvelteKit cookie API generally requires `path` to be set.
-					path: options?.path ?? '/'
-				});
+				// Always use `path: '/'` so the session cookie is available across routes
+				// (important for incognito / first request behaviour).
+				event.cookies.set(key, value, { ...(options as any), path: '/' } as any);
 			},
 			remove: (key: string, options?: Record<string, unknown>) => {
-				event.cookies.delete(key, {
-					...options,
-					path: options?.path ?? '/'
-				});
+				event.cookies.delete(key, { ...(options as any), path: '/' } as any);
 			}
 		}
 	});

@@ -41,7 +41,9 @@
 		formData.append('description', args[0] as string);
 		await fetch('?/' + 'description', {
 			method: 'POST',
-			body: formData
+			body: formData,
+			// Ensure Supabase auth cookies are included (Safari sometimes drops them for fetches).
+			credentials: 'include'
 		});
 	}, 600);
 
@@ -52,7 +54,8 @@
 		formData.append('vote', String(value));
 		await fetch('?/' + 'vote', {
 			method: 'POST',
-			body: formData
+			body: formData,
+			credentials: 'include'
 		});
 	}, 200);
 
@@ -65,7 +68,8 @@
 		);
 		await fetch('?/' + 'restrictControl', {
 			method: 'POST',
-			body: formData
+			body: formData,
+			credentials: 'include'
 		});
 	}, 200);
 
@@ -74,7 +78,8 @@
 		formData.append('clearVotes', 'true');
 		await fetch('?/' + 'clearVotes', {
 			method: 'POST',
-			body: formData
+			body: formData,
+			credentials: 'include'
 		});
 	}, 200);
 
@@ -83,7 +88,8 @@
 		formData.append('showVotes', 'true');
 		await fetch('?/' + 'showVotes', {
 			method: 'POST',
-			body: formData
+			body: formData,
+			credentials: 'include'
 		});
 	}, 200);
 

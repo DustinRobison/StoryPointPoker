@@ -11,23 +11,21 @@ export async function handle({ event, resolve }) {
 
 	// Ensure we always have an authenticated session (anonymous sign-in).
 	try {
-		const {
-			data: { session }
-		} = await supabase.auth.getSession();
-
-		if (!session) {
-			await supabase.auth.signInAnonymously();
+		// Prefer getUser() to avoid using `session.user` directly (Supabase warns about this).
+		const { data: userData, error: userError } = await supabase.auth.getUser();
+		if (!userError && userData?.user) {
+			event.locals.supabase = supabase;
+			event.locals.user = userData.user;
+			return resolve(event);
 		}
+
+		const { data } = await supabase.auth.signInAnonymously();
+		event.locals.supabase = supabase;
+		event.locals.user = data?.user ?? null;
+		return resolve(event);
 	} catch (e) {
-		console.error('Supabase auth error:', e);
+		console.error('Supabase auth error (anon sign-in):', e);
 	}
-
-	const {
-		data: { session }
-	} = await supabase.auth.getSession();
-
-	event.locals.supabase = supabase;
-	event.locals.user = session?.user ?? null;
 
 	return resolve(event);
 }

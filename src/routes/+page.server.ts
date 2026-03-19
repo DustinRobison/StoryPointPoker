@@ -60,7 +60,32 @@ export const load = async ({ locals }) => {
 
 export const actions = {
 	room: async ({ request, locals }) => {
-		const userId = locals.user?.id;
+		let userId = locals.user?.id;
+
+		// If the SSR session didn't initialize (common during local testing),
+		// create an anonymous Supabase session on-demand so the action can proceed.
+		if (!userId) {
+			try {
+				const { data, error } = await locals.supabase.auth.signInAnonymously();
+				if (error) {
+					console.error('Supabase anon signIn (action) error:', error);
+				}
+				userId = data.user?.id ?? data.session?.user?.id ?? undefined;
+				if (!userId) {
+					console.warn('Supabase anon signIn (action) returned no user/session userId');
+					console.warn('Supabase anon signIn (action) payload:', {
+						hasUser: Boolean(data.user),
+						hasSession: Boolean(data.session),
+						userId: data.user?.id ?? data.session?.user?.id,
+						error: error ? String((error as any).message ?? error) : null
+					});
+				}
+			} catch (e) {
+				console.error('Supabase anon sign-in failed in homepage action:', e);
+				// Fall through to unauthorized below.
+			}
+		}
+
 		if (!userId) return fail(401, { form: { error: 'Unauthorized' } });
 
 		// extract form data
