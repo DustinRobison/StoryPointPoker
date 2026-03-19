@@ -1,5 +1,5 @@
 import { env } from '$env/dynamic/private';
-import { PUBLIC_BASE_URL } from '$env/static/public';
+import { env as publicEnv } from '$env/dynamic/public';
 import process from 'process';
 import Stripe from 'stripe';
 import type { RequestHandler } from './$types';
@@ -13,6 +13,8 @@ if (import.meta.env.MODE === 'development') {
 export const POST: RequestHandler = async ({ request }) => {
 	const { amount } = await request.json();
 	const stripeSecretKey = env.SECRET_STRIPE_KEY || process.env.SECRET_STRIPE_KEY;
+	const publicBaseUrl =
+		publicEnv.PUBLIC_BASE_URL ?? process.env.PUBLIC_BASE_URL ?? 'http://localhost:5173';
 	if (!stripeSecretKey) {
     throw new Error('STRIPE_SECRET_KEY not set');
   }
@@ -34,8 +36,8 @@ export const POST: RequestHandler = async ({ request }) => {
 				}
 			],
 			mode: 'payment',
-			success_url: `${PUBLIC_BASE_URL}/coffee/success?amount=${amount}&session_id={CHECKOUT_SESSION_ID}`,
-			cancel_url: `${PUBLIC_BASE_URL}/coffee/cancel`
+			success_url: `${publicBaseUrl}/coffee/success?amount=${amount}&session_id={CHECKOUT_SESSION_ID}`,
+			cancel_url: `${publicBaseUrl}/coffee/cancel`
 		});
 
 		return new Response(JSON.stringify({ sessionId: session.id }), {

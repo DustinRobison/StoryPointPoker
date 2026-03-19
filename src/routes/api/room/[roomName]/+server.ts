@@ -20,7 +20,7 @@ export const GET: RequestHandler = async ({params, locals}) => {
 		}
     } catch (error) {
         // Handle other errors
-        console.error('Error querying PocketBase:', error);
+        console.error('Error querying rooms from Supabase:', error);
         return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
     }
 

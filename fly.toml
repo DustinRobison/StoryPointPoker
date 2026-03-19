@@ -11,14 +11,10 @@ primary_region = 'den'
 
   [build.args]
     PUBLIC_BASE_URL='https://scrumstorypoints-svelte.fly.dev'
-    PUBLIC_POCKETBASE_ADMIN = 'https://scrumstorypoints-pb.fly.dev/_'
-    PUBLIC_POCKETBASE_URL = 'https://scrumstorypoints-pb.fly.dev/'
 
 [env]
   PORT = '3000'
   PUBLIC_BASE_URL='https://scrumstorypoints-svelte.fly.dev'
-  PUBLIC_POCKETBASE_ADMIN = 'https://scrumstorypoints-pb.fly.dev/_'
-  PUBLIC_POCKETBASE_URL = 'https://scrumstorypoints-pb.fly.dev/'
 
 [http_service]
   internal_port = 3000
