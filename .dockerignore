@@ -23,7 +23,4 @@ build
 **/vite.config.js.timestamp-*
 **/vite.config.ts.timestamp-*
 
-# Pocketbase
-**/pb/pocketbase
-**/pb/pb_data
 fly.toml

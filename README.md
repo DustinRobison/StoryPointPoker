@@ -16,8 +16,7 @@
 
 ## Pre Requisites
 
-- [Node v20](https://nodejs.org/en/)
-- [Pocketbase](https://pocketbase.io/)
+- [Node.js v24](https://nodejs.org/en/)
 
 
 ## Installation
@@ -29,21 +28,18 @@
 
     - `npm install`
 
-3. Download pocketbase, extract it into the pb directory and serve it.
+3. Configure environment variables for Supabase.
 
-    - Download it from: `https://pocketbase.io/docs/`
-    - Extract it so there is pb/pocketbase
+    - Copy `.env.example` to `.env` and fill in `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`, and `SECRET_SUPABASE_SERVICE_ROLE_KEY`
+    - Make sure `PUBLIC_BASE_URL` is set to your local/dev URL
 
-4. Run Pocketbase and set up an adminstrator, the link should be in your console on first run
+4. Create the database schema in Supabase.
 
-    - `pb/pocketbase serve`
+    - Run `supabase/schema.sql` in the Supabase SQL editor
 
-5. Load the schema from `pb/pb_schema.json` into pocketbase Settings -> Import collections to setup your db schema
+5. Start the UI.
 
-6. Start and ensure both both pocketbase server backend and svelte UI frontend are running
-
-    - PB: `pb/pocketbase serve`
-    - UI: `npm run dev`
+    - `npm run dev`
 
 
 
