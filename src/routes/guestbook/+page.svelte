@@ -7,7 +7,7 @@
 	import { fade } from 'svelte/transition';
 	import type { PageData } from './$types';
 
-	let { data, form }: { data: PageData } = $props();
+	let { data, form }: { data: PageData; form: any } = $props();
 
 	let isLoading = $state(true);
 	let isSubmitting = $state(false);
@@ -123,7 +123,7 @@
 				{#each data.posts as post}
 					<Post
 						id={post.id}
-						userId={data.user.public}
+						userId={data.user?.id}
 						authorId={post.authorId}
 						authorUsername={post.authorName}
 						content={post.content}

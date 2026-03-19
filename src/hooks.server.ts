@@ -1,7 +1,4 @@
-// src/hooks.server.js
-import { dev } from '$app/environment';
-import { createInstance } from '$lib/pocketbase';
-import { createAnonymousUser } from '$lib/pocketbase.server';
+import { createSupabaseServerClient } from '$lib/supabase.server';
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
@@ -10,42 +7,25 @@ export async function handle({ event, resolve }) {
 		return new Response(null, { status: 204 }); // Return empty response with 204 No Content
 	}
 
-	// Create a new PocketBase instance
-	const pb = await createInstance();
+	const supabase = createSupabaseServerClient({ cookies: event.cookies });
 
-	// load the store data from the request cookie string
-	pb.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
+	// Ensure we always have an authenticated session (anonymous sign-in).
 	try {
-		// get an up-to-date auth store state by verifying and refreshing the loaded auth model (if any)
-		if (pb.authStore.isValid) {
-			await pb.collection('users').authRefresh();
+		// Prefer getUser() to avoid using `session.user` directly (Supabase warns about this).
+		const { data: userData, error: userError } = await supabase.auth.getUser();
+		if (!userError && userData?.user) {
+			event.locals.supabase = supabase;
+			event.locals.user = userData.user;
+			return resolve(event);
 		}
-	} catch {
-		// clear the auth store on failed refresh
-		pb.authStore.clear();
+
+		const { data } = await supabase.auth.signInAnonymously();
+		event.locals.supabase = supabase;
+		event.locals.user = data?.user ?? null;
+		return resolve(event);
+	} catch (e) {
+		console.error('Supabase auth error (anon sign-in):', e);
 	}
 
-	event.locals.pb = pb;
-	event.locals.user = pb.authStore.record;
-
-	// Create & authenticate anonymous user if no valid user is present
-	if (!event.locals.user) {
-		try {
-			// Check if the client has an anonymous user token in the auth store
-			if (!pb.authStore.isValid) {
-				await createAnonymousUser(pb);
-			}
-			event.locals.user = pb.authStore.record;
-		} catch (error) {
-			console.error('Error creating anonymous user:', error);
-		}
-	}
-
-	const response = await resolve(event);
-	response.headers.set(
-		'set-cookie',
-		event.locals.pb.authStore.exportToCookie({ httpOnly: false, sameSite: 'lax', secure: !dev })
-	);
-
-	return response;
+	return resolve(event);
 }

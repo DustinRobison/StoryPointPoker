@@ -3,43 +3,91 @@ import { urlSafeRegex } from '$lib/form-schema';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const load = async ({ locals }) => {
-	// Load posts
-	const userPublic = await locals.pb.collection('users_public').getOne(locals.user?.public);
-	const posts = await locals.pb.collection('posts').getList(1, 20, {
-		expand: 'author',
-		sort: '-created',
-		fields: 'id,expand.author.name,expand.author.avatar,created,updated,likes,content'
-	});
-	const announcements = await locals.pb.collection('announcements').getList(1, 20)
+	const userId = locals.user?.id;
+	if (!userId) return { userPublic: null, posts: [], announcements: [] };
 
-	const userPublicTransformed = {
-		id: userPublic?.id || '',
-		avatar: userPublic?.avatar || '',
-		name: userPublic?.name || '',
-		email: locals.user?.email || '',
-	}
+	// Load current user's public profile
+	const { data: userPublic } = await locals.supabase
+		.from('users_public')
+		.select('id,name,avatar')
+		.eq('id', userId)
+		.single();
 
-	const transformedPosts = posts.items.map((post) => ({
+	// Load posts (then resolve author display info with a second query)
+	const { data: posts } = await locals.supabase
+		.from('posts')
+		.select('id,created,updated,content,likes,author')
+		.order('created', { ascending: false })
+		.limit(20);
+
+	const authorIds = Array.from(
+		new Set((posts ?? []).map((p) => p.author).filter((id): id is string => Boolean(id)))
+	);
+
+	const { data: authors } = authorIds.length
+		? await locals.supabase.from('users_public').select('id,name,avatar').in('id', authorIds)
+		: { data: [] };
+
+	const authorMap = new Map((authors ?? []).map((a) => [a.id, a]));
+
+	const transformedPosts = (posts ?? []).map((post) => ({
 		id: post.id,
 		created: post.created,
 		updated: post.updated,
 		content: post.content,
-		likes: post.likes.length,
-		author: post?.expand?.author?.name,
-		avatar: post?.expand?.author?.avatar,
+		likes: post.likes?.length ?? 0,
+		author: post.author ? authorMap.get(post.author)?.name : null,
+		avatar: post.author ? authorMap.get(post.author)?.avatar : null
 	}));
 
-	return { userPublic: userPublicTransformed, posts: transformedPosts, announcements: announcements.items };
+	// Load announcements (optional in UI, but kept for compatibility)
+	const { data: announcements } = await locals.supabase
+		.from('announcements')
+		.select('id,author,content,created,updated')
+		.order('created', { ascending: false })
+		.limit(20);
+
+	return {
+		userPublic: {
+			id: userPublic?.id || '',
+			avatar: userPublic?.avatar || '',
+			name: userPublic?.name || ''
+		},
+		posts: transformedPosts,
+		announcements: announcements ?? []
+	};
 };
 
 export const actions = {
 	room: async ({ request, locals }) => {
-		const pb = locals.pb;
-		// get user
-		const user = locals.user;
-		if (!user) {
-			return fail(401, { form: { error: 'Unauthorized' } });
+		let userId = locals.user?.id;
+
+		// If the SSR session didn't initialize (common during local testing),
+		// create an anonymous Supabase session on-demand so the action can proceed.
+		if (!userId) {
+			try {
+				const { data, error } = await locals.supabase.auth.signInAnonymously();
+				if (error) {
+					console.error('Supabase anon signIn (action) error:', error);
+				}
+				userId = data.user?.id ?? data.session?.user?.id ?? undefined;
+				if (!userId) {
+					console.warn('Supabase anon signIn (action) returned no user/session userId');
+					console.warn('Supabase anon signIn (action) payload:', {
+						hasUser: Boolean(data.user),
+						hasSession: Boolean(data.session),
+						userId: data.user?.id ?? data.session?.user?.id,
+						error: error ? String((error as any).message ?? error) : null
+					});
+				}
+			} catch (e) {
+				console.error('Supabase anon sign-in failed in homepage action:', e);
+				// Fall through to unauthorized below.
+			}
 		}
+
+		if (!userId) return fail(401, { form: { error: 'Unauthorized' } });
+
 		// extract form data
 		const data = await request.formData();
 
@@ -48,47 +96,45 @@ export const actions = {
 		if (honeypot) {
 			return fail(400, { form: { error: 'Honeypot triggered' } });
 		}
+
 		// Validate form data
 		const action = data.get('action') as string;
 		const roomName = (data.get('roomName') as string).toLowerCase().trim();
 
 		// Validate roomName
 		const valid = roomName.length >= 4 && roomName.length <= 20 && urlSafeRegex.test(roomName);
+		if (!valid) return fail(400, { form: { error: 'Invalid room name' } });
 
-		// Throw error if invalid
-		if (!valid) {
-			return fail(400, { form: { error: 'Invalid room name' } });
-		}
 		if (action === 'create') {
 			// Check if room already exists
-			try {
-				await pb.collection('rooms').getOne(`name="${roomName}"`);
-				return redirect(303, `/room/${roomName}`);
-			} catch (error) {
-				if ((error as { status?: number }).status === 404) {
-					// Room does not exist, proceed to create
-				}
-			}
+			const { data: existingRoom } = await locals.supabase
+				.from('rooms')
+				.select('id')
+				.eq('name', roomName)
+				.maybeSingle();
+
+			if (existingRoom) return redirect(303, `/room/${roomName}`);
 
 			// Create room logic here
-			await pb.collection('rooms').create({
-				...defaultRoomValues,
+			await locals.supabase.from('rooms').insert({
 				name: roomName,
-				owner: user.public,
-				voteClear: new Date().toISOString(),
+				description: defaultRoomValues.description,
+				restrict_control: defaultRoomValues.restrictControl,
+				show_votes: defaultRoomValues.showVotes,
+				owner: userId,
+				vote_clear: new Date().toISOString()
 			});
 		}
 
 		// Get name from users_public collection
-		try {
-			const userPublic = await pb.collection('users_public').getOne(user.public);
-			if (!userPublic.name) {
-				return redirect(303, `/profile?redirectTo=/room/${roomName}`);
-			}
-		} catch (error) {
-			if ((error as { status?: number }).status === 404) {
-				console.warn('user public not found');
-			}
+		const { data: userPublic } = await locals.supabase
+			.from('users_public')
+			.select('id,name')
+			.eq('id', userId)
+			.single();
+
+		if (!userPublic?.name) {
+			return redirect(303, `/profile?redirectTo=/room/${roomName}`);
 		}
 
 		return redirect(303, `/room/${roomName}`);

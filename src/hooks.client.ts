@@ -1,8 +1,19 @@
-import { pb } from '$lib/pocketbase';
 import { currentUser } from '$lib/stores/user';
 
-pb.authStore.loadFromCookie(document.cookie);
-pb.authStore.onChange(() => {
-	currentUser.set(pb.authStore.record);
-	document.cookie = pb.authStore.exportToCookie({ httpOnly: false });
-}, true);
+import { supabase } from '$lib/supabase';
+
+// Initialize the currentUser store from the session (if any).
+const init = async () => {
+	const { data } = await supabase.auth.getUser();
+	currentUser.set(data?.user ?? null);
+};
+
+init();
+
+// Keep currentUser in sync as Supabase refreshes/updates the session.
+if (supabase) {
+	supabase.auth.onAuthStateChange(async () => {
+		const { data } = await supabase.auth.getUser();
+		currentUser.set(data?.user ?? null);
+	});
+}

@@ -4,8 +4,8 @@ declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			pb: import('pocketbase').default;
-			user: import('pocketbase').default['authStore']['model'];
+			supabase: ReturnType<typeof import('$lib/supabase.server').createSupabaseServerClient>;
+			user: { id: string } | null;
 		}
 		// interface PageData {}
 		// interface PageState {}

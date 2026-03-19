@@ -9,8 +9,6 @@ export const load = (async () => {
 
 export const actions = {
 	name: async ({ request, locals }) => {
-		const pb = locals.pb;
-		// extract anonymousId from cookie
 		const user = locals.user;
 		if (!user) {
 			return fail(400, { form: { error: 'Anonymous ID not found' } });
@@ -23,15 +21,15 @@ export const actions = {
 
 		if (errors) {
 			return fail(400, {
-				data: formData,
-				errors: errors.fieldErrors
+				form: {
+					data: formData,
+					errors: errors.fieldErrors
+				}
 			});
 		}
 
-		// Update the user name in pocketbase user table
-		await pb.collection('users_public').update(user.public, {
-			name: formData.name
-		});
+		// Update the user name in users_public
+		await locals.supabase.from('users_public').update({ name: formData.name }).eq('id', user.id);
 
 		// get url search param redirectTo
 		const url = new URL(request.url);

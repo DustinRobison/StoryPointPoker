@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
 
-	let { data, form }: { data: PageData } = $props();
+	let { data, form }: { data: PageData; form: any } = $props();
 	let isSubmitting = $state(false)
 
 	const redirectTo = page.url.searchParams.get('redirectTo');
@@ -27,15 +27,7 @@
 				action='?/name&redirectTo={redirectTo}'
 				method="POST"
 				class="my-4 flex w-full flex-col items-center justify-center px-2"
-				use:enhance={({ cancel }) => {
-					if (isSubmitting) return cancel();
-					isSubmitting = true;
-
-					return async ({ update }) => {
-						await update();
-						isSubmitting = false;
-					};
-				}}
+				
 				
 			>
 				<h5 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -49,11 +41,13 @@
 						Some character restrictions apply
 					</p>
 					{#if form?.errors?.name}
-						<p class="text-sm text-red-500">{form.errors.name}</p>
+						<p class="text-sm text-red-500">
+							{Array.isArray(form.errors.name) ? form.errors.name[0] : form.errors.name}
+						</p>
 					{/if}
 				</div>
 
-				<Button type="submit" class="mt-4 w-full" disabled={isSubmitting}>
+				<Button type="submit" class="mt-4 w-full">
 					{#if isSubmitting}
 						<Spinner class="mr-2" />
 						{:else}
