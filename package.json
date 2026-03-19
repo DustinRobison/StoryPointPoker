@@ -46,6 +46,9 @@
 		"zod": "^3.24.3"
 	},
 	"dependencies": {
+		"@supabase/ssr": "^0.9.0",
+		"@supabase/supabase-js": "^2.99.3",
+		"@sveltejs/adapter-vercel": "^5.10.3",
 		"bad-words": "^4.0.0",
 		"clsx": "^2.1.1",
 		"date-fns": "^4.1.0",

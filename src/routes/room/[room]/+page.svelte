@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { defaultStoryPointValues } from '$lib/data';
 	import { debounce } from '$lib/helpers.js';
-	import { pb } from '$lib/pocketbase.js';
+	import { supabase } from '$lib/supabase';
 	import { toast } from '$lib/stores/toast.js';
 	import { formatDistanceToNow, isAfter } from 'date-fns';
+	import { mapRoom, mapUserPublic } from '$lib/supabase-mappers';
 	import {
 		Button,
 		Card,
@@ -24,22 +25,15 @@
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 
-	interface User {
-		id: string;
-		name: string;
-		avatar?: string;
-		vote?: string;
-		voteTime?: Date;
-		updated?: string;
-	}
-
 	const { data } = $props();
 	let isInitializing = $state(true);
 	let roomDescription = $state(data.room.description || '');
 	let timeElapsed = $state('');
-	let roomData = $state(data.room);
+	// Supabase returns snake_case + nullable fields; treat this as dynamic data.
+	// The runtime logic below already guards where needed.
+	let roomData = $state<any>(data.room);
 	let roomBannedUsers = $derived(roomData.banned || []);
-	let users = $state<User[]>(data.users);
+	let users = $state<any[]>(data.users);
 
 	// Debounce function to limit the rate at which the description is updated
 	const handleDebouncedInput = debounce(async (...args: unknown[]) => {
@@ -55,7 +49,7 @@
 		// Update public_users collection with the user's vote
 		// call svelte action to update the user's vote in the room
 		const formData = new FormData();
-		formData.append('vote', value);
+		formData.append('vote', String(value));
 		await fetch('?/' + 'vote', {
 			method: 'POST',
 			body: formData
@@ -118,9 +112,14 @@
 
 	function calculateAverageVotes() {
 		// Get users votes
-		const votes = users.map((user) => isAfter(new Date(user.voteTime), new Date(roomData.voteClear || roomData.created)) ? user.vote : "-");
+		const windowDate = new Date(roomData.voteClear || roomData.created);
+		const votes = users.map((user) => {
+			if (!user.voteTime) return '-';
+			const voted = isAfter(new Date(user.voteTime), windowDate);
+			return voted ? (user.vote ?? '-') : '-';
+		});
 		// Filter out non-numeric votes
-		const numericVotes = votes.filter((vote) => !isNaN(parseInt(vote)));
+		const numericVotes = votes.filter((vote) => vote !== '-' && !isNaN(parseInt(vote)));
 		if (numericVotes.length === 0) {
 			return '--';
 		}
@@ -132,7 +131,12 @@
 
 	function calculateAbstainVotes() {
 		// Get users votes
-		const abstainVotes = users.filter((user) => isNaN(parseInt(user.vote)) || isAfter(new Date(roomData.voteClear || roomData.created), new Date(user.voteTime)));
+		const windowDate = new Date(roomData.voteClear || roomData.created);
+		const abstainVotes = users.filter((user) => {
+			const vote = user.vote ?? '-';
+			if (!user.voteTime) return true;
+			return isNaN(parseInt(vote)) || isAfter(windowDate, new Date(user.voteTime));
+		});
 		// If no abstain votes, return 0
 		if (abstainVotes.length === 0) {
 			return 0;
@@ -144,71 +148,70 @@
 		return abstainVotes.length;
 	}
 
-	function kickUser(userId: string) {
+	async function kickUser(userId: string) {
 		if (roomData?.owner === data.user.id && roomData?.id) {
-			const updatedVotes = { ...roomData.votes };
-			delete updatedVotes[userId];
-			pb.collection('rooms').update(roomData.id, {
-				votes: updatedVotes,
-				banned: [...roomData.banned, userId]
-			});
+			const nextBanned = Array.from(new Set([...(roomData.banned || []), userId]));
+			// Optimistic UI update; realtime subscription should also confirm.
+			roomData = { ...roomData, banned: nextBanned };
+			await supabase.from('rooms').update({ banned: nextBanned }).eq('id', roomData.id);
 		}
 	}
 
-	function unbanUsers() {
+	async function unbanUsers() {
 		if (roomData?.owner === data.user.id && roomData?.id) {
-			pb.collection('rooms').update(roomData.id, {
-				banned: []
-			});
-			roomBannedUsers = [];
+			roomData = { ...roomData, banned: [] };
+			await supabase.from('rooms').update({ banned: [] }).eq('id', roomData.id);
 		}
 	}
 
-	function hasVoted(vote: string, voteTime: string): boolean {
-		return vote !== '-' && isAfter(new Date(voteTime), new Date(roomData.voteClear || roomData.created));
+	function hasVoted(vote: string, voteTime?: string | null): boolean {
+		if (vote === '-' || !voteTime) return false;
+		return isAfter(new Date(voteTime), new Date(roomData.voteClear || roomData.created));
 	}
 
 	onMount(() => {
 		let interval: ReturnType<typeof setInterval>;
+		let roomChannel: ReturnType<typeof supabase.channel> | null = null;
+		let usersChannel: ReturnType<typeof supabase.channel> | null = null;
 
 		(async () => {
-			// Subscribe to the room data
-			pb.collection('rooms').subscribe(roomData.id, (e) => {
-				if (e.action === 'update') {
-					roomData = e.record;
-				}
-			});
-			// Subscribe to all users_public where room equals roomData.id
-			pb.collection('users_public').subscribe(
-				'*',
-				(e) => {
-					if (e.action === 'create' || e.action === 'update') {
-						// Update the users state with the new user data
-						const updatedUser = {
-							id: e.record.id,
-							name: e.record.name,
-							avatar: e.record.avatar || '',
-							vote: e.record.vote || '-',
-							voteTime: e.record.voteTime || roomData.created,
-						};
-						const existingUserIndex = users.findIndex((user) => user.id === updatedUser.id);
-						if (existingUserIndex !== -1) {
-							// Update existing user
-							users[existingUserIndex] = updatedUser;
-						} else {
-							// Add new user and sort by name
-							users = [...users, updatedUser].sort((a, b) => {
-								const nameA = a.name || '';
-								const nameB = b.name || '';
-								return nameA.localeCompare(nameB);
-							});
+			// Subscribe to room updates
+			roomChannel = supabase
+				.channel(`room:${roomData.id}`)
+				.on(
+					'postgres_changes',
+					{ event: 'UPDATE', schema: 'public', table: 'rooms', filter: `id=eq.${roomData.id}` },
+					(payload: any) => {
+						if (payload.new) {
+							roomData = mapRoom(payload.new as any);
 						}
 					}
-				},
-				{
-					filter: `room="${roomData.id}"`
-				}
-			);
+				)
+				.subscribe();
+
+			// Subscribe to user updates for the current room
+			usersChannel = supabase
+				.channel(`room-users:${roomData.id}`)
+				.on(
+					'postgres_changes',
+					{
+						event: '*',
+						schema: 'public',
+						table: 'users_public',
+						filter: `room=eq.${roomData.id}`
+					},
+					(payload: any) => {
+						if (!payload.new) return;
+						const updatedUser = mapUserPublic(payload.new as any);
+						const existingUserIndex = users.findIndex((u) => u.id === updatedUser.id);
+						if (existingUserIndex !== -1) {
+							users = users.map((u) => (u.id === updatedUser.id ? updatedUser : u));
+						} else {
+							users = [...users, updatedUser].sort((a, b) => a.name.localeCompare(b.name));
+						}
+					}
+				)
+				.subscribe();
 
 			// Set the isInitializing state to false after the data is loaded
 			isInitializing = false;
@@ -221,7 +224,8 @@
 		})();
 
 		return () => {
-			pb.collection('rooms').unsubscribe('*');
+			if (roomChannel) supabase.removeChannel(roomChannel);
+			if (usersChannel) supabase.removeChannel(usersChannel);
 			clearInterval(interval);
 		};
 	});

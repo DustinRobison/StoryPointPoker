@@ -11,100 +11,94 @@ interface CustomError {
 
 export const load = (async ({ locals }) => {
 	const user = locals.user;
-	const posts = await locals.pb.collection('posts').getFullList({
-		sort: '-created',
-		fields: 'id,content,created,author,likes,tags,replies'
-	});
-	const usersPublic = await locals.pb.collection('users_public').getFullList()
 
+	const { data: posts } = await locals.supabase
+		.from('posts')
+		.select('id,content,created,author,likes,tags,replies')
+		.order('created', { ascending: false });
 
+	const authorIds = Array.from(
+		new Set((posts ?? []).map((p) => p.author).filter((id): id is string => Boolean(id)))
+	);
+
+	const { data: usersPublic } = authorIds.length
+		? await locals.supabase.from('users_public').select('id,name').in('id', authorIds)
+		: { data: [] };
+
+	const nameMap = new Map((usersPublic ?? []).map((u) => [u.id, u.name]));
 
 	// Limit data sent to client via transformation
-	const transformedPosts = posts.map((post) => ({
+	const transformedPosts = (posts ?? []).map((post) => ({
 		authorId: post.author,
 		content: post.content,
 		created: post.created,
 		id: post.id,
-		authorName: usersPublic?.find(usr => usr.id === post.author).name || "Anonymous",
-		likes: post.likes || [],
+		authorName: post.author ? nameMap.get(post.author) || 'Anonymous' : 'Anonymous',
+		likes: post.likes ?? [],
 		tags: post.tags,
-		replies: post.replies,
+		replies: post.replies
 	}));
-	
-	return {
-		user,
-		posts: transformedPosts
-	};
+
+	return { user, posts: transformedPosts };
 }) satisfies PageServerLoad;
 
 export const actions = {
 	new: async ({ request, locals }) => {
 		const { user } = locals;
-		if (!user) {
-			return fail(401, { message: 'Unauthorized' });
+		if (!user) return fail(401, { message: 'Unauthorized' });
+
+		const { formData, errors } = await validateData(await request.formData(), createGuestBookPostSchema);
+		if (errors) {
+			return fail(400, { data: formData, errors: errors.fieldErrors });
 		}
 
-		const { formData, errors } = await validateData(
-			await request.formData(),
-			createGuestBookPostSchema
-		);
-		if (errors) {
-			return fail(400, {
-				data: formData,
-				errors: errors.fieldErrors
-			});
-		}
 		try {
-			await locals.pb.collection('posts').create({
-				author: user.public,
+			await locals.supabase.from('posts').insert({
+				author: user.id,
 				content: formData.content,
 				tags: [],
 				replies: []
 			});
 		} catch (err) {
 			const customError = err as CustomError;
-			console.error('Error: ', 'error creating post: ' + customError.message);
+			console.error('Error: error creating post:', customError.message);
 			throw error(customError.status, customError.message);
 		}
+
 		return { success: true };
 	},
 
-    
-    likePost: async ({ request, locals }) => {
-        const { user } = locals;
-        if (!user) {
-            return fail(401, { message: 'Unauthorized' });
-        }
+	likePost: async ({ request, locals }) => {
 		try {
 			const { formData } = await validateData(await request.formData(), likeGuestBookPostSchema);
-			const post = await locals.pb.collection('posts').getOne(formData.postId, { expand: 'likes' });
 
-			const userIndex = post.likes.indexOf(user.public);
-			if (userIndex !== -1) {
-				post.likes.splice(userIndex, 1);
-			} else {
-				post.likes.push(user.public);
-			}
+			const { data: post } = await locals.supabase
+				.from('posts')
+				.select('id,content,created,author,likes,tags,replies')
+				.eq('id', formData.postId)
+				.single();
 
-			try {
-				await locals.pb.collection('posts').update(post.id, { likes: post.likes });
-			} catch (err) {
-				const customError = err as CustomError;
-				console.error('Error: ', 'error liking/unliking post: ' + customError.message);
-				throw error(customError.status, customError.message);
-			}
-			// Fetch the updated post
-			const updatedPost = await locals.pb
-				.collection('posts')
-				.getOne(formData.postId, { expand: 'likes' });
+			if (!post) return fail(404, { message: 'Post not found' });
 
-			return {
-				success: true,
-				post: updatedPost
-			};
+			const likes = (post.likes ?? []) as string[];
+			const userId = formData.currentUserId;
+			const hasLiked = likes.includes(userId);
+			const nextLikes = hasLiked
+				? likes.filter((id: string) => id !== userId)
+				: [...likes, userId];
+
+			await locals.supabase.from('posts').update({ likes: nextLikes }).eq('id', formData.postId);
+
+			const { data: updatedPost } = await locals.supabase
+				.from('posts')
+				.select('id,content,created,author,likes,tags,replies')
+				.eq('id', formData.postId)
+				.single();
+
+			return { success: true, post: updatedPost };
 		} catch (err) {
 			console.error('Error processing likePost:', err);
 			throw error(500, 'An unknown error occurred');
 		}
-	},
+	}
 };

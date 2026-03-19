@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
 
-	let { data, form }: { data: PageData } = $props();
+	let { data, form }: { data: PageData; form: any } = $props();
 	let isSubmitting = $state(false)
 
 	const redirectTo = page.url.searchParams.get('redirectTo');

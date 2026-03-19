@@ -9,25 +9,23 @@ export const load = (async ({locals}) => {
         throw new Error('STRIPE_PUBLIC_KEY not set');
     }
 
-    // Get Donators from the database
-    const pbDonators = await locals.pb.collection('donators').getFullList(200 /* batch size */, {
-        sort: '-created'
-    });
+    // Get donators from the database (used on success page / future UI)
+    const { data: donators } = await locals.supabase
+		.from('donators')
+		.select('id,user,amount,stripe_id,created,updated')
+		.order('created', { ascending: false })
+		.limit(200);
 
-    // Get donators from patreon
-    
-
-    // Get featured donators from the database
-    const featuredDonators = await locals.pb.collection('featured_donators').getFullList( 10, {
-		sort: '-rank',
-	});
-
+	// Featured donators feed
+	const { data: featuredDonators } = await locals.supabase
+		.from('featured_donators')
+		.select('id,name,link,rank,created,updated')
+		.order('rank', { ascending: false })
+		.limit(10);
 
     return {
         stripePublicKey,
-        donators: [
-            ...pbDonators
-        ],
-        featuredDonators
+        donators: donators ?? [],
+        featuredDonators: featuredDonators ?? []
     };
 }) satisfies PageServerLoad;
