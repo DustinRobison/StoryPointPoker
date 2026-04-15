@@ -1,86 +1,55 @@
 <p align="center">
   <a href="https://scrumstorypoints.com/" rel="noopener" target="_blank">
-  <img width="150" src="/static/android-chrome-512x512.png" alt="StoryPointPoker logo" />
+    <img width="150" src="https://scrumstorypoints.com/images/logo_white.png" alt="StoryPointPoker logo" />
   </a>
 </p>
+
 <h1 align="center">Scrum Story Points</h1>
-
-
 
 <div align="center">
 
-[Agile](https://en.wikipedia.org/wiki/Agile_software_development) tool for sharing task complexity estimates.
+[Agile](https://en.wikipedia.org/wiki/Agile_software_development) tool for sharing task complexity estimates in real time.
 
 <img width="300" src="/.github/lighthouse.png" alt="Lighthouse report" />
+
 </div>
 
-## Pre Requisites
+## Prerequisites
 
-- [Node.js v24](https://nodejs.org/en/)
+- [Node.js](https://nodejs.org/) v24 (see `.nvmrc`)
 
+## Local setup
 
-## Installation
-1. Clone the repository and change directory into the project root
+1. Clone and install:
 
-    - `git clone git@github.com:DustinRobison/StoryPointPoker.git && cd StoryPointPoker`
+   ```bash
+   git clone git@github.com:DustinRobison/StoryPointPoker.git && cd StoryPointPoker
+   npm install
+   ```
 
-2. Install the dependencies with node package manager
+2. Environment: copy `.env.example` to `.env` and set at least:
 
-    - `npm install`
+   - `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`, `SECRET_SUPABASE_SERVICE_ROLE_KEY`
+   - `PUBLIC_BASE_URL` (e.g. `http://localhost:5173` for dev)
+   - Stripe and Umami keys if you use those features
 
-3. Configure environment variables for Supabase.
+3. Database: in the [Supabase](https://supabase.com/dashboard) SQL editor, run `supabase/schema.sql` on your project (including vote RPCs and grants if you use room voting).
 
-    - Copy `.env.example` to `.env` and fill in `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`, and `SECRET_SUPABASE_SERVICE_ROLE_KEY`
-    - Make sure `PUBLIC_BASE_URL` is set to your local/dev URL
+4. Dev server:
 
-4. Create the database schema in Supabase.
+   ```bash
+   npm run dev
+   ```
 
-    - Run `supabase/schema.sql` in the Supabase SQL editor
-
-5. Start the UI.
-
-    - `npm run dev`
-
-
-
-
-
-
-# Boilerplate Svelte CLI docs:
-
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
+## Production build
 
 ```bash
 npm run build
+npm run preview
 ```
 
-You can preview the production build with `npm run preview`.
+`npm run check` runs TypeScript/Svelte validation; `npm run lint` runs Prettier + ESLint.
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+## Deployment (Vercel + Supabase)
+
+The app uses [`@sveltejs/adapter-vercel`](https://svelte.dev/docs/kit/adapter-vercel) (`nodejs24.x`). Connect the repo to Vercel and configure the same environment variables as in `.env.example`. Ensure production Supabase has the full schema applied and, after adding RPCs, reload the Supabase API schema if needed.

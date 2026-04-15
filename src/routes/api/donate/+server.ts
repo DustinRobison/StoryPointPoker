@@ -4,20 +4,14 @@ import process from 'process';
 import Stripe from 'stripe';
 import type { RequestHandler } from './$types';
 
-if (import.meta.env.MODE === 'development') {
-	console.log('Running in development mode');
-} else {
-	console.log('Running in production mode');
-}
-
 export const POST: RequestHandler = async ({ request }) => {
 	const { amount } = await request.json();
 	const stripeSecretKey = env.SECRET_STRIPE_KEY || process.env.SECRET_STRIPE_KEY;
 	const publicBaseUrl =
 		publicEnv.PUBLIC_BASE_URL ?? process.env.PUBLIC_BASE_URL ?? 'http://localhost:5173';
 	if (!stripeSecretKey) {
-    throw new Error('STRIPE_SECRET_KEY not set');
-  }
+		throw new Error('SECRET_STRIPE_KEY is not set');
+	}
 	const stripe = new Stripe(stripeSecretKey);
 
 	try {
