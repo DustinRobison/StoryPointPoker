@@ -212,6 +212,58 @@ grant execute on function public.room_show_votes(uuid, boolean) to anon;
 grant execute on function public.room_clear_votes(uuid) to authenticated;
 grant execute on function public.room_show_votes(uuid, boolean) to authenticated;
 
+-- Owner-only ban: update rooms.banned and clear the target's users_public.room (RLS blocks cross-user profile updates).
+create or replace function public.room_ban_user(p_room_id uuid, p_target uuid)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  r_owner uuid;
+  cur_banned uuid[];
+begin
+  if auth.uid() is null then
+    raise exception 'Unauthorized';
+  end if;
+  if p_target = auth.uid() then
+    raise exception 'Cannot ban yourself';
+  end if;
+
+  select owner, banned into r_owner, cur_banned
+  from public.rooms
+  where id = p_room_id
+  for update;
+
+  if not found then
+    raise exception 'Room not found';
+  end if;
+  if r_owner is distinct from auth.uid() then
+    raise exception 'Only the room owner can ban users';
+  end if;
+  if p_target = r_owner then
+    raise exception 'Cannot ban the room owner';
+  end if;
+
+  cur_banned := coalesce(cur_banned, '{}');
+  if not (p_target = any(cur_banned)) then
+    cur_banned := array_append(cur_banned, p_target);
+  end if;
+
+  update public.rooms
+  set banned = cur_banned
+  where id = p_room_id;
+
+  update public.users_public
+  set room = null, vote = '-'
+  where id = p_target;
+end;
+$$;
+
+revoke all on function public.room_ban_user(uuid, uuid) from public;
+grant execute on function public.room_ban_user(uuid, uuid) to anon;
+grant execute on function public.room_ban_user(uuid, uuid) to authenticated;
+
 create policy users_public_select on public.users_public
   for select using (true);
 create policy users_public_insert on public.users_public

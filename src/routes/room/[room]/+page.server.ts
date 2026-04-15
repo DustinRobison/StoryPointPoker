@@ -84,6 +84,21 @@ function mapVoteControlRpcError(
 	return error(500, msg || 'Failed to update room');
 }
 
+function mapBanUserRpcError(roomName: string, rpcError: { message?: string; code?: string }) {
+	const msg = rpcError.message ?? '';
+	if (rpcError.code === '42883' || /function .* does not exist/i.test(msg)) {
+		return error(
+			500,
+			'Ban failed: run the room_ban_user SQL in Supabase, then reload the API schema.'
+		);
+	}
+	if (msg.includes('Room not found')) return error(404, `Room ${roomName} not found`);
+	if (msg.includes('Unauthorized')) return error(401, 'Unauthorized');
+	if (msg.includes('Only the room owner')) return error(403, 'You are not the owner of this room');
+	if (msg.includes('Cannot ban')) return error(400, msg);
+	return error(500, msg || 'Failed to ban user');
+}
+
 export const actions = {
 	vote: async ({ request, locals }) => {
 		const data = await request.formData();
@@ -183,6 +198,55 @@ export const actions = {
 			p_room_id: roomRow.id
 		});
 		if (rpcError) return mapVoteControlRpcError(roomName, rpcError);
+
+		return { success: true };
+	},
+	banUser: async ({ request, locals, params }) => {
+		const userId = locals.user?.id;
+		if (!userId) return error(401, 'Unauthorized');
+
+		const formData = await request.formData();
+		const targetUserId = formData.get('userId');
+		if (!targetUserId || typeof targetUserId !== 'string') {
+			return error(400, 'Invalid user');
+		}
+
+		const roomName = (params.room ?? '').toLowerCase().trim();
+		const { data: roomRow } = await locals.supabase
+			.from('rooms')
+			.select('id')
+			.eq('name', roomName)
+			.maybeSingle();
+
+		if (!roomRow) return error(404, `Room ${roomName} not found`);
+
+		const { error: rpcError } = await locals.supabase.rpc('room_ban_user', {
+			p_room_id: roomRow.id,
+			p_target: targetUserId
+		});
+		if (rpcError) return mapBanUserRpcError(roomName, rpcError);
+
+		return { success: true };
+	},
+	unbanAll: async ({ locals, params }) => {
+		const userId = locals.user?.id;
+		if (!userId) return error(401, 'Unauthorized');
+
+		const roomName = (params.room ?? '').toLowerCase().trim();
+		const { data: roomRow } = await locals.supabase
+			.from('rooms')
+			.select('id,owner')
+			.eq('name', roomName)
+			.maybeSingle();
+
+		if (!roomRow) return error(404, `Room ${roomName} not found`);
+		if (roomRow.owner !== userId) return error(403, 'You are not the owner of this room');
+
+		const { error: upErr } = await locals.supabase
+			.from('rooms')
+			.update({ banned: [] })
+			.eq('id', roomRow.id);
+		if (upErr) return error(500, upErr.message);
 
 		return { success: true };
 	}

@@ -190,19 +190,39 @@
 		return abstainVotes.length;
 	}
 
-	async function kickUser(userId: string) {
-		if (roomData?.owner === data.user.id && roomData?.id) {
-			const nextBanned = Array.from(new Set([...(roomData.banned || []), userId]));
-			// Optimistic UI update; realtime subscription should also confirm.
-			roomData = { ...roomData, banned: nextBanned };
-			await supabase.from('rooms').update({ banned: nextBanned }).eq('id', roomData.id);
+	async function banParticipant(targetId: string) {
+		if (roomData?.owner !== data.user.id || !roomData?.id) return;
+		const roomSnapshot = { ...roomData };
+		const usersSnapshot = users;
+		const nextBanned = Array.from(new Set([...(roomData.banned || []), targetId]));
+		roomData = { ...roomData, banned: nextBanned };
+		users = users.filter((u) => u.id !== targetId);
+
+		const formData = new FormData();
+		formData.append('userId', targetId);
+		const res = await fetch('?/banUser', {
+			method: 'POST',
+			body: formData,
+			credentials: 'include'
+		});
+		if (!res.ok) {
+			roomData = roomSnapshot;
+			users = usersSnapshot;
 		}
 	}
 
-	async function unbanUsers() {
-		if (roomData?.owner === data.user.id && roomData?.id) {
-			roomData = { ...roomData, banned: [] };
-			await supabase.from('rooms').update({ banned: [] }).eq('id', roomData.id);
+	async function unbanAllBanned() {
+		if (roomData?.owner !== data.user.id || !roomData?.id) return;
+		const roomSnapshot = { ...roomData };
+		roomData = { ...roomData, banned: [] };
+
+		const res = await fetch('?/unbanAll', {
+			method: 'POST',
+			body: new FormData(),
+			credentials: 'include'
+		});
+		if (!res.ok) {
+			roomData = roomSnapshot;
 		}
 	}
 
@@ -442,7 +462,7 @@
 										<div class="flex items-center">
 											<TrashBinSolid
 												class="h-6 w-6 hover:text-red-500"
-												onclick={() => kickUser(user.id)}
+												onclick={() => banParticipant(user.id)}
 											/>
 										</div>
 									{/if}
@@ -454,9 +474,8 @@
 							<hr class="my-4" />
 							<div class="text-red-500">
 								<p class="font-bold">Banned Users: {roomBannedUsers.length}</p>
-								<Button size="sm" color="alternative" onclick={() => unbanUsers()}
-									>Unban all users</Button
-								>
+								<Button size="sm" color="alternative" onclick={() => unbanAllBanned()}
+									>Unban all users</Button>
 							</div>
 						{/if}
 						<div></div>
