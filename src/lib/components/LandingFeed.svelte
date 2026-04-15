@@ -14,7 +14,7 @@
 	<Marquee pauseOnHover class="[--duration:20s]">
 		{#each announcements as announcement}
 			<NoteCard
-				title={announcement.name}
+				title={announcement.author ?? 'Announcement'}
 				subtitle={formatDistanceToNow(announcement.created)}
 				avatar="/images/avatar.jpg"
 				body={announcement.content}
