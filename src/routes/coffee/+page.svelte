@@ -9,11 +9,15 @@
 	let { data }: { data: PageData } = $props();
 
 	let amount: any = $state();
-	let isDisabled = $derived(!amount || amount < 1);
+	let isDisabled = $derived(!data.stripeConfigured || !amount || amount < 1);
 
 	let stripePromise: Promise<Stripe | null> | undefined;
 
 	async function handleDonate() {
+		if (!data.stripeConfigured) {
+			alert('Stripe is not configured for this deployment. You can still support the project via Patreon below.');
+			return;
+		}
 		const stripe = await stripePromise;
 		if (!stripe) {
 			console.error('Stripe.js not loaded');
@@ -46,7 +50,7 @@
 	}
 
 	onMount(async () => {
-		// Load Stripe and generate BTC QR code on mount
+		if (!data.stripeConfigured || !data.stripePublicKey) return;
 		stripePromise = loadStripe(data.stripePublicKey);
 	});
 
@@ -72,6 +76,11 @@
 	<!-- Donate Card -->
 	<Card class="w-1/2">
 		<h5 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Donate:</h5>
+		{#if !data.stripeConfigured}
+			<p class="mb-2 text-sm text-amber-700 dark:text-amber-300">
+				Card donations are temporarily unavailable (Stripe is not configured). Please use Patreon below.
+			</p>
+		{/if}
 		<p class="mb-2 min-h-12 text-sm text-gray-500 dark:text-shadow-white">
 			{@html donationMessage(amount)}
 		</p>

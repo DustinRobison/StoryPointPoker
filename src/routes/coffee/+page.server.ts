@@ -1,31 +1,28 @@
 import { env } from '$env/dynamic/public';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({locals}) => {
+export const load = (async ({ locals }) => {
+	const stripePublicKey = (env.PUBLIC_STRIPE_KEY || process.env.PUBLIC_STRIPE_KEY || '').trim();
+	const stripeConfigured = Boolean(stripePublicKey);
 
-    // Get the pubilc stripe key
-    const stripePublicKey = env.PUBLIC_STRIPE_KEY || process.env.PUBLIC_STRIPE_KEY;
-    if (!stripePublicKey) {
-        throw new Error('STRIPE_PUBLIC_KEY not set');
-    }
+	if (!stripeConfigured) {
+		console.warn('PUBLIC_STRIPE_KEY is not set; Stripe checkout will be disabled on /coffee');
+	}
 
-    // Get donators from the database (used on success page / future UI)
-    const { data: donators } = await locals.supabase
-		.from('donators')
-		.select('id,user,amount,stripe_id,created,updated')
-		.order('created', { ascending: false })
-		.limit(200);
-
-	// Featured donators feed
-	const { data: featuredDonators } = await locals.supabase
+	// Featured donators feed (donators list is not shown on this page; avoid selecting reserved column "user" here)
+	const { data: featuredDonators, error: featuredError } = await locals.supabase
 		.from('featured_donators')
 		.select('id,name,link,rank,created,updated')
 		.order('rank', { ascending: false })
 		.limit(10);
 
-    return {
-        stripePublicKey,
-        donators: donators ?? [],
-        featuredDonators: featuredDonators ?? []
-    };
+	if (featuredError) {
+		console.error('featured_donators load error:', featuredError.message);
+	}
+
+	return {
+		stripePublicKey,
+		stripeConfigured,
+		featuredDonators: featuredDonators ?? []
+	};
 }) satisfies PageServerLoad;
