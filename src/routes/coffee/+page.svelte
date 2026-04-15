@@ -6,7 +6,9 @@
 	import { fade } from 'svelte/transition';
 	import type { PageData } from './$types';
 
-	let { data }: { data: PageData } = $props();
+	const props = $props<{ data: PageData }>();
+	/** Avoid destructuring `$props()` so nested `data.*` stays reactive in Svelte 5. */
+	const data = $derived(props.data);
 
 	let amount: any = $state();
 	let isDisabled = $derived(!data.stripeConfigured || !amount || amount < 1);
@@ -108,7 +110,7 @@
 
 		<div class="my-4 grid grid-cols-3 gap-2">
 			{#each prices as amt}
-				<Button class="w-full" type="button" on:click={() => (amount = amt)}>
+				<Button class="w-full" type="button" onclick={() => (amount = amt)}>
 					{amt}
 				</Button>
 			{/each}
