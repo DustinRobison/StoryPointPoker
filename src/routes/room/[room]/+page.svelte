@@ -4,11 +4,17 @@
 	import { supabase } from '$lib/supabase';
 	import { toast } from '$lib/stores/toast.js';
 	import { formatDistanceToNow, isAfter } from 'date-fns';
-	import { mapRoom, mapUserPublic } from '$lib/supabase-mappers';
+	import {
+		mapRoom,
+		mapUserPublic,
+		type MappedRoom,
+		type MappedUserPublic,
+		type RoomRow,
+		type UserPublicRow
+	} from '$lib/supabase-mappers';
 	import {
 		Button,
 		Card,
-		Checkbox,
 		ListPlaceholder,
 		Skeleton,
 		Textarea,
@@ -28,12 +34,14 @@
 	const { data } = $props();
 	let isInitializing = $state(true);
 	let roomDescription = $state(data.room.description || '');
-	let timeElapsed = $state('');
 	// Supabase returns snake_case + nullable fields; treat this as dynamic data.
 	// The runtime logic below already guards where needed.
-	let roomData = $state<any>(data.room);
+	let roomData = $state<MappedRoom>(data.room);
 	let roomBannedUsers = $derived(roomData.banned || []);
-	let users = $state<any[]>(data.users);
+	let users = $state<MappedUserPublic[]>(data.users);
+	let lockControls = $state(data.room.restrictControl === true);
+	/** While saving lock preference, ignore realtime rows that still have the old restrict_control. */
+	let lockRestrictSaveInFlight = false;
 
 	// Debounce function to limit the rate at which the description is updated
 	const handleDebouncedInput = debounce(async (...args: unknown[]) => {
@@ -47,54 +55,82 @@
 		});
 	}, 600);
 
-	const handleVoteClick = debounce(async (value) => {
-		// Update public_users collection with the user's vote
-		// call svelte action to update the user's vote in the room
-		const formData = new FormData();
-		formData.append('vote', String(value));
-		await fetch('?/' + 'vote', {
-			method: 'POST',
-			body: formData,
-			credentials: 'include'
-		});
-	}, 200);
-
-	const handleRestrictControls = debounce(async (e: unknown) => {
-		// Update the room's restrictControl field based on the checkbox state
-		const formData = new FormData();
-		formData.append(
-			'restrictControl',
-			((e as Event)?.target as HTMLInputElement)?.checked?.toString()
+	async function submitVote(value: string | number) {
+		const self = users.find((u) => u.id === data.user.id);
+		const snapshot = self ? { ...self } : null;
+		const now = new Date().toISOString();
+		const v = String(value);
+		users = users.map((u) =>
+			u.id === data.user.id ? { ...u, vote: v, voteTime: now, vote_time: now } : u
 		);
-		await fetch('?/' + 'restrictControl', {
+		const formData = new FormData();
+		formData.append('vote', v);
+		const res = await fetch('?/' + 'vote', {
 			method: 'POST',
 			body: formData,
 			credentials: 'include'
 		});
-	}, 200);
+		if (!res.ok && snapshot) {
+			users = users.map((u) => (u.id === data.user.id ? snapshot : u));
+		}
+	}
 
-	const handleClearVotes = debounce(async () => {
+	async function persistLockControls() {
+		const checked = lockControls;
+		lockRestrictSaveInFlight = true;
+		roomData = { ...roomData, restrictControl: checked, restrict_control: checked };
+		const formData = new FormData();
+		formData.append('restrictControl', String(checked));
+		try {
+			const res = await fetch('?/' + 'restrictControl', {
+				method: 'POST',
+				body: formData,
+				credentials: 'include'
+			});
+			if (!res.ok) {
+				lockControls = !checked;
+				roomData = { ...roomData, restrictControl: !checked, restrict_control: !checked };
+			}
+		} finally {
+			lockRestrictSaveInFlight = false;
+		}
+	}
+
+	async function submitClearVotes() {
+		const snapshot = { ...roomData };
+		const now = new Date().toISOString();
+		roomData = {
+			...roomData,
+			voteClear: now,
+			vote_clear: now,
+			showVotes: false,
+			show_votes: false
+		};
 		const formData = new FormData();
 		formData.append('clearVotes', 'true');
-		await fetch('?/' + 'clearVotes', {
+		const res = await fetch('?/' + 'clearVotes', {
 			method: 'POST',
 			body: formData,
 			credentials: 'include'
 		});
-	}, 200);
+		if (!res.ok) {
+			roomData = snapshot;
+		}
+	}
 
-	const handleShowVotes = debounce(async () => {
+	async function submitShowVotes() {
+		const snapshot = { ...roomData };
+		roomData = { ...roomData, showVotes: true, show_votes: true };
 		const formData = new FormData();
 		formData.append('showVotes', 'true');
-		await fetch('?/' + 'showVotes', {
+		const res = await fetch('?/' + 'showVotes', {
 			method: 'POST',
 			body: formData,
 			credentials: 'include'
 		});
-	}, 200);
-
-	function updateTime() {
-		timeElapsed = roomData?.created ? formatDistanceToNow(new Date(roomData.created)) : 'Unknown';
+		if (!res.ok) {
+			roomData = snapshot;
+		}
 	}
 
 	function copyRoomLink() {
@@ -118,7 +154,7 @@
 
 	function calculateAverageVotes() {
 		// Get users votes
-		const windowDate = new Date(roomData.voteClear || roomData.created);
+		const windowDate = voteWindowDate();
 		const votes = users.map((user) => {
 			if (!user.voteTime) return '-';
 			const voted = isAfter(new Date(user.voteTime), windowDate);
@@ -137,7 +173,7 @@
 
 	function calculateAbstainVotes() {
 		// Get users votes
-		const windowDate = new Date(roomData.voteClear || roomData.created);
+		const windowDate = voteWindowDate();
 		const abstainVotes = users.filter((user) => {
 			const vote = user.vote ?? '-';
 			if (!user.voteTime) return true;
@@ -170,13 +206,17 @@
 		}
 	}
 
+	function voteWindowDate(): Date {
+		const t = roomData.voteClear ?? roomData.created;
+		return t ? new Date(t) : new Date(0);
+	}
+
 	function hasVoted(vote: string, voteTime?: string | null): boolean {
 		if (vote === '-' || !voteTime) return false;
-		return isAfter(new Date(voteTime), new Date(roomData.voteClear || roomData.created));
+		return isAfter(new Date(voteTime), voteWindowDate());
 	}
 
 	onMount(() => {
-		let interval: ReturnType<typeof setInterval>;
 		let roomChannel: ReturnType<typeof supabase.channel> | null = null;
 		let usersChannel: ReturnType<typeof supabase.channel> | null = null;
 
@@ -187,9 +227,20 @@
 				.on(
 					'postgres_changes',
 					{ event: 'UPDATE', schema: 'public', table: 'rooms', filter: `id=eq.${roomData.id}` },
-					(payload: any) => {
-						if (payload.new) {
-							roomData = mapRoom(payload.new as any);
+					(payload: { new: RoomRow }) => {
+						if (!payload.new) return;
+						const next = mapRoom(payload.new);
+						if (lockRestrictSaveInFlight) {
+							roomData = {
+								...next,
+								restrictControl: lockControls,
+								restrict_control: lockControls
+							};
+						} else {
+							roomData = next;
+							if (next.owner === data.user.id) {
+								lockControls = next.restrictControl === true;
+							}
 						}
 					}
 				)
@@ -206,14 +257,16 @@
 						table: 'users_public',
 						filter: `room=eq.${roomData.id}`
 					},
-					(payload: any) => {
+					(payload: { new: UserPublicRow }) => {
 						if (!payload.new) return;
-						const updatedUser = mapUserPublic(payload.new as any);
+						const updatedUser = mapUserPublic(payload.new);
 						const existingUserIndex = users.findIndex((u) => u.id === updatedUser.id);
 						if (existingUserIndex !== -1) {
 							users = users.map((u) => (u.id === updatedUser.id ? updatedUser : u));
 						} else {
-							users = [...users, updatedUser].sort((a, b) => a.name.localeCompare(b.name));
+							users = [...users, updatedUser].sort((a, b) =>
+								(a.name ?? '').localeCompare(b.name ?? '')
+							);
 						}
 					}
 				)
@@ -221,22 +274,17 @@
 
 			// Set the isInitializing state to false after the data is loaded
 			isInitializing = false;
-
-			// Update time every minute
-			updateTime();
-			interval = setInterval(() => {
-				updateTime();
-			}, 60000);
 		})();
 
 		return () => {
 			if (roomChannel) supabase.removeChannel(roomChannel);
 			if (usersChannel) supabase.removeChannel(usersChannel);
-			clearInterval(interval);
 		};
 	});
 
 	$effect(() => {
+		// Only the owner may update description server-side; avoid 403 spam for other participants.
+		if (roomData?.owner !== data.user.id) return;
 		handleDebouncedInput(roomDescription);
 	});
 
@@ -281,8 +329,8 @@
 						{#if roomData?.owner === data.user.id}
 							<Textarea
 								id="description"
-								placeholder={`Text that will update for all users in the room`}
-								value={roomData?.description}
+								placeholder="Text that will update for all users in the room"
+								value={roomData?.description ?? ''}
 								oninput={(e) => (roomDescription = (e.target as HTMLTextAreaElement).value)}
 								rows={4}
 								class="mb-4"
@@ -295,8 +343,8 @@
 
 						<!-- Create rows of estimate buttons -->
 						<div class="grid grid-cols-3 gap-4 py-4">
-							{#each defaultStoryPointValues as value}
-								<Button size="sm" onclick={() => handleVoteClick(value)}>{value}</Button>
+							{#each defaultStoryPointValues as value (value)}
+								<Button size="sm" onclick={() => submitVote(value)}>{value}</Button>
 							{/each}
 						</div>
 					</div>
@@ -315,19 +363,26 @@
 
 						<div class="my-4 flex space-x-2">
 							<Button
-								disabled={roomData?.restrictControl && data.user.id !== roomData.owner}
-								onclick={() => handleClearVotes()}>Clear Votes</Button
+								disabled={roomData?.restrictControl === true && data.user.id !== roomData.owner}
+								onclick={() => submitClearVotes()}>Clear Votes</Button
 							>
 							<Button
-								disabled={roomData?.restrictControl && data.user.id !== roomData.owner}
-								onclick={() => handleShowVotes()}>Show Votes</Button
+								disabled={roomData?.restrictControl === true && data.user.id !== roomData.owner}
+								onclick={() => submitShowVotes()}>Show Votes</Button
 							>
 						</div>
 						{#if roomData?.owner === data.user.id}
-							<div class="flex space-x-2">
-								<Checkbox onchange={(e) => handleRestrictControls(e)} />
-								<p>Lock controls to room creator</p>
-							</div>
+							<label class="flex cursor-pointer items-center gap-2">
+								<input
+									type="checkbox"
+									class="h-4 w-4 rounded border-gray-300 bg-gray-100 text-primary-600 focus:ring-2 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-primary-600"
+									bind:checked={lockControls}
+									onchange={() => persistLockControls()}
+								/>
+								<span class="text-sm text-gray-900 dark:text-white"
+									>Lock controls to room creator</span
+								>
+							</label>
 						{/if}
 
 						<hr class="" />
@@ -357,11 +412,11 @@
 						</div>
 
 						<div class="my-4">
-							{#each users as user}
+							{#each users as user (user.id)}
 								<div class="flex items-center space-x-4">
 									<div class="min-w-8">
 										{#if roomData?.showVotes}
-											{isAfter(new Date(user.voteTime), new Date(roomData.voteClear || roomData.created)) ? user.vote : '-'}
+											{isAfter(new Date(user.voteTime ?? 0), voteWindowDate()) ? user.vote : '-'}
 										{:else if hasVoted(user?.vote || '-', user?.voteTime)}
 											<CheckCircleSolid class="h-6 w-6 text-green-500" />
 										{:else}

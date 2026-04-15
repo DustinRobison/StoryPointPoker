@@ -138,6 +138,80 @@ create policy rooms_insert on public.rooms
 create policy rooms_update on public.rooms
   for update using (auth.uid() is not null) with check (auth.uid() is not null and owner = auth.uid());
 
+-- Clear/show votes from non-owners when restrict_control is false: direct UPDATE is blocked by
+-- rooms_update (owner-only). These RPCs run as definer and apply the same rule as the app layer.
+create or replace function public.room_clear_votes(p_room_id uuid)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  r_owner uuid;
+  r_restrict boolean;
+begin
+  if auth.uid() is null then
+    raise exception 'Unauthorized';
+  end if;
+
+  select owner, restrict_control into r_owner, r_restrict
+  from public.rooms
+  where id = p_room_id;
+
+  if not found then
+    raise exception 'Room not found';
+  end if;
+
+  if coalesce(r_restrict, false) and r_owner is distinct from auth.uid() then
+    raise exception 'Only the room owner can perform this action while controls are locked';
+  end if;
+
+  update public.rooms
+  set vote_clear = now(), show_votes = false
+  where id = p_room_id;
+end;
+$$;
+
+create or replace function public.room_show_votes(p_room_id uuid, p_show boolean)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  r_owner uuid;
+  r_restrict boolean;
+begin
+  if auth.uid() is null then
+    raise exception 'Unauthorized';
+  end if;
+
+  select owner, restrict_control into r_owner, r_restrict
+  from public.rooms
+  where id = p_room_id;
+
+  if not found then
+    raise exception 'Room not found';
+  end if;
+
+  if coalesce(r_restrict, false) and r_owner is distinct from auth.uid() then
+    raise exception 'Only the room owner can perform this action while controls are locked';
+  end if;
+
+  update public.rooms
+  set show_votes = p_show
+  where id = p_room_id;
+end;
+$$;
+
+revoke all on function public.room_clear_votes(uuid) from public;
+revoke all on function public.room_show_votes(uuid, boolean) from public;
+-- Requests use the anon API key with a user JWT; PostgREST often runs as role `anon` or `authenticated`.
+grant execute on function public.room_clear_votes(uuid) to anon;
+grant execute on function public.room_show_votes(uuid, boolean) to anon;
+grant execute on function public.room_clear_votes(uuid) to authenticated;
+grant execute on function public.room_show_votes(uuid, boolean) to authenticated;
+
 create policy users_public_select on public.users_public
   for select using (true);
 create policy users_public_insert on public.users_public

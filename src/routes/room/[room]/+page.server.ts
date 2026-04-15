@@ -1,6 +1,11 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { mapRoom, mapUserPublic } from '$lib/supabase-mappers';
+import {
+	mapRoom,
+	mapUserPublic,
+	type RoomRow,
+	type UserPublicRow
+} from '$lib/supabase-mappers';
 
 export const load = (async ({ locals, params }) => {
 	const userId = locals.user?.id;
@@ -18,7 +23,7 @@ export const load = (async ({ locals, params }) => {
 	if (!userPublicRow || !userPublicRow.name) {
 		return redirect(303, `/profile?redirectTo=/room/${roomName}`);
 	}
-	const userPublic = mapUserPublic(userPublicRow as any);
+	const userPublic = mapUserPublic(userPublicRow as UserPublicRow);
 
 	// Query room by name
 	const { data: roomRow } = await locals.supabase
@@ -28,7 +33,7 @@ export const load = (async ({ locals, params }) => {
 		.maybeSingle();
 
 	if (!roomRow) return error(404, `Room ${roomName} not found`);
-	const room = mapRoom(roomRow as any);
+	const room = mapRoom(roomRow as RoomRow);
 
 	// Check if the user is banned from the room
 	const bannedUsers = room.banned ?? [];
@@ -49,7 +54,7 @@ export const load = (async ({ locals, params }) => {
 		.eq('room', room.id)
 		.order('name', { ascending: false });
 
-	const users = (usersRows ?? []).map((u) => mapUserPublic(u as any));
+	const users = (usersRows ?? []).map((u) => mapUserPublic(u as UserPublicRow));
 
 	return {
 		userId,
@@ -58,6 +63,26 @@ export const load = (async ({ locals, params }) => {
 		users
 	};
 }) satisfies PageServerLoad;
+
+function mapVoteControlRpcError(
+	roomName: string,
+	rpcError: { message?: string; details?: string; hint?: string; code?: string }
+) {
+	const msg = [rpcError.message, rpcError.details, rpcError.hint].filter(Boolean).join(' ');
+	// PostgREST: function not in schema cache or not created
+	if (rpcError.code === '42883' || /function .* does not exist/i.test(msg)) {
+		return error(
+			500,
+			'Vote action failed: run the room_clear_votes / room_show_votes SQL in Supabase, then in Dashboard → Settings → API click "Reload schema" (or restart the project).'
+		);
+	}
+	if (msg.includes('Room not found')) return error(404, `Room ${roomName} not found`);
+	if (msg.includes('Unauthorized')) return error(401, 'Unauthorized');
+	if (msg.includes('controls are locked')) {
+		return error(403, 'You are not the owner of this room');
+	}
+	return error(500, msg || 'Failed to update room');
+}
 
 export const actions = {
 	vote: async ({ request, locals }) => {
@@ -124,16 +149,18 @@ export const actions = {
 		const roomName = (params.room ?? '').toLowerCase().trim();
 		const { data: roomRow } = await locals.supabase
 			.from('rooms')
-			.select('id,owner,restrict_control')
+			.select('id')
 			.eq('name', roomName)
 			.maybeSingle();
 
 		if (!roomRow) return error(404, `Room ${roomName} not found`);
-		if (roomRow.restrict_control && roomRow.owner !== userId) {
-			return error(403, 'You are not the owner of this room');
-		}
 
-		await locals.supabase.from('rooms').update({ show_votes: showVotes }).eq('id', roomRow.id);
+		const { error: rpcError } = await locals.supabase.rpc('room_show_votes', {
+			p_room_id: roomRow.id,
+			p_show: showVotes
+		});
+		if (rpcError) return mapVoteControlRpcError(roomName, rpcError);
+
 		return { success: true };
 	},
 	clearVotes: async ({ request, locals, params }) => {
@@ -145,21 +172,17 @@ export const actions = {
 		const roomName = (params.room ?? '').toLowerCase().trim();
 		const { data: roomRow } = await locals.supabase
 			.from('rooms')
-			.select('id,owner,restrict_control')
+			.select('id')
 			.eq('name', roomName)
 			.maybeSingle();
 
 		if (!roomRow) return error(404, `Room ${roomName} not found`);
-		if (roomRow.restrict_control && roomRow.owner !== userId) {
-			return error(403, 'You are not the owner of this room');
-		}
-
 		if (!clearVotes) return error(400, 'Invalid request to clear votes');
 
-		await locals.supabase.from('rooms').update({
-			vote_clear: new Date().toISOString(),
-			show_votes: false
-		}).eq('id', roomRow.id);
+		const { error: rpcError } = await locals.supabase.rpc('room_clear_votes', {
+			p_room_id: roomRow.id
+		});
+		if (rpcError) return mapVoteControlRpcError(roomName, rpcError);
 
 		return { success: true };
 	}

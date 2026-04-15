@@ -7,6 +7,14 @@ export async function handle({ event, resolve }) {
 		return new Response(null, { status: 204 }); // Return empty response with 204 No Content
 	}
 
+	// Safari / iOS probe for a touch icon; avoids noisy 404s in dev logs when not present in /static.
+	if (
+		event.url.pathname === '/apple-touch-icon-precomposed.png' ||
+		event.url.pathname === '/apple-touch-icon.png'
+	) {
+		return new Response(null, { status: 204 });
+	}
+
 	const supabase = createSupabaseServerClient({ cookies: event.cookies });
 
 	// Ensure we always have an authenticated session (anonymous sign-in).

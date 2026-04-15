@@ -1,4 +1,8 @@
-type RoomRow = {
+function coerceBool(v: unknown): boolean {
+	return v === true || v === 'true';
+}
+
+export type RoomRow = {
 	id: string;
 	name: string;
 	description: string | null;
@@ -11,7 +15,7 @@ type RoomRow = {
 	updated: string | null;
 };
 
-type UserPublicRow = {
+export type UserPublicRow = {
 	id: string;
 	name: string | null;
 	avatar: string | null;
@@ -23,11 +27,13 @@ type UserPublicRow = {
 };
 
 export function mapRoom(row: RoomRow) {
+	const restrict = coerceBool(row.restrict_control);
+	const show = coerceBool(row.show_votes);
 	return {
 		...row,
 		voteClear: row.vote_clear,
-		restrictControl: row.restrict_control,
-		showVotes: row.show_votes,
+		restrictControl: restrict,
+		showVotes: show,
 		banned: row.banned ?? []
 	};
 }
@@ -38,3 +44,6 @@ export function mapUserPublic(row: UserPublicRow) {
 		voteTime: row.vote_time
 	};
 }
+
+export type MappedRoom = ReturnType<typeof mapRoom>;
+export type MappedUserPublic = ReturnType<typeof mapUserPublic>;
